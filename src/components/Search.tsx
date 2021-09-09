@@ -1,18 +1,21 @@
 import {useState} from 'react'
 
-export default function Search({onSearch}) {
+type SearchProps = {
+  onSearch: (params: any) => void
+}
+
+export default function Search(props: SearchProps) {
     const [id, setID] = useState('')
 
-    const onSubmit = (e) => {
+    const onSubmit = (e: any) => {
         e.preventDefault()
         if (!id) {
             return;
         }
-        onSearch({id})
+        props.onSearch({id})
     }
 
-    return (
-        <form className='add-form' onSubmit={onSubmit}>
+    return <form className='add-form' onSubmit={onSubmit}>
             <div className='form-control'>
                 <label>Annotation ID</label>
                 <input
@@ -25,6 +28,5 @@ export default function Search({onSearch}) {
             </div>
 
             <input type='submit' value='Search' className='btn btn-block'/>
-        </form>
-    )
+        </form>;
 }

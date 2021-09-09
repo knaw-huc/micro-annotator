@@ -14,7 +14,7 @@ export default function App() {
     const [regionLinks, setRegionLinks] = useState([])
     const [annotatableText, setAnnotatableText] = useState([])
     const [selectionRange, setSelectionRange] = useState([])
-    const [myAnnotations, setMyAnnotations] = useState([])
+    const [myAnnotations, setMyAnnotations] = useState([] as any [])
 
     useEffect(() => {
         const getUserAnnotations = async () => {
@@ -24,8 +24,8 @@ export default function App() {
         getUserAnnotations()
     }, []);
 
-    const searchAnnotation = async (annotationID) => {
-        const data = await Annotations.get(annotationID.id);
+    const searchAnnotation = async (annotation: any) => {
+        const data = await Annotations.get(annotation.id);
         const ann = data['annotations'];
         await setRegionLinks(ann['region_links'])
         const text = await Texts.get(ann.resource_id, ann.begin_anchor, ann.end_anchor);
@@ -34,8 +34,8 @@ export default function App() {
     }
 
     const readSelection = () => {
-        const s = window.getSelection();
-        const range = {}
+        const s : any = window.getSelection();
+        const range : any = {}
         range['beginAnchor'] = parseInt(s.anchorNode.parentNode.id);
         range['beginOffset'] = s.anchorOffset;
         range['endAnchor'] = parseInt(s.focusNode.parentNode.id);
@@ -43,11 +43,7 @@ export default function App() {
         setSelectionRange(range);
     }
 
-    const getSelectionRange = () => {
-        return selectionRange;
-    }
-
-    const onAddAnnotation = async (ann) => {
+    const onAddAnnotation = async (ann: any) => {
         ann['owner'] = OWNER;
         ann['begin_anchor'] += 56378;
         ann['end_anchor'] += 56378;
@@ -55,8 +51,8 @@ export default function App() {
         setMyAnnotations([...myAnnotations, ann]);
     }
 
-    const setSelectedAnnotation = (selected_ann_id) => {
-        setMyAnnotations(myAnnotations.map((annot, index) => {
+    const setSelectedAnnotation = (selected_ann_id: number) => {
+        setMyAnnotations(myAnnotations.map((annot: any, index: number) => {
             return {...annot, selected: index === selected_ann_id};
         }))
     }
@@ -68,8 +64,7 @@ export default function App() {
                 <ImageParts images={regionLinks}/>
                 <AnnotatableText text={annotatableText} onReadSelection={readSelection}/>
                 <Annotator
-                    selectionRange={getSelectionRange}
-                    onReadSelection={readSelection}
+                    selectionRange={() => selectionRange}
                     onAddAnnotation={onAddAnnotation}
                     onSelectAnnotation={setSelectedAnnotation}
                     myAnnotations={myAnnotations}
