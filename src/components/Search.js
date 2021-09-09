@@ -5,14 +5,10 @@ export default function Search({onSearch}) {
 
     const onSubmit = (e) => {
         e.preventDefault()
-
         if (!id) {
-            alert('Please add an annotation identifier')
+            return;
         }
-
         onSearch({id})
-
-        setID('')
     }
 
     return (

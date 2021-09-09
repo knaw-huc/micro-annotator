@@ -4,6 +4,10 @@ import Search from './components/Search'
 import ImageParts from './components/ImageParts'
 import AnnotatableText from './components/AnnotatableText'
 import Annotator from './components/Annotator'
+import Annotations from "./resources/Annotations";
+import Texts from "./resources/Texts";
+
+const OWNER = 'hennie';
 
 export default function App() {
 
@@ -14,85 +18,47 @@ export default function App() {
 
     useEffect(() => {
         const getUserAnnotations = async () => {
-            const annotationsFromServer = await fetchAnnotations()
+            const annotationsFromServer = await Annotations.getBy(OWNER);
             setMyAnnotations(annotationsFromServer)
         }
-
         getUserAnnotations()
-    }, [])
-
-    const fetchAnnotations = async () => {
-        const res = await fetch('http://localhost:5001/volume-1728/annotations/56378,56499?owner=hennie')
-        const data = await res.json()
-        return data['annotations']
-    }
+    }, []);
 
     const searchAnnotation = async (annotationID) => {
-        const data = await fetchAnnotation(annotationID.id);
-        const annotation = data['annotations'];
-
-        await setRegionLinks(annotation['region_links'])
-
-        const textdata = await fetchText(annotation.resource_id, annotation.begin_anchor, annotation.end_anchor);
-        const textgrid = textdata['textgrid'];
-
-        await setAnnotatableText(textgrid['_ordered_segments'])
-    }
-
-    const fetchAnnotation = async (annotationID) => {
-        const res = await fetch(`http://localhost:5001/annotations/${annotationID}`, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        })
-        return await res.json();
-    }
-
-    const fetchText = async (resourceID, beginAnchor, endAnchor) => {
-        const res = await fetch(`http://localhost:5000/${resourceID}/segmentedtext/textgrid/${beginAnchor},${endAnchor}`, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        })
-        return await res.json();
+        const data = await Annotations.get(annotationID.id);
+        const ann = data['annotations'];
+        await setRegionLinks(ann['region_links'])
+        const text = await Texts.get(ann.resource_id, ann.begin_anchor, ann.end_anchor);
+        const grid = text['textgrid'];
+        await setAnnotatableText(grid['_ordered_segments'])
     }
 
     const readSelection = () => {
-        const selection = window.getSelection();
-        const newSelRange = {}
-        newSelRange['beginAnchor'] = parseInt(selection.anchorNode.parentNode.id);
-        newSelRange['beginOffset'] = selection.anchorOffset;
-        newSelRange['endAnchor'] = parseInt(selection.focusNode.parentNode.id);
-        newSelRange['endOffset'] = selection.focusOffset;
-
-        setSelectionRange(newSelRange);
+        const s = window.getSelection();
+        const range = {}
+        range['beginAnchor'] = parseInt(s.anchorNode.parentNode.id);
+        range['beginOffset'] = s.anchorOffset;
+        range['endAnchor'] = parseInt(s.focusNode.parentNode.id);
+        range['endOffset'] = s.focusOffset;
+        setSelectionRange(range);
     }
 
     const getSelectionRange = () => {
         return selectionRange;
     }
 
-    const onAddAnnotation = async (newAnnotation) => {
-        newAnnotation['owner'] = 'hennie';
-        newAnnotation['begin_anchor'] += 56378;
-        newAnnotation['end_anchor'] += 56378;
-        const res = await fetch('http://localhost:5001/annotations', {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(newAnnotation)
-        })
-
-        await res.json()
-        setMyAnnotations([...myAnnotations, newAnnotation])
+    const onAddAnnotation = async (ann) => {
+        ann['owner'] = OWNER;
+        ann['begin_anchor'] += 56378;
+        ann['end_anchor'] += 56378;
+        await Annotations.create(ann);
+        setMyAnnotations([...myAnnotations, ann]);
     }
 
     const setSelectedAnnotation = (selected_ann_id) => {
-        setMyAnnotations(myAnnotations.map((annot, index) => index === selected_ann_id
-            ? {...annot, selected: true} : {...annot, selected: false}))
+        setMyAnnotations(myAnnotations.map((annot, index) => {
+            return {...annot, selected: index === selected_ann_id};
+        }))
     }
 
     return (
