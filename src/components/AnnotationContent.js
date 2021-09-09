@@ -1,4 +1,4 @@
-export const AnnotationContent = ({myAnnotations}) => {
+export default function AnnotationContent({myAnnotations}) {
     return (
         <div
             style={{padding: '20px', fontSize: '11px', borderStyle: 'solid', borderColor: 'black', borderWidth: '1px'}}>

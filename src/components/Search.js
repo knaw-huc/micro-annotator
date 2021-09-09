@@ -1,6 +1,6 @@
 import {useState} from 'react'
 
-const Search = ({onSearch}) => {
+export default function Search({onSearch}) {
     const [id, setID] = useState('')
 
     const onSubmit = (e) => {
@@ -32,5 +32,3 @@ const Search = ({onSearch}) => {
         </form>
     )
 }
-
-export default Search

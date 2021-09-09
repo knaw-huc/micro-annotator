@@ -1,6 +1,6 @@
 import Image from './Image'
 
-const ImageParts = ({images}) => {
+export default function ImageParts({images}) {
     return (
         <div style={{'maxHeight': '500px'}}>
             {images.map((url, index) => (
@@ -9,5 +9,3 @@ const ImageParts = ({images}) => {
         </div>
     )
 }
-
-export default ImageParts

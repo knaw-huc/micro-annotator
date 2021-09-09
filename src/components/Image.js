@@ -1,4 +1,4 @@
-const Image = ({url, width}) => {
+export default function Image ({url, width}) {
     return (
         <div style={{'padding': '3px'}}>
             <img
@@ -9,5 +9,3 @@ const Image = ({url, width}) => {
         </div>
     )
 }
-
-export default Image

@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react'
 
-const AddAnnotation = ({selectionRange, onAdd}) => {
+export default function AddAnnotation({selectionRange, onAdd}) {
     const [bodyValue, setBodyValue] = useState('')
 
     const [selRangeStr, setSelRangeStr] = useState('geen selectie gezet')
@@ -68,5 +68,3 @@ const AddAnnotation = ({selectionRange, onAdd}) => {
         </form>
     )
 }
-
-export default AddAnnotation

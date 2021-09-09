@@ -8,6 +8,8 @@ git clone https://github.com/knaw-huc/react-micro-annotator.git
 git clone https://github.com/knaw-huc/textrepo.git
 
 pip3 install flask 
+
+cd react-micro-annotator && npm install 
 ````
 
 Change `datadir` path in `un-t-ann-gle/packages/annotation/aservice.py` and `un-t-ann-gle/packages/textservice/tservice.py` to existing path
@@ -25,7 +27,7 @@ cd un-t-ann-gle/packages/textservice/ && python3 tservice.py
 
 Start annotator UI: 
 ```shell
-cd react-micro-annotator && npm install && npm start
+cd react-micro-annotator && npm start
 ```
 
 Open http://localhost:3000

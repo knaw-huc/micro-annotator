@@ -1,6 +1,6 @@
 import AnnotationSnippet from './AnnotationSnippet'
 
-const AnnotationList = ({myAnnotations, onSelectAnnotation}) => {
+export default function AnnotationList({myAnnotations, onSelectAnnotation}) {
     return (
         <div>
             {myAnnotations.map((annotation, index) => (
@@ -10,5 +10,3 @@ const AnnotationList = ({myAnnotations, onSelectAnnotation}) => {
         </div>
     )
 }
-
-export default AnnotationList

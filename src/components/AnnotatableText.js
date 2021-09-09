@@ -2,7 +2,7 @@ import {useEffect, useRef} from 'react'
 
 import TextLine from './TextLine'
 
-const AnnotatableText = ({text, onReadSelection}) => {
+export default function AnnotatableText({text, onReadSelection}) {
     const ref = useRef();
 
     useEffect(() => {
@@ -34,5 +34,3 @@ const AnnotatableText = ({text, onReadSelection}) => {
         </div>
     )
 }
-
-export default AnnotatableText

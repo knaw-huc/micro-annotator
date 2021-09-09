@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-const TextLine = ({text, id}) => {
+export default function TextLine({text, id}) {
     const [anchorIsShown, setAnchorIsShown] = useState(false);
 
     return (
@@ -14,5 +14,3 @@ const TextLine = ({text, id}) => {
         </div>
     )
 }
-
-export default TextLine

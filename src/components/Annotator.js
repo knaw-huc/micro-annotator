@@ -1,8 +1,8 @@
 import AddAnnotation from './AddAnnotation'
 import AnnotationList from './AnnotationList'
-import {AnnotationContent} from './AnnotationContent'
+import AnnotationContent from './AnnotationContent'
 
-const Annotator = ({selectionRange, onAddAnnotation, onSelectAnnotation, myAnnotations}) => {
+export default function Annotator({selectionRange, onAddAnnotation, onSelectAnnotation, myAnnotations}) {
     return (
         <div style={{'minWidth': '150px'}}>
             <div>
@@ -14,5 +14,3 @@ const Annotator = ({selectionRange, onAddAnnotation, onSelectAnnotation, myAnnot
         </div>
     )
 }
-
-export default Annotator

@@ -1,6 +1,6 @@
 //import { useState } from 'react'
 
-const AnnotationSnippet = ({annot_id, annotation, onSelectAnnotation}) => {
+export default function AnnotationSnippet({annot_id, annotation, onSelectAnnotation}) {
 //	const [selected, setSelected] = useState(false);
 
     /*	const selectAnnotation = () => {
@@ -17,5 +17,3 @@ const AnnotationSnippet = ({annot_id, annotation, onSelectAnnotation}) => {
         </div>
     )
 }
-
-export default AnnotationSnippet
