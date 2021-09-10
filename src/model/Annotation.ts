@@ -1,6 +1,7 @@
 export type Annotation = {
   id: string;
   resource_id: string;
+  owner: string;
   label: string;
   entity_type: string;
   begin_char_offset: number;

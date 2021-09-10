@@ -3,5 +3,4 @@ export type AnnRange = {
   beginOffset: number;
   endAnchor: number;
   endOffset: number;
-
 }
