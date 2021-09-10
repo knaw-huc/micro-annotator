@@ -1,11 +1,13 @@
 import {useState} from 'react'
 
+const DEFAULT_VALUE = "meeting-1728-06-19-session-1-resolution-17";
+
 type SearchProps = {
-  onSearch: (params: any) => void
+  onSearch: (params: { id: string }) => void
 }
 
 export default function Search(props: SearchProps) {
-    const [id, setID] = useState('')
+    const [id, setID] = useState(DEFAULT_VALUE)
 
     const onSubmit = (e: any) => {
         e.preventDefault()
@@ -20,10 +22,8 @@ export default function Search(props: SearchProps) {
                 <label>Annotation ID</label>
                 <input
                     type='text'
-                    placeholder='Please enter annotation id' value={id}
-                    onChange={
-                        (e) => setID(e.target.value)
-                    }
+                    value={id}
+                    onChange={e => setID(e.target.value)}
                 />
             </div>
 

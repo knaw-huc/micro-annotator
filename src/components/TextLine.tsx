@@ -1,16 +1,21 @@
 import {useState} from 'react';
 
-export default function TextLine({text, id}) {
+type TextLineProps = {
+    index: number,
+    text: string
+}
+
+export default function TextLine(props: TextLineProps) {
     const [anchorIsShown, setAnchorIsShown] = useState(false);
 
     return (
         <div
-            id={id}
+            id={'' + props.index}
             onMouseEnter={() => setAnchorIsShown(true)}
             onMouseLeave={() => setAnchorIsShown(false)}
             style={{'fontSize': '9px'}}
             className={anchorIsShown ? 'anchor' : ''}>
-            {text}
+            {props.text}
         </div>
     )
 }
