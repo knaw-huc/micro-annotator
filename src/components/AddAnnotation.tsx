@@ -14,7 +14,7 @@ export default function AddAnnotation(props: AddAnnotationProps) {
 
   let getSelRange = props.selectionRange;
   useEffect(() => {
-    setSelRangeStr(getSelRangeStr(getSelRange()));
+    setSelRangeStr(toString(getSelRange()));
   }, [setSelRangeStr, getSelRange])
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,15 +47,15 @@ export default function AddAnnotation(props: AddAnnotationProps) {
     setBodyValue('')
   }
 
-  const getSelRangeStr = (selRange: AnnRange | undefined) => {
-    if (selRange === undefined) {
-      return 'No selection'
+  const toString = (range: AnnRange | undefined) => {
+    if (range === undefined) {
+      return ''
     }
     return '('
-      + selRange.beginAnchor + ','
-      + selRange.beginOffset + ')('
-      + selRange.endAnchor + ','
-      + selRange.endOffset + ')';
+      + range.beginAnchor + ','
+      + range.beginOffset + ')('
+      + range.endAnchor + ','
+      + range.endOffset + ')';
   }
 
   return (
@@ -65,13 +65,15 @@ export default function AddAnnotation(props: AddAnnotationProps) {
         <input
           type='text'
           value={selRangeStr}
+          placeholder='Make selection in text'
           readOnly
         />
       </div>
       <div className='form-control'>
         <label>Body Text</label>
         <input
-          type='text' placeholder='Add Body Text'
+          type='text'
+          placeholder='Add Body Text'
           onChange={
             (e) => setBodyValue(e.target.value)
           }
