@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, FormEvent} from 'react'
 import {Annotation} from "../model/Annotation";
 import {AnnRange} from "../model/AnnRange";
 
@@ -13,11 +13,12 @@ export default function AddAnnotation(props: AddAnnotationProps) {
   const [selRangeStr, setSelRangeStr] = useState('geen selectie gezet')
 
   let getSelRange = props.selectionRange;
+
   useEffect(() => {
     setSelRangeStr(toString(getSelRange()));
   }, [setSelRangeStr, getSelRange])
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!bodyValue) {

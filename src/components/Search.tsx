@@ -1,13 +1,13 @@
 import {useState} from 'react'
+import Config from "../Config";
 
-const DEFAULT_VALUE = "meeting-1728-06-19-session-1-resolution-17";
 
 type SearchProps = {
   onSearch: (params: { id: string }) => void
 }
 
 export default function Search(props: SearchProps) {
-    const [id, setID] = useState(DEFAULT_VALUE)
+    const [id, setID] = useState(Config.PLACEHOLDER_SEARCH_ID)
 
     const onSubmit = (e: any) => {
         e.preventDefault()

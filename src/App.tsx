@@ -8,8 +8,7 @@ import Annotations from "./resources/Annotations";
 import Texts from "./resources/Texts";
 import {AnnRange} from "./model/AnnRange";
 import {Annotation} from "./model/Annotation";
-
-const OWNER = 'hennie';
+import Config from "./Config";
 
 export default function App() {
 
@@ -21,7 +20,7 @@ export default function App() {
 
   useEffect(() => {
     const getUserAnnotations = async () => {
-      const annotationsFromServer = await Annotations.getBy(OWNER);
+      const annotationsFromServer = await Annotations.getBy(Config.OWNER);
       setMyAnnotations(annotationsFromServer)
     }
     getUserAnnotations()
@@ -42,7 +41,7 @@ export default function App() {
   }
 
   const onAddAnnotation = async (ann: Annotation) => {
-    ann.owner = OWNER;
+    ann.owner = Config.OWNER;
     ann.begin_anchor += beginOffsetInResource;
     ann.end_anchor += beginOffsetInResource;
     await Annotations.create(ann);

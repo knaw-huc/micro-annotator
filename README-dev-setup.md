@@ -30,6 +30,14 @@ Start annotator UI:
 cd react-micro-annotator && npm start
 ```
 
+Set env vars:
+```
+export REACT_APP_PLACEHOLDER_SEARCH_ID='meeting-1728-06-19-session-1-resolution-17'
+export REACT_APP_OWNER='HENNIE'
+export REACT_APP_ANNOTATION_HOST='http://localhost:5001'
+export REACT_APP_TEXT_HOST='http://localhost:5000'
+```
+
 Open http://localhost:3000
 
 Temporarily disable CORS in browser: 
