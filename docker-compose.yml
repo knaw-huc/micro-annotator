@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  nginx:
+    container_name: manginx
+    image: nginx:1.19
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - annotator_network
+    ports:
+      - 8000:8000
+    depends_on:
+      - annotator
+      - annotation
+      - textservice
+
+  annotator:
+    container_name: maannotator
+    image: micro-annotator-gui:latest
+    build: ./gui
+    volumes:
+    - ./gui/public:/annotator/public
+    - ./gui/src:/annotator/src
+    - ./gui/tsconfg.json:/annotator/tsconfg.json
+    networks:
+      - annotator_network
+    depends_on:
+      - annotation
+      - textservice
+    environment:
+      REACT_APP_PLACEHOLDER_SEARCH_ID: ${REACT_APP_PLACEHOLDER_SEARCH_ID}
+      REACT_APP_OWNER: ${REACT_APP_OWNER}
+      REACT_APP_ANNOTATION_HOST: ${REACT_APP_ANNOTATION_HOST}
+      REACT_APP_TEXT_HOST: ${REACT_APP_TEXT_HOST}
+    command: npm start
+    ports:
+      - 3000
+
+  annotation:
+    container_name: maannotation
+    build: ./py
+    volumes:
+      - ../un-t-ann-gle/packages:/usr/src/app/packages
+      - ../un-t-ann-gle/data:/usr/src/app/data
+    networks:
+      - annotator_network
+    ports:
+      - 5001:5001
+    command: 'bash -c "cd packages/annotation && export FLASK_APP=aservice.py && flask run --host=0.0.0.0 --port=5001"'
+
+  textservice:
+    container_name: matextservice
+    build: ./py
+    volumes:
+      - ../un-t-ann-gle/packages:/usr/src/app/packages
+      - ../un-t-ann-gle/data:/usr/src/app/data
+    networks:
+      - annotator_network
+    ports:
+      - 5000:5000
+    command: 'bash -c "cd packages/textservice && export FLASK_APP=tservice.py && flask run --host=0.0.0.0 --port=5000"'
+
+networks:
+  annotator_network:
