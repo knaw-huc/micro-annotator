@@ -5,6 +5,7 @@ export default class Config {
   public static OWNER: string;
   public static ANNOTATION_HOST: string;
   public static TEXT_HOST: string;
+  static ELUCIDATE_HOST: string;
 
   public static init() {
     for (const key of Object.keys(this)) {

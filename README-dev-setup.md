@@ -12,7 +12,10 @@ Change `datadir` path in `un-t-ann-gle/packages/annotation/aservice.py` and `un-
 
 ## Run
 
-Populate an `.env` with env vars as defined in `docker-compose.yml`.
+Populate an `.env` with env vars as defined in `docker-compose.yml`. Example:
+```
+export REACT_APP_PLACEHOLDER_SEARCH_ID='meeting-1728-06-19-session-1-resolution-17'
+```
 
 Open http://localhost:8000
 

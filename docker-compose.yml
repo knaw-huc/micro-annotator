@@ -14,9 +14,10 @@ services:
       - annotator
       - annotation
       - textservice
+      - elucidate
 
   annotator:
-    container_name: maannotator
+    container_name: ma_annotator
     image: micro-annotator-gui:latest
     build: ./gui
     volumes:
@@ -30,36 +31,73 @@ services:
       - textservice
     environment:
       REACT_APP_PLACEHOLDER_SEARCH_ID: ${REACT_APP_PLACEHOLDER_SEARCH_ID}
-      REACT_APP_OWNER: ${REACT_APP_OWNER}
-      REACT_APP_ANNOTATION_HOST: ${REACT_APP_ANNOTATION_HOST}
-      REACT_APP_TEXT_HOST: ${REACT_APP_TEXT_HOST}
+      REACT_APP_OWNER: HENNIE
+      REACT_APP_ANNOTATION_HOST: http://localhost:8000/annotation
+      REACT_APP_TEXT_HOST: http://localhost:8000/textservice
+      REACT_APP_ELUCIDATE_HOST: http://localhost:8000/elucidate
     command: npm start
-    ports:
+    expose:
       - 3000
 
   annotation:
-    container_name: maannotation
+    container_name: ma_annotation
     build: ./py
     volumes:
       - ../un-t-ann-gle/packages:/usr/src/app/packages
       - ../un-t-ann-gle/data:/usr/src/app/data
     networks:
       - annotator_network
-    ports:
-      - 5001:5001
+    expose:
+      - 5001
     command: 'bash -c "cd packages/annotation && export FLASK_APP=aservice.py && flask run --host=0.0.0.0 --port=5001"'
 
   textservice:
-    container_name: matextservice
+    container_name: ma_textservice
     build: ./py
     volumes:
       - ../un-t-ann-gle/packages:/usr/src/app/packages
       - ../un-t-ann-gle/data:/usr/src/app/data
     networks:
       - annotator_network
-    ports:
-      - 5000:5000
+    expose:
+      - 5000
     command: 'bash -c "cd packages/textservice && export FLASK_APP=tservice.py && flask run --host=0.0.0.0 --port=5000"'
+
+  elucidate:
+    container_name: elucidate
+    image: registry.diginfra.net/bramb/huc-elucidate-server:1.6.0-SNAPSHOT
+    networks:
+      - annotator_network
+    env_file:
+      - elucidate.env
+    depends_on:
+      - database
+    restart: unless-stopped
+    expose:
+      - 8080
+    ports:
+      - 18080:8080
+    volumes:
+      - ./scripts/wait-for-it.sh:/scripts/wait-for-it.sh
+    command: ["/scripts/wait-for-it.sh", "database:5432", "--", "./bin/catalina.sh", "run"]
+
+  database:
+    container_name: elucidate_db
+    image: postgres:13-alpine
+    shm_size: 1g
+    networks:
+      - annotator_network
+    ports:
+      - 5432:5432
+    env_file:
+      - postgres.env
+    restart: unless-stopped
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+
+volumes:
+  database-data:
+    driver: local
 
 networks:
   annotator_network:

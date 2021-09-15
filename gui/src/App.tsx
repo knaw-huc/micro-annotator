@@ -9,6 +9,7 @@ import Texts from "./resources/Texts";
 import {AnnRange} from "./model/AnnRange";
 import {Annotation} from "./model/Annotation";
 import Config from "./Config";
+import ElucidateCollection from "./ElucidateCollection";
 
 export default function App() {
 
@@ -58,6 +59,7 @@ export default function App() {
     <div className="container">
       <Search onSearch={searchAnnotation}/>
       <div className='row'>
+        <ElucidateCollection />
         <ImageParts images={regionLinks}/>
         <AnnotatableText text={annotatableText} onReadSelection={readSelection}/>
         <Annotator
