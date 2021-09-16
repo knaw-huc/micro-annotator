@@ -6,6 +6,7 @@ export default class Config {
   public static ANNOTATION_HOST: string;
   public static TEXT_HOST: string;
   static ELUCIDATE_HOST: string;
+  static TEXTREPO_HOST: string;
 
   public static init() {
     for (const key of Object.keys(this)) {

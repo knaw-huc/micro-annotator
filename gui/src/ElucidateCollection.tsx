@@ -1,17 +1,34 @@
-import {useEffect, useState } from "react";
-import Elucidate from "./resources/Elucidate";
+import {FormEvent, useEffect, useState} from "react";
 
-export default function ElucidateCollection() {
-  const [collection, setCollection] = useState<string>()
+type ElucidateCollectionProps = {
+  collection: string | undefined,
+  setCollection: (c: string) => void
+}
+
+export default function ElucidateCollection(props: ElucidateCollectionProps) {
+
+  let collection = props.collection;
+  const [collectionField, setCollectionField] = useState<string>('');
 
   useEffect(() => {
-    const getUserAnnotations = async () => {
-      const collection = await Elucidate.createCollection();
-      console.log("Collection?", collection)
-      setCollection(collection)
-    }
-    getUserAnnotations()
-  }, []);
+    setCollectionField(collection ? collection : '');
+  }, [collection]);
 
-  return collection ? <p>Collection: {collection}</p> : <>Loading...</>;
+  return <form className='add-form' onSubmit={handleSubmit}>
+    <div className='form-control'>
+      <label>Elucidate Collection</label>
+      <input
+        type='text'
+        value={collectionField}
+        onChange={e => setCollectionField(e.target.value)}
+      />
+    </div>
+
+    <input type='submit' value='Search' className='btn btn-block'/>
+  </form>;
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    props.setCollection(collectionField);
+  }
 }

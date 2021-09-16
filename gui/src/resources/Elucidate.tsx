@@ -1,7 +1,14 @@
 import Config from "../Config";
+import {Annotation} from "../model/Annotation";
 
 export default class Elucidate {
   static readonly host = Config.ELUCIDATE_HOST;
+  static readonly tr = Config.TEXTREPO_HOST;
+
+  static readonly headers = {
+    "Accept": "application/ld+json; profile=\"http://www.w3.org/ns/anno.jsonld\"",
+    "Content-Type": "application/ld+json; profile=\"http://www.w3.org/ns/anno.jsonld\""
+  };
 
   static async createCollection(): Promise<string> {
     const body = {
@@ -11,14 +18,34 @@ export default class Elucidate {
     };
     const res = await fetch(`${this.host}/annotation/w3c/`, {
       method: "POST",
-      headers: {
-        "Accept": "application/ld+json; profile=\"http://www.w3.org/ns/anno.jsonld\"",
-        "Content-Type": "application/ld+json; profile=\"http://www.w3.org/ns/anno.jsonld\""
-      },
+      headers: this.headers,
       body: JSON.stringify(body)
     });
     const responseBody = await res.json();
-    let uuid = responseBody.id.split('/').filter((e: string) => !!e).pop();
+    let uuid = responseBody.id.match(/[0-9a-f-]{36}/)[0];
+    return uuid;
+  }
+
+  static async createAnnotation(collection: string, a: Annotation): Promise<string> {
+    const body = {
+      "@context": "http://www.w3.org/ns/anno.jsonld",
+      "type": "Annotation",
+      "body": {
+        "type": "TextualBody",
+        "value": a.label
+      },
+      // TODO: resolve $version_id
+      "target": `${this.tr}/view/versions/$version_id/segments/index/${a.begin_anchor}/${a.begin_char_offset}/${a.end_anchor}/${a.end_char_offset}`
+    };
+
+    const res = await fetch(`${this.host}/annotation/w3c/${collection}/`, {
+      method: "POST",
+      headers: this.headers,
+      body: JSON.stringify(body)
+    });
+
+    const responseBody = await res.json();
+    let uuid = responseBody.id.match(/[0-9a-f-]{36}/)[0];
     return uuid;
   }
 }

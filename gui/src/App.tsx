@@ -10,6 +10,7 @@ import {AnnRange} from "./model/AnnRange";
 import {Annotation} from "./model/Annotation";
 import Config from "./Config";
 import ElucidateCollection from "./ElucidateCollection";
+import Elucidate from "./resources/Elucidate";
 
 export default function App() {
 
@@ -18,13 +19,15 @@ export default function App() {
   const [selectionRange, setSelectionRange] = useState<AnnRange>()
   const [myAnnotations, setMyAnnotations] = useState([] as any [])
   const [beginOffsetInResource, setBeginOffsetInResource] = useState(0)
+  const [collection, setCollection] = useState<string>()
 
   useEffect(() => {
-    const getUserAnnotations = async () => {
-      const annotationsFromServer = await Annotations.getBy(Config.OWNER);
-      setMyAnnotations(annotationsFromServer)
+    const getResources = async () => {
+      setMyAnnotations(await Annotations.getBy(Config.OWNER));
+      let c = await Elucidate.createCollection();
+      setCollection(c);
     }
-    getUserAnnotations()
+    getResources()
   }, []);
 
   const searchAnnotation = async (annotation: any) => {
@@ -45,7 +48,11 @@ export default function App() {
     ann.owner = Config.OWNER;
     ann.begin_anchor += beginOffsetInResource;
     ann.end_anchor += beginOffsetInResource;
-    await Annotations.create(ann);
+    if(collection) {
+      await Elucidate.createAnnotation(collection, ann);
+    } else {
+      console.error("Could not create annotation: no collection available")
+    }
     setMyAnnotations([...myAnnotations, ann]);
   }
 
@@ -57,9 +64,9 @@ export default function App() {
 
   return (
     <div className="container">
+      <ElucidateCollection collection={collection} setCollection={setCollection}/>
       <Search onSearch={searchAnnotation}/>
       <div className='row'>
-        <ElucidateCollection />
         <ImageParts images={regionLinks}/>
         <AnnotatableText text={annotatableText} onReadSelection={readSelection}/>
         <Annotator

@@ -35,6 +35,7 @@ services:
       REACT_APP_ANNOTATION_HOST: http://localhost:8000/annotation
       REACT_APP_TEXT_HOST: http://localhost:8000/textservice
       REACT_APP_ELUCIDATE_HOST: http://localhost:8000/elucidate
+      REACT_APP_TEXTREPO_HOST: http://localhost:8000/textrepo
     command: npm start
     expose:
       - 3000
@@ -49,6 +50,7 @@ services:
       - annotator_network
     expose:
       - 5001
+    # flask+docker needs host 0.0.0.0:
     command: 'bash -c "cd packages/annotation && export FLASK_APP=aservice.py && flask run --host=0.0.0.0 --port=5001"'
 
   textservice:
@@ -61,6 +63,7 @@ services:
       - annotator_network
     expose:
       - 5000
+    # flask+docker needs host 0.0.0.0:
     command: 'bash -c "cd packages/textservice && export FLASK_APP=tservice.py && flask run --host=0.0.0.0 --port=5000"'
 
   elucidate:
