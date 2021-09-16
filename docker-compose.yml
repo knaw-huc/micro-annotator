@@ -23,7 +23,7 @@ services:
     volumes:
     - ./gui/public:/annotator/public
     - ./gui/src:/annotator/src
-    - ./gui/tsconfg.json:/annotator/tsconfg.json
+    - ./gui/tsconfig.json:/annotator/tsconfig.json
     networks:
       - annotator_network
     depends_on:
