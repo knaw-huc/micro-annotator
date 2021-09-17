@@ -2,6 +2,7 @@
 
 ## Preparation
 
+In parent dir:
 ```shell
 git clone https://github.com/knaw-huc/un-t-ann-gle.git
 git clone https://github.com/knaw-huc/react-micro-annotator.git
