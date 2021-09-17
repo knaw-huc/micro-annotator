@@ -8,8 +8,9 @@ services:
       - textrepo_network
       - elucidate_network
     volumes:
-      - ../un-t-ann-gle/packages:/usr/src/app/packages
-      - ../un-t-ann-gle/data:/usr/src/app/data
+#      - ../untangle2elucidate/requirements.txt:/usr/src/app/requirements.txt
+      - ../untangle2elucidate/:/usr/src/app/
+#      - ../untangle2elucidate/data:/usr/src/app/data
       - ./scripts/wait-for-it.sh:/scripts/wait-for-it.sh
       - ./init/init.sh:/usr/src/app/init.sh
     command: [

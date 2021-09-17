@@ -6,9 +6,15 @@
 git clone https://github.com/knaw-huc/un-t-ann-gle.git
 git clone https://github.com/knaw-huc/react-micro-annotator.git
 git clone https://github.com/knaw-huc/textrepo.git
+
+git clone -b tt-878-republic-annotaties-omzetten https://github.com/knaw-huc/un-t-ann-gle.git untangle2elucidate
+
 ````
 
-Change `datadir` path in `un-t-ann-gle/packages/annotation/aservice.py` and `un-t-ann-gle/packages/textservice/tservice.py` to existing path
+Change `datadir` path to existing path in: 
+- `un-t-ann-gle/packages/annotation/aservice.py`
+- `un-t-ann-gle/packages/textservice/tservice.py`
+- `untangle2elucidate/scripts/export_to_elucidate.py`
 
 Remove `.example` postfix of example env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
 
