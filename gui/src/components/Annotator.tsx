@@ -14,15 +14,15 @@ type AnnotatorProps = {
 export default function Annotator(props: AnnotatorProps) {
   return (
     <div style={{'minWidth': '150px'}}>
-      <div>
-        Annotator
-      </div>
+      <h4>Annotator</h4>
       {props.getSelectionRange()
         ? <AddAnnotation getSelectionRange={props.getSelectionRange} onAdd={props.onAddAnnotation}/>
         : <small>To create an annotation, select some text...</small>
       }
       {props.myAnnotations.length
         ? <>
+          <h4>Existing user annotations</h4>
+
           <AnnotationList myAnnotations={props.myAnnotations} onSelectAnnotation={props.onSelectAnnotation}/>
           <AnnotationContent ann={props.myAnnotations.find(a => a.selected)}/>
         </>
