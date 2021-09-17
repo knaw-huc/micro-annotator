@@ -21,10 +21,9 @@ export default function ElucidateCollection(props: ElucidateCollectionProps) {
         type='text'
         value={collectionField}
         onChange={e => setCollectionField(e.target.value)}
+        disabled={true}
       />
     </div>
-
-    <input type='submit' value='Search' className='btn btn-block'/>
   </form>;
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
