@@ -25,7 +25,7 @@ by an instance of knaw-huc/textrepo and annotations by an adapted version of the
     "type": "TextualBody",
     "value": "${entity_text}"
   },
-  "target": "${$tr/view/versions/$version_id/segments/index/$begin_anchor/$begin_char_offset/$end_anchor/$end_char_offset}"
+  "target": "$tr/view/versions/$version_id/segments/index/$begin_anchor/$begin_char_offset/$end_anchor/$end_char_offset"
 }
 ```
 

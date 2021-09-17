@@ -1,6 +1,23 @@
 version: '3.8'
 
 services:
+  dev_init:
+    container_name: dev_init
+    build: ./py
+    networks:
+      - textrepo_network
+      - elucidate_network
+    volumes:
+      - ../un-t-ann-gle/packages:/usr/src/app/packages
+      - ../un-t-ann-gle/data:/usr/src/app/data
+      - ./scripts/wait-for-it.sh:/scripts/wait-for-it.sh
+      - ./init/init.sh:/usr/src/app/init.sh
+    command: [
+        "/scripts/wait-for-it.sh", "textrepo-app:8080", "--timeout=0", "--",
+        "/scripts/wait-for-it.sh", "elucidate:8080", "--timeout=0", "--",
+        "./init.sh"
+    ]
+
   nginx:
     container_name: manginx
     image: nginx:1.19
@@ -22,9 +39,9 @@ services:
     image: micro-annotator-gui:latest
     build: ./gui
     volumes:
-    - ./gui/public:/annotator/public
-    - ./gui/src:/annotator/src
-    - ./gui/tsconfig.json:/annotator/tsconfig.json
+      - ./gui/public:/annotator/public
+      - ./gui/src:/annotator/src
+      - ./gui/tsconfig.json:/annotator/tsconfig.json
     networks:
       - annotator_network
     depends_on:
