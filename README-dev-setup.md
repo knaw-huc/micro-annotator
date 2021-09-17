@@ -10,6 +10,8 @@ git clone https://github.com/knaw-huc/textrepo.git
 
 Change `datadir` path in `un-t-ann-gle/packages/annotation/aservice.py` and `un-t-ann-gle/packages/textservice/tservice.py` to existing path
 
+Remove `example` prefix of example env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
+
 ## Run
 Start containers of elucidate, textrepo and and micro-annotator:
 ```
