@@ -5,9 +5,7 @@
 ```shell
 git clone https://github.com/knaw-huc/un-t-ann-gle.git
 git clone https://github.com/knaw-huc/react-micro-annotator.git
-
 git clone -b tt-878-republic-annotaties-omzetten https://github.com/knaw-huc/un-t-ann-gle.git untangle2elucidate
-
 ````
 
 Change `datadir` path to existing path in: 
@@ -28,5 +26,3 @@ docker-compose up -d
 ```
 
 Open http://localhost:8000
-
-
