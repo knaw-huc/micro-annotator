@@ -24,8 +24,7 @@ export default function App() {
   useEffect(() => {
     const getResources = async () => {
       setMyAnnotations(await Annotations.getBy(Config.OWNER));
-      let c = await Elucidate.createCollection();
-      setCollection(c);
+      setCollection(await Elucidate.createCollection());
     }
     getResources()
   }, []);
@@ -33,11 +32,12 @@ export default function App() {
   const searchAnnotation = async (annotation: any) => {
     const data = await Annotations.get(annotation.id);
     const ann = data['annotations'];
-    await setRegionLinks(ann['region_links'])
+    setRegionLinks(ann['region_links'])
+
     const text = await Texts.get(ann.resource_id, ann.begin_anchor, ann.end_anchor);
     const grid = text['textgrid'];
-    await setBeginOffsetInResource(grid['text_grid_spec']['begin_offset_in_resource'])
-    await setAnnotatableText(grid['_ordered_segments'])
+    setBeginOffsetInResource(grid['text_grid_spec']['begin_offset_in_resource'])
+    setAnnotatableText(grid['_ordered_segments'])
   }
 
   const readSelection = (range: AnnRange) => {
