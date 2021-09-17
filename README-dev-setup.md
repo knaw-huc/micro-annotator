@@ -12,7 +12,7 @@ Change `datadir` path to existing path in:
 - `un-t-ann-gle/packages/annotation/aservice.py`
 - `un-t-ann-gle/packages/textservice/tservice.py`
   
-Change `elucidate_base_url` in:
+Change `elucidate_base_url` to `http://elucidate:8080/annotation` in:
 - `untangle2elucidate/scripts/export_to_elucidate.py`
 
 Remove `.example` postfix of example env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
