@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+
+  elucidate:
+    container_name: elucidate
+    image: registry.diginfra.net/bramb/huc-elucidate-server:1.6.0-SNAPSHOT
+    networks:
+      - elucidate_network
+    env_file:
+      - elucidate.env
+    depends_on:
+      - database
+    restart: unless-stopped
+    expose:
+      - 8080
+    ports:
+      - 18080:8080
+    volumes:
+      - ../../scripts/wait-for-it.sh:/scripts/wait-for-it.sh
+    command: ["/scripts/wait-for-it.sh", "database:5432", "--", "./bin/catalina.sh", "run"]
+
+  database:
+    container_name: elucidate_db
+    image: postgres:13-alpine
+    shm_size: 1g
+    networks:
+      - elucidate_network
+    ports:
+      - 5432:5432
+    env_file:
+      - postgres.env
+    restart: unless-stopped
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+
+volumes:
+  database-data:
+    driver: local
+
+networks:
+  elucidate_network:
+    external: false
+    name: elucidate_network
