@@ -28,6 +28,10 @@ export default function AddAnnotation(props: AddAnnotationProps) {
       alert('Please add body text')
       return;
     }
+    if (!entityType) {
+      alert('Please set entity type')
+      return;
+    }
 
     const range = getSelectionRange();
 
@@ -51,6 +55,7 @@ export default function AddAnnotation(props: AddAnnotationProps) {
     props.onAdd(newAnnotation);
 
     setBodyValue('')
+    setEntityType(undefined)
   }
 
   const toString = (range: AnnRange | undefined) => {

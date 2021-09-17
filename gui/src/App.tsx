@@ -48,9 +48,10 @@ export default function App() {
     ann.owner = Config.OWNER;
     ann.begin_anchor += beginOffsetInResource;
     ann.end_anchor += beginOffsetInResource;
-    if(collection) {
+    if (collection) {
       console.log("Create ann", ann)
       await Elucidate.createAnnotation(collection, ann);
+      setSelectionRange(undefined)
     } else {
       console.error("Could not create annotation: no collection available")
     }
@@ -69,13 +70,18 @@ export default function App() {
       <Search onSearch={searchAnnotation}/>
       <div className='row'>
         <ImageParts images={regionLinks}/>
-        <AnnotatableText text={annotatableText} onReadSelection={readSelection}/>
-        <Annotator
-          getSelectionRange={() => selectionRange}
-          onAddAnnotation={onAddAnnotation}
-          onSelectAnnotation={setSelectedAnnotation}
-          myAnnotations={myAnnotations}
-        />
+        {annotatableText.length
+          ?
+          <>
+            <AnnotatableText text={annotatableText} onReadSelection={readSelection}/>
+            <Annotator
+              getSelectionRange={() => selectionRange}
+              onAddAnnotation={onAddAnnotation}
+              onSelectAnnotation={setSelectedAnnotation}
+              myAnnotations={myAnnotations}
+            />
+          </>
+          : <>Click search to find an annotation by its ID</>}
       </div>
     </div>
   );
