@@ -17,7 +17,7 @@ export default function Annotator(props: AnnotatorProps) {
       <div>
         Annotator
       </div>
-      <AddAnnotation selectionRange={props.getSelectionRange} onAdd={props.onAddAnnotation}/>
+      <AddAnnotation getSelectionRange={props.getSelectionRange} onAdd={props.onAddAnnotation}/>
       <AnnotationList myAnnotations={props.myAnnotations} onSelectAnnotation={props.onSelectAnnotation}/>
       <AnnotationContent annotations={props.myAnnotations}/>
     </div>

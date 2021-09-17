@@ -49,6 +49,7 @@ export default function App() {
     ann.begin_anchor += beginOffsetInResource;
     ann.end_anchor += beginOffsetInResource;
     if(collection) {
+      console.log("Create ann", ann)
       await Elucidate.createAnnotation(collection, ann);
     } else {
       console.error("Could not create annotation: no collection available")

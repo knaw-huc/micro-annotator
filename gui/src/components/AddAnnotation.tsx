@@ -1,45 +1,50 @@
-import {useState, useEffect, FormEvent} from 'react'
+import {FormEvent, useEffect, useState} from 'react'
 import {Annotation} from "../model/Annotation";
 import {AnnRange} from "../model/AnnRange";
+import SelectEntityType from "./SelectEntityType";
+import {EntityType, fromValue} from "../model/EntityType";
 
 type AddAnnotationProps = {
-  selectionRange: () => AnnRange | undefined;
+  getSelectionRange: () => AnnRange | undefined;
   onAdd: (ann: Annotation) => void
 };
 
 export default function AddAnnotation(props: AddAnnotationProps) {
   const [bodyValue, setBodyValue] = useState('')
+  const [entityType, setEntityType] = useState<EntityType>()
 
   const [selRangeStr, setSelRangeStr] = useState('geen selectie gezet')
 
-  let getSelRange = props.selectionRange;
+  let getSelectionRange = props.getSelectionRange;
 
   useEffect(() => {
-    setSelRangeStr(toString(getSelRange()));
-  }, [setSelRangeStr, getSelRange])
+    setSelRangeStr(toString(getSelectionRange()));
+  }, [setSelRangeStr, getSelectionRange])
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!bodyValue) {
       alert('Please add body text')
+      return;
     }
 
-    const selRange = getSelRange();
+    const range = getSelectionRange();
 
-    if (selRange === undefined) {
-      return 'Selection range undefined';
+    if (range === undefined) {
+      alert('Selection range undefined');
+      return;
     }
 
     const newAnnotation = {
       resource_id: 'volume-1728',
       label: 'entity',
-      begin_anchor: selRange.beginAnchor,
-      end_anchor: selRange.endAnchor,
-      begin_char_offset: selRange.beginOffset,
-      end_char_offset: selRange.endOffset,
+      begin_anchor: range.beginAnchor,
+      end_anchor: range.endAnchor,
+      begin_char_offset: range.beginOffset,
+      end_char_offset: range.endOffset,
       id: 'annot_some_uuid',
-      entity_type: 'location',
+      entity_type: entityType,
       entity_text: bodyValue
     } as Annotation;
 
@@ -71,13 +76,15 @@ export default function AddAnnotation(props: AddAnnotationProps) {
         />
       </div>
       <div className='form-control'>
+        <SelectEntityType selected={entityType} selectOption={(e) => setEntityType(fromValue(e.target.value))} />
+      </div>
+
+      <div className='form-control'>
         <label>Body Text</label>
         <input
           type='text'
           placeholder='Add Body Text'
-          onChange={
-            (e) => setBodyValue(e.target.value)
-          }
+          onChange={(e) => setBodyValue(e.target.value)}
         />
       </div>
 
