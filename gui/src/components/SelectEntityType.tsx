@@ -25,8 +25,8 @@ export const EntityTypes = [
     placeholder: 'Location'
   },
   {
-    name: EntityType.ORGANISATION,
-    placeholder: 'Organsation'
+    name: EntityType.ORGANIZATION,
+    placeholder: 'Organization'
   },
   {
     name: EntityType.PERSON,

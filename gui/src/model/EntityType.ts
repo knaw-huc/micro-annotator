@@ -1,6 +1,6 @@
 export enum EntityType {
   LOCATION = 'location',
-  ORGANISATION = 'organisation',
+  ORGANIZATION = 'organization',
   PERSON = 'person'
 }
 

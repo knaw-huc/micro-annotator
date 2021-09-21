@@ -11,10 +11,12 @@ import {Annotation} from "./model/Annotation";
 import Config from "./Config";
 import ElucidateCollection from "./ElucidateCollection";
 import Elucidate from "./resources/Elucidate";
+import {SelectorTarget} from "./model/ElucidateAnnotation";
 
 export default function App() {
 
-  const [regionLinks, setRegionLinks] = useState([])
+  const [error, setError] = useState<string>()
+  const [regionLinks, setRegionLinks] = useState([] as string[])
   const [annotatableText, setAnnotatableText] = useState([])
   const [selectionRange, setSelectionRange] = useState<AnnRange>()
   const [myAnnotations, setMyAnnotations] = useState([] as any [])
@@ -24,17 +26,31 @@ export default function App() {
   useEffect(() => {
     const getResources = async () => {
       setMyAnnotations(await Annotations.getBy(Config.OWNER));
-      setCollection(await Elucidate.createCollection());
+
+      // setCollection(await Elucidate.createCollection());
     }
     getResources()
   }, []);
 
   const searchAnnotation = async (annotation: any) => {
-    const data = await Annotations.get(annotation.id);
-    const ann = data['annotations'];
-    setRegionLinks(ann['region_links'])
+    let elAnn = await Elucidate.getByBodyId(annotation.id);
+    if(!elAnn) {
+      setError('No elucidate annotation found');
+      return;
+    }
 
-    const text = await Texts.get(ann.resource_id, ann.begin_anchor, ann.end_anchor);
+    setRegionLinks(elAnn.target
+      .filter(t => !t.selector && t.type === 'Image')
+      .map(t => t.source));
+
+    // TODO: where to find proper resourceId?
+    let resourceTarget = elAnn.target.find(t => t.type === undefined) as SelectorTarget;
+    let resourceId = resourceTarget?.source?.match(/.*(find\/)(.*)(\/contents)/)?.[2];
+    if(!resourceId) {
+      setError('No resource ID found in ' + JSON.stringify(resourceTarget));
+      return;
+    }
+    const text = await Texts.get(resourceId, resourceTarget.selector.start, resourceTarget.selector.end);
     const grid = text['textgrid'];
     setBeginOffsetInResource(grid['text_grid_spec']['begin_offset_in_resource'])
     setAnnotatableText(grid['_ordered_segments'])
@@ -66,6 +82,7 @@ export default function App() {
 
   return (
     <div className="container">
+      {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
       <ElucidateCollection collection={collection} setCollection={setCollection}/>
       <Search onSearch={searchAnnotation}/>
       <div className='row'>

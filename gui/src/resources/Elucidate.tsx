@@ -1,5 +1,6 @@
 import Config from "../Config";
 import {Annotation} from "../model/Annotation";
+import {ElucidateAnnotation} from "../model/ElucidateAnnotation";
 
 export default class Elucidate {
   static readonly host = Config.ELUCIDATE_HOST;
@@ -10,7 +11,7 @@ export default class Elucidate {
     "Content-Type": "application/ld+json; profile=\"http://www.w3.org/ns/anno.jsonld\""
   };
 
-  static async createCollection(): Promise<string> {
+  public static async createCollection(): Promise<string> {
     const body = {
       "@context": ["http://www.w3.org/ns/anno.jsonld", "http://www.w3.org/ns/ldp.jsonld"],
       "type": ["BasicContainer", "AnnotationCollection"],
@@ -26,7 +27,7 @@ export default class Elucidate {
     return uuid;
   }
 
-  static async createAnnotation(collection: string, a: Annotation): Promise<string> {
+  public static async createAnnotation(collection: string, a: Annotation): Promise<string> {
     const body = {
       "@context": "http://www.w3.org/ns/anno.jsonld",
       "type": "Annotation",
@@ -47,5 +48,17 @@ export default class Elucidate {
     const responseBody = await res.json();
     let uuid = responseBody.id.match(/[0-9a-f-]{36}/)[0];
     return uuid;
+  }
+
+  public static async getByBodyId(id: string): Promise<ElucidateAnnotation | undefined> {
+    let queryParam = encodeURIComponent(id);
+    console.log('queryParam', queryParam);
+    const res = await fetch(
+      `${this.host}/annotation/w3c/services/search/body?fields=id&value=${queryParam}`,
+      {headers: this.headers}
+    );
+    const annotationPage = await res.json();
+    const items = annotationPage?.first?.items;
+    return items ? items[0] as ElucidateAnnotation : undefined;
   }
 }
