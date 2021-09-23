@@ -12,4 +12,4 @@ echo "new version id: $VERSION_ID"
 pip install -r requirements.txt
 pip install .
 python ./scripts/convert_to_web_annotations.py data/1728-06-19-annotationstore.json
-python ./scripts/export_to_elucidate.py
+python ./scripts/export_to_elucidate.py -e http://elucidate:8080/annotation -c $VERSION_ID
