@@ -5,36 +5,32 @@ import ImageParts from './components/ImageParts'
 import AnnotatableText from './components/AnnotatableText'
 import Annotator from './components/Annotator'
 import Annotations from "./resources/Annotations";
-import Texts from "./resources/Texts";
 import {AnnRange} from "./model/AnnRange";
 import {Annotation} from "./model/Annotation";
 import Config from "./Config";
-import ElucidateCollection from "./ElucidateCollection";
 import Elucidate from "./resources/Elucidate";
 import {SelectorTarget} from "./model/ElucidateAnnotation";
+import TextRepo from "./resources/TextRepo";
 
 export default function App() {
 
   const [error, setError] = useState<string>()
   const [regionLinks, setRegionLinks] = useState([] as string[])
-  const [annotatableText, setAnnotatableText] = useState([])
+  const [annotatableText, setAnnotatableText] = useState([] as string[])
   const [selectionRange, setSelectionRange] = useState<AnnRange>()
   const [myAnnotations, setMyAnnotations] = useState([] as any [])
   const [beginOffsetInResource, setBeginOffsetInResource] = useState(0)
-  const [collection, setCollection] = useState<string>()
 
   useEffect(() => {
     const getResources = async () => {
       setMyAnnotations(await Annotations.getBy(Config.OWNER));
-
-      // setCollection(await Elucidate.createCollection());
     }
     getResources()
   }, []);
 
   const searchAnnotation = async (annotation: any) => {
     let elAnn = await Elucidate.getByBodyId(annotation.id);
-    if(!elAnn) {
+    if (!elAnn) {
       setError('No elucidate annotation found');
       return;
     }
@@ -46,14 +42,23 @@ export default function App() {
     // TODO: where to find proper resourceId?
     let resourceTarget = elAnn.target.find(t => t.type === undefined) as SelectorTarget;
     let resourceId = resourceTarget?.source?.match(/.*(find\/)(.*)(\/contents)/)?.[2];
-    if(!resourceId) {
+    if (!resourceId) {
       setError('No resource ID found in ' + JSON.stringify(resourceTarget));
       return;
     }
-    const text = await Texts.get(resourceId, resourceTarget.selector.start, resourceTarget.selector.end);
-    const grid = text['textgrid'];
-    setBeginOffsetInResource(grid['text_grid_spec']['begin_offset_in_resource'])
-    setAnnotatableText(grid['_ordered_segments'])
+
+    // Get text by version uuid (first uuid in ann id):
+    const versionId = elAnn.id.match(/.*\/w3c\/([0-9a-f-]{36})\/([0-9a-f-]{36})/)?.[1] as string;
+    if (!versionId) {
+      setError('No version ID found in ' + elAnn.id);
+      return;
+    }
+    const grid: string[] = await TextRepo.getByVersionIdAndRange(
+      versionId, resourceTarget.selector.start, resourceTarget.selector.end
+    );
+
+    setBeginOffsetInResource(resourceTarget.selector.start)
+    setAnnotatableText(grid)
   }
 
   const readSelection = (range: AnnRange) => {
@@ -64,13 +69,6 @@ export default function App() {
     ann.owner = Config.OWNER;
     ann.begin_anchor += beginOffsetInResource;
     ann.end_anchor += beginOffsetInResource;
-    if (collection) {
-      console.log("Create ann", ann)
-      await Elucidate.createAnnotation(collection, ann);
-      setSelectionRange(undefined)
-    } else {
-      console.error("Could not create annotation: no collection available")
-    }
     setMyAnnotations([...myAnnotations, ann]);
   }
 
@@ -83,7 +81,6 @@ export default function App() {
   return (
     <div className="container">
       {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
-      <ElucidateCollection collection={collection} setCollection={setCollection}/>
       <Search onSearch={searchAnnotation}/>
       <div className='row'>
         <ImageParts images={regionLinks}/>

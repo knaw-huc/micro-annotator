@@ -63,7 +63,7 @@ services:
 
   textrepo-app:
     container_name: tr_textrepo
-    image: knawhuc/textrepo-app:${DOCKER_TAG}
+    image: textrepo-elasticsearch:txt_anchor
     expose:
       - 8080
       - 8081

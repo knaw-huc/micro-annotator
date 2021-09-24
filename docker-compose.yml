@@ -7,9 +7,13 @@ services:
     networks:
       - textrepo_network
       - elucidate_network
+    environment:
+      TEXTREPO_HOST: http://textrepo-app:8080
+      TEXT_STORE_PATH: http://textrepo-app:8080
     volumes:
       - ../untangle2elucidate/:/usr/src/app/
       - ./scripts/wait-for-it.sh:/scripts/wait-for-it.sh
+      - ./init/textrepo:/usr/src/app/textrepo
       - ./init/init.sh:/usr/src/app/init.sh
     command: [
         "/scripts/wait-for-it.sh", "textrepo-app:8080", "--timeout=0", "--",

@@ -52,7 +52,6 @@ export default class Elucidate {
 
   public static async getByBodyId(id: string): Promise<ElucidateAnnotation | undefined> {
     let queryParam = encodeURIComponent(id);
-    console.log('queryParam', queryParam);
     const res = await fetch(
       `${this.host}/annotation/w3c/services/search/body?fields=id&value=${queryParam}`,
       {headers: this.headers}
