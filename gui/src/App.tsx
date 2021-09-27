@@ -17,8 +17,9 @@ export default function App() {
   const [regionLinks, setRegionLinks] = useState([] as string[])
   const [annotatableText, setAnnotatableText] = useState([] as string[])
   const [selectionRange, setSelectionRange] = useState<AnnRange>()
-  const [myAnnotations, setMyAnnotations] = useState([] as any [])
+  const [myAnnotations, setMyAnnotations] = useState<Annotation[]>([])
   const [beginOffsetInResource, setBeginOffsetInResource] = useState(0)
+  const [versionId, setVersionId] = useState<string>()
 
   useEffect(() => {
     const getResources = async () => {
@@ -47,15 +48,17 @@ export default function App() {
     }
 
     // Get text by version uuid (first uuid in ann id):
-    const versionId = elAnn.id.match(/.*\/w3c\/([0-9a-f-]{36})\/([0-9a-f-]{36})/)?.[1] as string;
-    if (!versionId) {
+    const foundVersionId = elAnn.id.match(/.*\/w3c\/([0-9a-f-]{36})\/([0-9a-f-]{36})/)?.[1] as string;
+    if (!foundVersionId) {
       setError('No version ID found in ' + elAnn.id);
       return;
     }
+
     const grid: string[] = await TextRepo.getByVersionIdAndRange(
-      versionId, resourceTarget.selector.start, resourceTarget.selector.end
+      foundVersionId, resourceTarget.selector.start, resourceTarget.selector.end
     );
 
+    setVersionId(foundVersionId);
     setBeginOffsetInResource(resourceTarget.selector.start)
     setAnnotatableText(grid)
   }
@@ -68,12 +71,17 @@ export default function App() {
     ann.owner = Config.OWNER;
     ann.begin_anchor += beginOffsetInResource;
     ann.end_anchor += beginOffsetInResource;
+    if (!versionId) {
+      setError('Cannot save annotation when version id is not set')
+      return;
+    }
+    await Elucidate.createAnnotation(versionId, ann)
     setMyAnnotations([...myAnnotations, ann]);
   }
 
-  const setSelectedAnnotation = (selected_ann: number) => {
-    setMyAnnotations(myAnnotations.map((annot: any, index: number) => {
-      return {...annot, selected: index === selected_ann};
+  const setSelectedAnnotation = async (selectedAnn: number) => {
+    setMyAnnotations(myAnnotations.map((annot: Annotation, index: number) => {
+      return {...annot, selected: index === selectedAnn};
     }));
   }
 

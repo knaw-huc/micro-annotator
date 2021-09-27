@@ -27,7 +27,7 @@ export default class Elucidate {
     return uuid;
   }
 
-  public static async createAnnotation(collection: string, a: Annotation): Promise<string> {
+  public static async createAnnotation(versionId: string, a: Annotation): Promise<string> {
     const body = {
       "@context": "http://www.w3.org/ns/anno.jsonld",
       "type": "Annotation",
@@ -35,11 +35,10 @@ export default class Elucidate {
         "type": "TextualBody",
         "value": a.label
       },
-      // TODO: resolve $version_id
-      "target": `${this.tr}/view/versions/$version_id/segments/index/${a.begin_anchor}/${a.begin_char_offset}/${a.end_anchor}/${a.end_char_offset}`
+      "target": `${this.tr}/view/versions/${versionId}/segments/index/${a.begin_anchor}/${a.begin_char_offset}/${a.end_anchor}/${a.end_char_offset}`
     };
 
-    const res = await fetch(`${this.host}/annotation/w3c/${collection}/`, {
+    const res = await fetch(`${this.host}/annotation/w3c/${versionId}/`, {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify(body)
