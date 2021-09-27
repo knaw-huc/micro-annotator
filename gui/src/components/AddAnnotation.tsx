@@ -28,7 +28,7 @@ export default function AddAnnotation(props: AddAnnotationProps) {
     e.preventDefault()
 
     if (!bodyValue) {
-      alert('Please add body text')
+      alert('Please add comment')
       return;
     }
     if (!entityType) {
@@ -74,11 +74,11 @@ export default function AddAnnotation(props: AddAnnotationProps) {
       </div>
 
       <div className='form-control'>
-        <label>Body Text</label>
+        <label>Comment</label>
         <input
           type='text'
           value={bodyValue}
-          placeholder='Add Body Text'
+          placeholder='Add Comment'
           onChange={(e) => setBodyValue(e.target.value)}
         />
       </div>

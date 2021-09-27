@@ -35,7 +35,6 @@ export function toAnnotation(ea: ElucidateAnnotation): Annotation {
   result.begin_char_offset = c[1];
   result.end_anchor = c[2];
   result.end_char_offset = c[3];
-  console.log('Annotation: ', result)
   return result;
 }
 
