@@ -1,5 +1,5 @@
 import Config from "../Config";
-import {Annotation, toAnnotation} from "../model/Annotation";
+import {Annotation, ENTITY, NS_PREFIX, toAnnotation} from "../model/Annotation";
 import {ElucidateAnnotation} from "../model/ElucidateAnnotation";
 
 export default class Elucidate {
@@ -27,16 +27,26 @@ export default class Elucidate {
   }
 
   public static async createAnnotation(versionId: string, a: Annotation): Promise<Annotation> {
-    if(a.id) {
+    if (a.id) {
       throw Error('Should recreate existing annotation with ID: ' + a.id);
     }
     const body = {
-      "@context": "http://www.w3.org/ns/anno.jsonld",
-      "type": "Annotation",
-      "body": {
-        "type": "TextualBody",
-        "value": a.label
-      },
+      "@context": ["http://www.w3.org/ns/anno.jsonld", {
+        "Entity": NS_PREFIX + ENTITY
+      }],
+      "type": ["Annotation", "Entity"],
+      "body": [
+        {
+          "type": "TextualBody",
+          "purpose": "classifying",
+          "value": a.entity_type
+        },
+        {
+          "type": "TextualBody",
+          "purpose": "commenting",
+          "value": a.entity_text
+        }
+      ],
       "target": `${this.tr}/view/versions/${versionId}/segments/index/${a.begin_anchor}/${a.begin_char_offset}/${a.end_anchor}/${a.end_char_offset}`
     };
 
@@ -61,9 +71,10 @@ export default class Elucidate {
     return items ? items[0] as ElucidateAnnotation : undefined;
   }
 }
-function getCollectionId(id: string) : string {
+
+function getCollectionId(id: string): string {
   let found = id.match(/[0-9a-f-]{36}/)?.[0];
-  if(!found) {
+  if (!found) {
     throw new Error('Could not find collection id in ' + id);
   }
   return found;

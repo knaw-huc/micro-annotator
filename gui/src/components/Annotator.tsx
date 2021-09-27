@@ -12,7 +12,6 @@ type AnnotatorProps = {
 }
 
 export default function Annotator(props: AnnotatorProps) {
-  console.log('props.selectionRange', props.selectionRange);
   return (
     <div style={{'minWidth': '150px', 'maxWidth': '280px'}}>
       <h4>Annotator</h4>
