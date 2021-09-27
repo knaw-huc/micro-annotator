@@ -8,7 +8,7 @@ import {AnnRange} from "./model/AnnRange";
 import {Annotation} from "./model/Annotation";
 import Config from "./Config";
 import Elucidate from "./resources/Elucidate";
-import {SelectorTarget} from "./model/ElucidateAnnotation";
+import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
 
 export default function App() {
@@ -35,8 +35,12 @@ export default function App() {
       setError('No elucidate annotation found');
       return;
     }
-
-    setRegionLinks(elAnn.target
+    if (typeof elAnn.target === 'string') {
+      setError('Could not find img and txt targets in annotation: ' + JSON.stringify(annotation));
+      return;
+    }
+    const target: ElucidateTargetType[] = elAnn.target;
+    setRegionLinks(target
       .filter(t => !t.selector && t.type === 'Image')
       .map(t => t.source));
 
@@ -68,15 +72,18 @@ export default function App() {
   }
 
   const onAddAnnotation = async (ann: Annotation) => {
-    ann.owner = Config.OWNER;
-    ann.begin_anchor += beginOffsetInResource;
-    ann.end_anchor += beginOffsetInResource;
     if (!versionId) {
       setError('Cannot save annotation when version id is not set')
       return;
     }
-    await Elucidate.createAnnotation(versionId, ann)
-    setMyAnnotations([...myAnnotations, ann]);
+
+    ann.owner = Config.OWNER;
+    ann.begin_anchor += beginOffsetInResource;
+    ann.end_anchor += beginOffsetInResource;
+
+    const created = await Elucidate.createAnnotation(versionId, ann)
+    setSelectionRange(undefined);
+    setMyAnnotations([...myAnnotations, created]);
   }
 
   const setSelectedAnnotation = async (selectedAnn: number) => {
@@ -96,7 +103,7 @@ export default function App() {
           <>
             <AnnotatableText text={annotatableText} onReadSelection={readSelection}/>
             <Annotator
-              getSelectionRange={() => selectionRange}
+              selectionRange={selectionRange}
               onAddAnnotation={onAddAnnotation}
               onSelectAnnotation={setSelectedAnnotation}
               myAnnotations={myAnnotations}

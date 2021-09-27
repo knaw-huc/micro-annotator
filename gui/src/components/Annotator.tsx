@@ -5,19 +5,20 @@ import {Annotation} from "../model/Annotation";
 import {AnnRange} from "../model/AnnRange";
 
 type AnnotatorProps = {
-  getSelectionRange: () => AnnRange | undefined;
+  selectionRange: AnnRange | undefined;
   onAddAnnotation: (ann: Annotation) => void;
   onSelectAnnotation: (ann: number) => void,
   myAnnotations: Annotation[]
 }
 
 export default function Annotator(props: AnnotatorProps) {
+  console.log('props.selectionRange', props.selectionRange);
   return (
-    <div style={{'minWidth': '150px'}}>
+    <div style={{'minWidth': '150px', 'maxWidth': '280px'}}>
       <h4>Annotator</h4>
-      {props.getSelectionRange()
-        ? <AddAnnotation getSelectionRange={props.getSelectionRange} onAdd={props.onAddAnnotation}/>
-        : <small>To create an annotation, select some text...</small>
+      {props.selectionRange
+          ? <AddAnnotation selectedRange={props.selectionRange} onAdd={props.onAddAnnotation}/>
+          : <small>To create an annotation, select some text...</small>
       }
       {props.myAnnotations.length
         ? <>

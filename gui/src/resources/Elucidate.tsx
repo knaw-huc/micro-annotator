@@ -1,5 +1,5 @@
 import Config from "../Config";
-import {Annotation} from "../model/Annotation";
+import {Annotation, toAnnotation} from "../model/Annotation";
 import {ElucidateAnnotation} from "../model/ElucidateAnnotation";
 
 export default class Elucidate {
@@ -23,11 +23,13 @@ export default class Elucidate {
       body: JSON.stringify(body)
     });
     const responseBody = await res.json();
-    let uuid = responseBody.id.match(/[0-9a-f-]{36}/)[0];
-    return uuid;
+    return getCollectionId(responseBody);
   }
 
-  public static async createAnnotation(versionId: string, a: Annotation): Promise<string> {
+  public static async createAnnotation(versionId: string, a: Annotation): Promise<Annotation> {
+    if(a.id) {
+      throw Error('Should recreate existing annotation with ID: ' + a.id);
+    }
     const body = {
       "@context": "http://www.w3.org/ns/anno.jsonld",
       "type": "Annotation",
@@ -45,8 +47,7 @@ export default class Elucidate {
     });
 
     const responseBody = await res.json();
-    let uuid = responseBody.id.match(/[0-9a-f-]{36}/)[0];
-    return uuid;
+    return toAnnotation(responseBody as ElucidateAnnotation);
   }
 
   public static async getByBodyId(id: string): Promise<ElucidateAnnotation | undefined> {
@@ -60,3 +61,11 @@ export default class Elucidate {
     return items ? items[0] as ElucidateAnnotation : undefined;
   }
 }
+function getCollectionId(id: string) : string {
+  let found = id.match(/[0-9a-f-]{36}/)?.[0];
+  if(!found) {
+    throw new Error('Could not find collection id in ' + id);
+  }
+  return found;
+}
+

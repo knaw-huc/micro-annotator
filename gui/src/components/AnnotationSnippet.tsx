@@ -1,4 +1,6 @@
 import {Annotation} from "../model/Annotation";
+import {toRangeStr} from "../util/toRangeStr";
+import {toRange} from "../model/AnnRange";
 
 type AnnotationSnippetProps = {
   annot_id: number;
@@ -10,7 +12,7 @@ export default function AnnotationSnippet(props: AnnotationSnippetProps) {
   return (
     <div className={`annotation-snippet ${props.annotation.selected ? 'selection' : ''}`}
          onClick={() => props.onSelectAnnotation(props.annot_id)}>
-      {props.annotation.entity_type}: {props.annotation.entity_text}
+      {toRangeStr(toRange(props.annotation))}
     </div>
   )
 }

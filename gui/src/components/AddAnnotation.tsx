@@ -3,23 +3,26 @@ import {Annotation} from "../model/Annotation";
 import {AnnRange} from "../model/AnnRange";
 import SelectEntityType from "./SelectEntityType";
 import {EntityType, fromValue} from "../model/EntityType";
+import {toRangeStr} from "../util/toRangeStr";
 
 type AddAnnotationProps = {
-  getSelectionRange: () => AnnRange | undefined;
+  selectedRange: AnnRange | undefined;
   onAdd: (ann: Annotation) => void
 };
 
 export default function AddAnnotation(props: AddAnnotationProps) {
   const [bodyValue, setBodyValue] = useState('')
   const [entityType, setEntityType] = useState<EntityType>()
-
   const [selRangeStr, setSelRangeStr] = useState('geen selectie gezet')
 
-  let getSelectionRange = props.getSelectionRange;
+  let selectedRange = props.selectedRange;
 
   useEffect(() => {
-    setSelRangeStr(toString(getSelectionRange()));
-  }, [setSelRangeStr, getSelectionRange])
+    if(!selectedRange) {
+      return;
+    }
+    setSelRangeStr(toRangeStr(selectedRange));
+  }, [selectedRange, setSelRangeStr])
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -33,40 +36,26 @@ export default function AddAnnotation(props: AddAnnotationProps) {
       return;
     }
 
-    const range = getSelectionRange();
-
-    if (range === undefined) {
+    if (selectedRange === undefined) {
       alert('Selection range undefined');
       return;
     }
 
     const newAnnotation = {
-      resource_id: 'volume-1728',
       label: 'entity',
-      begin_anchor: range.beginAnchor,
-      end_anchor: range.endAnchor,
-      begin_char_offset: range.beginOffset,
-      end_char_offset: range.endOffset,
-      id: 'annot_some_uuid',
+      begin_anchor: selectedRange.beginAnchor,
+      end_anchor: selectedRange.endAnchor,
+      begin_char_offset: selectedRange.beginOffset,
+      end_char_offset: selectedRange.endOffset,
       entity_type: entityType,
       entity_text: bodyValue
     } as Annotation;
 
-    props.onAdd(newAnnotation);
-
-    setBodyValue('')
+    setSelRangeStr('')
     setEntityType(undefined)
-  }
+    setBodyValue('')
 
-  const toString = (range: AnnRange | undefined) => {
-    if (range === undefined) {
-      return ''
-    }
-    return '('
-      + range.beginAnchor + ','
-      + range.beginOffset + ')('
-      + range.endAnchor + ','
-      + range.endOffset + ')';
+    props.onAdd(newAnnotation);
   }
 
   return (
@@ -88,6 +77,7 @@ export default function AddAnnotation(props: AddAnnotationProps) {
         <label>Body Text</label>
         <input
           type='text'
+          value={bodyValue}
           placeholder='Add Body Text'
           onChange={(e) => setBodyValue(e.target.value)}
         />

@@ -1,7 +1,10 @@
-export type ElucidateBodyType = {
-  "id": string,
+export type AnnotatorBodyType = {
   "type": string,
   "value": string,
+};
+
+export type ElucidateBodyType = AnnotatorBodyType & {
+  "id": string,
   "purpose": string
 };
 
@@ -25,6 +28,10 @@ export type ImageTarget = {
   "source": string
 };
 
+export type ElucidateTargetType = SelectorTarget | ImageTarget;
+
+type TargetType = string | (ElucidateTargetType[]);
+
 export type ElucidateAnnotation = {
   "id": string,
   "type": string,
@@ -34,7 +41,7 @@ export type ElucidateAnnotation = {
     "type": string,
     "name": string
   },
-  "body": ElucidateBodyType[],
-  "target": (SelectorTarget | ImageTarget) []
+  "body": ElucidateBodyType | (ElucidateBodyType[]),
+  "target": TargetType
   "motivation": string
 };
