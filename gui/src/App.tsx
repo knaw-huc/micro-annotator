@@ -4,7 +4,6 @@ import Search from './components/Search'
 import ImageParts from './components/ImageParts'
 import AnnotatableText from './components/AnnotatableText'
 import Annotator from './components/Annotator'
-import Annotations from "./resources/Annotations";
 import {AnnRange} from "./model/AnnRange";
 import {Annotation} from "./model/Annotation";
 import Config from "./Config";
@@ -23,7 +22,8 @@ export default function App() {
 
   useEffect(() => {
     const getResources = async () => {
-      setMyAnnotations(await Annotations.getBy(Config.OWNER));
+      // TODO: get by owner?
+      setMyAnnotations([]);
     }
     getResources()
   }, []);
@@ -39,7 +39,6 @@ export default function App() {
       .filter(t => !t.selector && t.type === 'Image')
       .map(t => t.source));
 
-    // TODO: where to find proper resourceId?
     let resourceTarget = elAnn.target.find(t => t.type === undefined) as SelectorTarget;
     let resourceId = resourceTarget?.source?.match(/.*(find\/)(.*)(\/contents)/)?.[2];
     if (!resourceId) {

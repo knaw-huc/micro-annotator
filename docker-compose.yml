@@ -34,8 +34,6 @@ services:
       - 8000:8000
     depends_on:
       - annotator
-      - annotation
-      - textservice
 
   annotator:
     container_name: ma_annotator
@@ -47,45 +45,14 @@ services:
       - ./gui/tsconfig.json:/annotator/tsconfig.json
     networks:
       - annotator_network
-    depends_on:
-      - annotation
-      - textservice
     environment:
       REACT_APP_PLACEHOLDER_SEARCH_ID: ${REACT_APP_PLACEHOLDER_SEARCH_ID}
       REACT_APP_OWNER: HENNIE
-      REACT_APP_ANNOTATION_HOST: http://localhost:8000/annotation
-      REACT_APP_TEXT_HOST: http://localhost:8000/textservice
       REACT_APP_ELUCIDATE_HOST: http://localhost:8000/elucidate
       REACT_APP_TEXTREPO_HOST: http://localhost:8000/textrepo
     command: npm start
     expose:
       - 3000
-
-  annotation:
-    container_name: ma_annotation
-    build: ./py
-    volumes:
-      - ../un-t-ann-gle/packages:/usr/src/app/packages
-      - ../un-t-ann-gle/data:/usr/src/app/data
-    networks:
-      - annotator_network
-    expose:
-      - 5001
-    # flask+docker needs host 0.0.0.0:
-    command: 'bash -c "cd packages/annotation && export FLASK_APP=aservice.py && flask run --host=0.0.0.0 --port=5001"'
-
-  textservice:
-    container_name: ma_textservice
-    build: ./py
-    volumes:
-      - ../un-t-ann-gle/packages:/usr/src/app/packages
-      - ../un-t-ann-gle/data:/usr/src/app/data
-    networks:
-      - annotator_network
-    expose:
-      - 5000
-    # flask+docker needs host 0.0.0.0:
-    command: 'bash -c "cd packages/textservice && export FLASK_APP=tservice.py && flask run --host=0.0.0.0 --port=5000"'
 
 networks:
   annotator_network:

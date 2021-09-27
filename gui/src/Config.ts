@@ -3,8 +3,6 @@ const env = process.env;
 export default class Config {
   public static PLACEHOLDER_SEARCH_ID: string;
   public static OWNER: string;
-  public static ANNOTATION_HOST: string;
-  public static TEXT_HOST: string;
   static ELUCIDATE_HOST: string;
   static TEXTREPO_HOST: string;
 
