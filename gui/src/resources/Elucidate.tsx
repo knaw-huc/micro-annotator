@@ -71,7 +71,21 @@ export default class Elucidate {
     const items = annotationPage?.first?.items;
     return items ? items[0] as ElucidateAnnotation : undefined;
   }
+
+  public static async getAllFilteredBy(id: string, filter: (ea: ElucidateAnnotation) => boolean) {
+    let result: ElucidateAnnotation[] = [];
+    let page = 0;
+    let annotationPage;
+    do {
+      const response = await fetch(`${this.host}/annotation/w3c/${id}/?page=${page++}&desc=1`, {headers: this.headers});
+      annotationPage = await response.json();
+      const filtered = annotationPage.items.filter(filter);
+      result.push(...filtered);
+    } while (annotationPage.next);
+    return result;
+  }
 }
+
 
 function getCollectionId(id: string): string {
   let found = id.match(/[0-9a-f-]{36}/)?.[0];

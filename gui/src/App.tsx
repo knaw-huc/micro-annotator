@@ -5,7 +5,7 @@ import ImageParts from './components/ImageParts'
 import AnnotatableText from './components/AnnotatableText'
 import Annotator from './components/Annotator'
 import {AnnRange} from "./model/AnnRange";
-import {Annotation} from "./model/Annotation";
+import {Annotation, toAnnotation} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
@@ -24,11 +24,16 @@ export default function App() {
 
   useEffect(() => {
     const getResources = async () => {
-      // TODO: get by owner?
-      setMyAnnotations([]);
+      if (!(versionId && currentCreator)) {
+        return;
+      }
+      const foundByCreatorAndVersion = (await Elucidate
+        .getAllFilteredBy(versionId, ea => ea.creator === currentCreator))
+        .map(toAnnotation);
+      setMyAnnotations(foundByCreatorAndVersion);
     }
     getResources()
-  }, []);
+  }, [versionId, currentCreator]);
 
   const searchAnnotation = async (annotation: any) => {
     let elAnn = await Elucidate.getByBodyId(annotation.id);
