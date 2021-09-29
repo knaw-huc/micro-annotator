@@ -1,46 +1,36 @@
-React micro-annotator is a small, proof-of-concept React app to create web annotations on segments of collection
+# Micro-annotator
+Micro-annotator is a small, proof-of-concept webapp to create web annotations on segments of collection
 documents, including both image segments and text segments. Image segments are provided by a IIIF server, text segments
-by an instance of knaw-huc/textrepo and annotations by an adapted version of the elucidate web annotation server.
+by an instance of [TextRepo](https://github.com/knaw-huc/textrepo) and annotations by an adapted version of the [Elucidate](https://github.com/dlcs/elucidate-server) web annotation server.
 
-```json
-{
-  "resource_id": "volume-1728",
-  "label": "entity",
-  "begin_anchor": 56385,
-  "end_anchor": 56393,
-  "begin_char_offset": 4,
-  "end_char_offset": 20,
-  "id": "annot_some_uuid",
-  "entity_type": "location",
-  "entity_text": "test",
-  "owner": "HENNIE"
-}
+## WIP: Development setup
+
+### Preparation
+
+- Remove `.example` postfix of env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
+
+In parent dir:
+
+- Get untanngle-elucidate conversion and import scripts:
+```shell
+git clone -b tt-878-republic-annotaties-omzetten https://github.com/knaw-huc/un-t-ann-gle.git untangle2elucidate
 ```
 
-```json
-{
-  "@context": "http://www.w3.org/ns/anno.jsonld",
-  "type": "Annotation",
-  "body": {
-    "type": "TextualBody",
-    "value": "${entity_text}"
-  },
-  "target": "$tr/view/versions/$version_id/segments/index/$begin_anchor/$begin_char_offset/$end_anchor/$end_char_offset"
-}
+- Create textrepo `txt_anchor` tag using development docker-compose setup:
+```
+git clone -b txt_anchor https://github.com/knaw-huc/textrepo.git textrepo
+cd textrepo && cp examples/development/* .
+sed -i '' 's#knawhuc/textrepo-app:${DOCKER_TAG}#textrepo-elasticsearch:txt_anchor#' docker-compose-dev.yml
+source docker-compose.env && docker-compose -f docker-compose-dev.yml build textrepo-app
 ```
 
-How to use TextRepo with micro-annotator:
-- checkout `txt_anchor` branch
-- create type: `{"name": "anchor", "mimetype": "application/json+anchor"}`
-- create untanngle file: https://raw.githubusercontent.com/knaw-huc/un-t-ann-gle/master/data/1728/10mrt-v1/1728-textstore.json  -
-- use segment view urls: `curl "$tr/view/versions/$version_id/segments/index/$begin_anchor/$begin_char_offset/$end_anchor/$end_char_offset" | jq`
 
-## // TODO:
+### Run
+Start containers of elucidate, textrepo and annotator:
+```
+docker-compose -f dev/elucidate/docker-compose.yml up -d
+docker-compose -f dev/textrepo/docker-compose.yml up -d
+docker-compose up -d
+```
 
-- store annotations in elaborate
-- retrieve annotations from elaborate
-- retrieve texts and annotations from textrepo
-- make annotation visible
-- restyle coordinate form field
-- what to do with owner 'HENNIE'?
-
+Open http://localhost:8000
