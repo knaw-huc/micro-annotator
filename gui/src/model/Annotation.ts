@@ -13,7 +13,7 @@ export type Annotation = {
   begin_anchor: number;
   end_char_offset: number;
   end_anchor: number;
-  entity_text: string;
+  entity_comment: string;
   selected: Boolean;
   source: any
 }
@@ -29,7 +29,7 @@ export function toAnnotation(ea: ElucidateAnnotation): Annotation {
   if (result.label !== ENTITY) {
     return result;
   }
-  result.entity_text = getEntityText(ea);
+  result.entity_comment = getEntityComment(ea);
   result.entity_type = getEntityType(ea);
 
   let c = toCoordinates(ea.target as string);
@@ -56,7 +56,7 @@ function getType(type: string | string[]) {
     throw Error('Could not find type in ' + JSON.stringify(type));
   }
 }
-function getEntityText(ea: ElucidateAnnotation) {
+function getEntityComment(ea: ElucidateAnnotation) {
   const b = ea.body as EntityBodyType;
   let entityText = b.find(b => b.purpose === "commenting")?.value;
   if (!entityText) {

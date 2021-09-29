@@ -45,7 +45,7 @@ export default class Elucidate {
         {
           "type": "TextualBody",
           "purpose": "commenting",
-          "value": a.entity_text
+          "value": a.entity_comment
         }
       ],
       "target": `${this.tr}/view/versions/${versionId}/segments/index/${a.begin_anchor}/${a.begin_char_offset}/${a.end_anchor}/${a.end_char_offset}`

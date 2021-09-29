@@ -9,10 +9,13 @@ type AnnotationSnippetProps = {
 }
 
 export default function AnnotationSnippet(props: AnnotationSnippetProps) {
+  let ann = props.annotation;
   return (
-    <div className={`annotation-snippet ${props.annotation.selected ? 'selection' : ''}`}
-         onClick={() => props.onSelectAnnotation(props.annot_id)}>
-      {toRangeStr(toRange(props.annotation))}
+    <div
+      className={`annotation-snippet ${ann.selected ? 'selection' : ''}`}
+      onClick={() => props.onSelectAnnotation(props.annot_id)}
+    >
+      {toRangeStr(toRange(ann))}
     </div>
   )
 }

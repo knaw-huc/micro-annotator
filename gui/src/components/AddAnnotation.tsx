@@ -12,7 +12,7 @@ type AddAnnotationProps = {
 };
 
 export default function AddAnnotation(props: AddAnnotationProps) {
-  const [bodyValue, setBodyValue] = useState('')
+  const [comment, setComment] = useState('')
   const [creator, setCreator] = useState(props.currentCreator)
   const [entityType, setEntityType] = useState<EntityType>()
   const [selRangeStr, setSelRangeStr] = useState('geen selectie gezet')
@@ -33,7 +33,7 @@ export default function AddAnnotation(props: AddAnnotationProps) {
       alert('Please add creator')
       return;
     }
-    if (!bodyValue) {
+    if (!comment) {
       alert('Please add comment')
       return;
     }
@@ -54,12 +54,12 @@ export default function AddAnnotation(props: AddAnnotationProps) {
       begin_char_offset: selectedRange.beginOffset,
       end_char_offset: selectedRange.endOffset,
       entity_type: entityType,
-      entity_text: bodyValue
+      entity_comment: comment
     } as Annotation;
 
     setSelRangeStr('');
     setEntityType(undefined);
-    setBodyValue('');
+    setComment('');
     setCreator(creator);
 
     props.onAdd(newAnnotation);
@@ -84,9 +84,9 @@ export default function AddAnnotation(props: AddAnnotationProps) {
         <label>Comment</label>
         <input
           type='text'
-          value={bodyValue}
+          value={comment}
           placeholder='Add Comment'
-          onChange={(e) => setBodyValue(e.target.value)}
+          onChange={(e) => setComment(e.target.value)}
         />
       </div>
       <div className='form-control'>

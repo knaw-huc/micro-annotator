@@ -1,4 +1,7 @@
 import {Annotation} from "../model/Annotation";
+import {toRangeStr} from "../util/toRangeStr";
+import {toRange} from "../model/AnnRange";
+import {useState} from "react";
 
 type AnnotationContentProps = {
   ann: Annotation | undefined
@@ -6,20 +9,20 @@ type AnnotationContentProps = {
 
 export default function AnnotationContent(props: AnnotationContentProps) {
   const ann = props.ann;
+  const [showFull, setShowFull] = useState(false);
   return ann
     ? <div className="annotation-content">
       <ul>
-        <li>text: {ann.entity_text}</li>
-        <li>resource: {ann.resource_id}</li>
-        <li>id: {ann.id}</li>
-        <li>annotation type: {ann.label}</li>
-        <li>entity type: {ann.entity_type}</li>
-        <li>begin anchor: {ann.begin_anchor}</li>
-        <li>begin offset: {ann.begin_char_offset}</li>
-        <li>end anchor: {ann.end_anchor}</li>
-        <li>end offset: {ann.end_char_offset}</li>
-        <li>creator: {ann.creator}</li>
-        <li>full web annotation: <pre style={{overflow: "auto"}}>{JSON.stringify(ann.source, null, 2)}</pre></li>
+        <li>id: <br/><code>{ann.id}</code></li>
+        <li>type: <br/><code>{ann.label} {ann.entity_type ? '(' + ann.entity_type + ')' : ''}</code></li>
+        <li>comment: <br/><code>{ann.entity_comment}</code></li>
+        <li>coordinates: <br/><code>{toRangeStr(toRange(ann))}</code></li>
+        <li>creator: <br/><code>{ann.creator}</code></li>
+        <li>
+          <button onClick={() => setShowFull(!showFull)}>full annotation [{showFull ? '-' : '+'}]</button>
+          <br/>
+          {showFull ? <pre style={{overflow: "auto"}}>{JSON.stringify(ann.source, null, 2)}</pre> : null}
+        </li>
       </ul>
     </div>
     : null;
