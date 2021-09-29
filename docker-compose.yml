@@ -46,9 +46,9 @@ services:
     networks:
       - annotator_network
     environment:
-      REACT_APP_PLACEHOLDER_SEARCH_ID: ${REACT_APP_PLACEHOLDER_SEARCH_ID}
-      REACT_APP_OWNER: HENNIE
+      REACT_APP_CREATOR: ${REACT_APP_CREATOR}
       REACT_APP_ELUCIDATE_HOST: http://localhost:8000/elucidate
+      REACT_APP_PLACEHOLDER_SEARCH_ID: ${REACT_APP_PLACEHOLDER_SEARCH_ID}
       REACT_APP_TEXTREPO_HOST: http://localhost:8000/textrepo
     command: npm start
     expose:

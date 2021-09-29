@@ -18,6 +18,7 @@ export default function AnnotationContent(props: AnnotationContentProps) {
         <li>begin offset: {ann.begin_char_offset}</li>
         <li>end anchor: {ann.end_anchor}</li>
         <li>end offset: {ann.end_char_offset}</li>
+        <li>creator: {ann.creator}</li>
       </ul>
     </div>
     : null;

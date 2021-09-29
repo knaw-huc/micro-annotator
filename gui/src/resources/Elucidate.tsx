@@ -35,6 +35,7 @@ export default class Elucidate {
         "Entity": NS_PREFIX + ENTITY
       }],
       "type": ["Annotation", "Entity"],
+      "creator": a.creator,
       "body": [
         {
           "type": "TextualBody",

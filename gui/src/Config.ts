@@ -2,9 +2,9 @@ const env = process.env;
 
 export default class Config {
   public static PLACEHOLDER_SEARCH_ID: string;
-  public static OWNER: string;
   static ELUCIDATE_HOST: string;
   static TEXTREPO_HOST: string;
+  static CREATOR: string;
 
   public static init() {
     for (const key of Object.keys(this)) {

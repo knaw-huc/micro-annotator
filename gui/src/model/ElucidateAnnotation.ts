@@ -49,6 +49,7 @@ export type ElucidateAnnotation = {
   "id": string,
   "type": string,
   "created": string,
+  "creator": string,
   "generator": {
     "id": string,
     "type": string,

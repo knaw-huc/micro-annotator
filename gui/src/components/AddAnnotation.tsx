@@ -6,12 +6,14 @@ import {EntityType, fromValue} from "../model/EntityType";
 import {toRangeStr} from "../util/toRangeStr";
 
 type AddAnnotationProps = {
+  currentCreator: string;
   selectedRange: AnnRange | undefined;
   onAdd: (ann: Annotation) => void
 };
 
 export default function AddAnnotation(props: AddAnnotationProps) {
   const [bodyValue, setBodyValue] = useState('')
+  const [creator, setCreator] = useState(props.currentCreator)
   const [entityType, setEntityType] = useState<EntityType>()
   const [selRangeStr, setSelRangeStr] = useState('geen selectie gezet')
 
@@ -27,6 +29,10 @@ export default function AddAnnotation(props: AddAnnotationProps) {
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    if (!creator) {
+      alert('Please add creator')
+      return;
+    }
     if (!bodyValue) {
       alert('Please add comment')
       return;
@@ -35,7 +41,6 @@ export default function AddAnnotation(props: AddAnnotationProps) {
       alert('Please set entity type')
       return;
     }
-
     if (selectedRange === undefined) {
       alert('Selection range undefined');
       return;
@@ -43,6 +48,7 @@ export default function AddAnnotation(props: AddAnnotationProps) {
 
     const newAnnotation = {
       label: 'entity',
+      creator: creator,
       begin_anchor: selectedRange.beginAnchor,
       end_anchor: selectedRange.endAnchor,
       begin_char_offset: selectedRange.beginOffset,
@@ -51,9 +57,10 @@ export default function AddAnnotation(props: AddAnnotationProps) {
       entity_text: bodyValue
     } as Annotation;
 
-    setSelRangeStr('')
-    setEntityType(undefined)
-    setBodyValue('')
+    setSelRangeStr('');
+    setEntityType(undefined);
+    setBodyValue('');
+    setCreator(creator);
 
     props.onAdd(newAnnotation);
   }
@@ -80,6 +87,15 @@ export default function AddAnnotation(props: AddAnnotationProps) {
           value={bodyValue}
           placeholder='Add Comment'
           onChange={(e) => setBodyValue(e.target.value)}
+        />
+      </div>
+      <div className='form-control'>
+        <label>Creator</label>
+        <input
+          type='text'
+          value={creator}
+          placeholder='Add Creator'
+          onChange={(e) => setCreator(e.target.value)}
         />
       </div>
 

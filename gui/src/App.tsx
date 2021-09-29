@@ -6,10 +6,10 @@ import AnnotatableText from './components/AnnotatableText'
 import Annotator from './components/Annotator'
 import {AnnRange} from "./model/AnnRange";
 import {Annotation} from "./model/Annotation";
-import Config from "./Config";
 import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
+import Config from "./Config";
 
 export default function App() {
 
@@ -20,6 +20,7 @@ export default function App() {
   const [myAnnotations, setMyAnnotations] = useState<Annotation[]>([])
   const [beginOffsetInResource, setBeginOffsetInResource] = useState(0)
   const [versionId, setVersionId] = useState<string>()
+  const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR)
 
   useEffect(() => {
     const getResources = async () => {
@@ -43,6 +44,7 @@ export default function App() {
     setRegionLinks(target
       .filter(t => !t.selector && t.type === 'Image')
       .map(t => t.source));
+
 
     let resourceTarget = elAnn.target.find(t => t.type === undefined) as SelectorTarget;
     let resourceId = resourceTarget?.source?.match(/.*(find\/)(.*)(\/contents)/)?.[2];
@@ -77,13 +79,13 @@ export default function App() {
       return;
     }
 
-    ann.owner = Config.OWNER;
     ann.begin_anchor += beginOffsetInResource;
     ann.end_anchor += beginOffsetInResource;
 
     const created = await Elucidate.createAnnotation(versionId, ann)
     setSelectionRange(undefined);
     setMyAnnotations([...myAnnotations, created]);
+    setCurrentCreator(created.creator);
   }
 
   const setSelectedAnnotation = async (selectedAnn: number) => {
@@ -103,6 +105,7 @@ export default function App() {
           <>
             <AnnotatableText text={annotatableText} onReadSelection={readSelection}/>
             <Annotator
+              currentCreator={currentCreator}
               selectionRange={selectionRange}
               onAddAnnotation={onAddAnnotation}
               onSelectAnnotation={setSelectedAnnotation}

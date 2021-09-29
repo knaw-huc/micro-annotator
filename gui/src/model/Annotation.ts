@@ -6,7 +6,7 @@ export const ENTITY = "Entity";
 export type Annotation = {
   id: string;
   resource_id: string;
-  owner: string;
+  creator: string;
   label: string;
   entity_type: string;
   begin_char_offset: number;
@@ -19,6 +19,7 @@ export type Annotation = {
 
 export function toAnnotation(ea: ElucidateAnnotation): Annotation {
   const result = {} as Annotation;
+  result.creator = ea.creator;
   result.id = ea.id.match(/[0-9a-f-]{36}/)?.[0] as string;
   let type = ea.type;
 
