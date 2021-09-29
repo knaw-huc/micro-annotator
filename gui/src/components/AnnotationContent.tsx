@@ -19,6 +19,7 @@ export default function AnnotationContent(props: AnnotationContentProps) {
         <li>end anchor: {ann.end_anchor}</li>
         <li>end offset: {ann.end_char_offset}</li>
         <li>creator: {ann.creator}</li>
+        <li>full web annotation: <pre style={{overflow: "auto"}}>{JSON.stringify(ann.source, null, 2)}</pre></li>
       </ul>
     </div>
     : null;

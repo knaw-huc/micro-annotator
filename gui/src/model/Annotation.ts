@@ -15,6 +15,7 @@ export type Annotation = {
   end_anchor: number;
   entity_text: string;
   selected: Boolean;
+  source: any
 }
 
 export function toAnnotation(ea: ElucidateAnnotation): Annotation {
@@ -36,6 +37,7 @@ export function toAnnotation(ea: ElucidateAnnotation): Annotation {
   result.begin_char_offset = c[1];
   result.end_anchor = c[2];
   result.end_char_offset = c[3];
+  result.source = ea;
   return result;
 }
 
