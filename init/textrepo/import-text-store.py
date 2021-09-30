@@ -22,8 +22,8 @@ def main():
                                    files = {'contents': (external_id, json.dumps(res))}).prepare()
             with requests.Session() as sess:
                 resp = sess.send(req)
-                if(resp.status_code != 201):
-                    raise Exception('Expected 201 but got {code}'.format(code=resp.status_code))
+                if(resp.status_code != 200 and resp.status_code != 201):
+                    raise Exception('Expected 200 or 201 but got {code}'.format(code=resp.status_code))
                 version_id = resp.json().get('versionId')
                 print(version_id)
 

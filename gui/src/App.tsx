@@ -64,13 +64,6 @@ export default function App() {
       .filter(t => !t.selector && t.type === 'Image')
       .map(t => t.source));
 
-    let resourceTarget = foundAnn.target.find(t => t.type === undefined) as SelectorTarget;
-    let resourceId = resourceTarget?.source?.match(/.*(find\/)(.*)(\/contents)/)?.[2];
-    if (!resourceId) {
-      setError('No resource ID found in ' + JSON.stringify(resourceTarget));
-      return;
-    }
-
     // Get text by version uuid (first uuid in ann id):
     const foundVersionId = foundAnn.id.match(/.*\/w3c\/([0-9a-f-]{36})\/([0-9a-f-]{36})/)?.[1] as string;
     if (!foundVersionId) {
@@ -78,12 +71,13 @@ export default function App() {
       return;
     }
 
+    const selectorTarget = foundAnn.target.find(t => t.type === undefined) as SelectorTarget;
     const grid: string[] = await TextRepo.getByVersionIdAndRange(
-      foundVersionId, resourceTarget.selector.start, resourceTarget.selector.end
+      foundVersionId, selectorTarget.selector.start, selectorTarget.selector.end
     );
 
     setVersionId(foundVersionId);
-    setBeginOffsetInResource(resourceTarget.selector.start)
+    setBeginOffsetInResource(selectorTarget.selector.start)
     setAnnotatableText(grid)
   }
 

@@ -7,11 +7,9 @@ by an instance of [TextRepo](https://github.com/knaw-huc/textrepo) and annotatio
 
 ### Preparation
 
-- Remove `.example` postfix of env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
-
 In parent dir:
 
-- Get untanngle-elucidate conversion and import scripts:
+- Get untanngle-elucidate data and import scripts:
 ```shell
 git clone -b tt-878-republic-annotaties-omzetten https://github.com/knaw-huc/un-t-ann-gle.git untangle2elucidate
 ```
@@ -24,13 +22,17 @@ sed -i '' 's#knawhuc/textrepo-app:${DOCKER_TAG}#textrepo-elasticsearch:txt_ancho
 source docker-compose.env && docker-compose -f docker-compose-dev.yml build textrepo-app
 ```
 
+In micro-annotator:
+
+-  Remove `.example` postfix of env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
 
 ### Run
+
 Start containers of elucidate, textrepo and annotator:
 ```
 docker-compose -f dev/elucidate/docker-compose.yml up -d
 docker-compose -f dev/textrepo/docker-compose.yml up -d
-docker-compose up -d
+docker-compose up
 ```
 
 Open http://localhost:8000
