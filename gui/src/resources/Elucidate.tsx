@@ -28,7 +28,7 @@ export default class Elucidate {
 
   public static async createAnnotation(versionId: string, a: Annotation): Promise<Annotation> {
     if (a.id) {
-      throw Error('Should recreate existing annotation with ID: ' + a.id);
+      throw Error('Cannot recreate an annotation that already has an ID: ' + a.id);
     }
     const body = {
       "@context": ["http://www.w3.org/ns/anno.jsonld", {

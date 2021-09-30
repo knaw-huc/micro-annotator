@@ -78,6 +78,31 @@ h4 {
     border-width: 1px;
 }
 
+.text-container {
+    width: 250px;
+    position: relative;
+}
+
+.text-box {
+    padding: 5px;
+    line-height: 76%;
+
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.text-underlay {
+    z-index: -1;
+    color: transparent;
+}
+
+.selected-text {
+    color: yellow;
+    background-color: yellow;
+}
+
 .annotation-content {
     margin: 5px;
     padding: 10px;

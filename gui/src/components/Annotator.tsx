@@ -1,6 +1,5 @@
 import AddAnnotation from './AddAnnotation'
 import AnnotationList from './AnnotationList'
-import AnnotationContent from './AnnotationContent'
 import {Annotation} from "../model/Annotation";
 import {AnnRange} from "../model/AnnRange";
 
@@ -8,12 +7,14 @@ type AnnotatorProps = {
   currentCreator: string;
   selectionRange: AnnRange | undefined;
   onAddAnnotation: (ann: Annotation) => void;
-  myAnnotations: Annotation[]
+  myAnnotations: Annotation[];
+  select: (a: Annotation | undefined) => void;
+  selected: Annotation | undefined;
 }
 
 export default function Annotator(props: AnnotatorProps) {
   return (
-    <div style={{'minWidth': '150px', 'maxWidth': '280px'}}>
+    <div style={{'minWidth': '150px', 'width': '280px'}}>
       <h4>Annotator</h4>
       {props.selectionRange
         ? <AddAnnotation
@@ -26,7 +27,11 @@ export default function Annotator(props: AnnotatorProps) {
       {props.myAnnotations.length
         ? <>
           <h4>Existing user annotations</h4>
-          <AnnotationList myAnnotations={props.myAnnotations}/>
+          <AnnotationList
+            myAnnotations={props.myAnnotations}
+            select={props.select}
+            selected={props.selected}
+          />
         </>
         : null
       }

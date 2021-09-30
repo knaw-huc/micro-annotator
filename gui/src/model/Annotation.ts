@@ -21,7 +21,9 @@ export type Annotation = {
 export function toAnnotation(ea: ElucidateAnnotation): Annotation {
   const result = {} as Annotation;
   result.creator = ea.creator;
-  result.id = ea.id.match(/[0-9a-f-]{36}/)?.[0] as string;
+
+  // Elucidate id contains version ID followed by annotation ID:
+  result.id = ea.id.match(/[0-9a-f-]{36}/g)?.[1] as string;
   let type = ea.type;
 
   result.label = getType(type);
