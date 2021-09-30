@@ -79,6 +79,10 @@ export default class Elucidate {
     do {
       const response = await fetch(`${this.host}/annotation/w3c/${id}/?page=${page++}&desc=1`, {headers: this.headers});
       annotationPage = await response.json();
+
+      // Off-by-one error: next link added when last page excactly filled:
+      if(!annotationPage.items) continue;
+
       const filtered = annotationPage.items.filter(filter);
       result.push(...filtered);
     } while (annotationPage.next);

@@ -31,6 +31,7 @@ export default function AnnotatableText(props: AnnotatableTextProps) {
       let focusIdx = parseInt(focusId);
 
       let anchorBeforeFocus = anchorIdx < focusIdx || (anchorIdx === focusIdx && s.anchorOffset < s.focusOffset);
+      let singleLineSelection = anchorIdx === focusIdx;
 
       let result: AnnRange;
       if (anchorBeforeFocus) {
@@ -38,14 +39,14 @@ export default function AnnotatableText(props: AnnotatableTextProps) {
           beginAnchor: anchorIdx,
           beginOffset: s.anchorOffset,
           endAnchor: focusIdx,
-          endOffset: s.focusOffset
+          endOffset: (singleLineSelection ? s.focusOffset - s.anchorOffset : s.focusOffset) - 1
         } as AnnRange;
       } else {
         result = {
           beginAnchor: focusIdx,
           beginOffset: s.focusOffset,
           endAnchor: anchorIdx,
-          endOffset: s.anchorOffset
+          endOffset: (singleLineSelection ? s.anchorOffset - s.focusOffset : s.anchorOffset) - 1
         } as AnnRange;
       }
 
