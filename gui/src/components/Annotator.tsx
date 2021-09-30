@@ -8,7 +8,6 @@ type AnnotatorProps = {
   currentCreator: string;
   selectionRange: AnnRange | undefined;
   onAddAnnotation: (ann: Annotation) => void;
-  onSelectAnnotation: (ann: number) => void,
   myAnnotations: Annotation[]
 }
 
@@ -22,14 +21,12 @@ export default function Annotator(props: AnnotatorProps) {
           selectedRange={props.selectionRange}
           onAdd={props.onAddAnnotation}
         />
-        : <small>To create an annotation, select some text...</small>
+        : <small>Select text to create an annotation</small>
       }
       {props.myAnnotations.length
         ? <>
           <h4>Existing user annotations</h4>
-
-          <AnnotationList myAnnotations={props.myAnnotations} onSelectAnnotation={props.onSelectAnnotation}/>
-          <AnnotationContent ann={props.myAnnotations.find(a => a.selected)}/>
+          <AnnotationList myAnnotations={props.myAnnotations}/>
         </>
         : null
       }

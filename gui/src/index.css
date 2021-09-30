@@ -68,13 +68,11 @@ h4 {
 }
 
 .annotation-snippet {
-    background: #f4f4f4;
+    user-select: none;
     margin: 5px;
-    padding: 10px 20px;
+    padding: 10px;
     cursor: pointer;
-}
-
-.annotation-snippet.selection {
+    font-size: 0.8em;
     border-style: solid;
     border-color: black;
     border-width: 1px;
@@ -82,12 +80,13 @@ h4 {
 
 .annotation-content {
     margin: 5px;
-    padding: 20px;
-    padding-left: 40px;
+    padding: 10px;
     font-size: 11px;
-    border-style: solid;
-    border-color: black;
-    border-width: 1px;
+}
+
+.show-full {
+    margin-top: 5px;
+    padding: 0 5px;
 }
 
 .task h3 {

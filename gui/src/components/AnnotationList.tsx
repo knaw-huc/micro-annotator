@@ -3,7 +3,6 @@ import {Annotation} from "../model/Annotation";
 
 type AnnotationListProps = {
     myAnnotations: Annotation[];
-    onSelectAnnotation: (annotationIdx: number) => void
 }
 
 export default function AnnotationList(props: AnnotationListProps) {
@@ -14,7 +13,7 @@ export default function AnnotationList(props: AnnotationListProps) {
                     key={index}
                     annot_id={index}
                     annotation={annotation}
-                    onSelectAnnotation={props.onSelectAnnotation}/>
+                />
             ))}
         </div>
     )

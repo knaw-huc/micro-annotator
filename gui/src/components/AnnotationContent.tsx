@@ -19,7 +19,11 @@ export default function AnnotationContent(props: AnnotationContentProps) {
         <li>coordinates: <br/><code>{toRangeStr(toRange(ann))}</code></li>
         <li>creator: <br/><code>{ann.creator}</code></li>
         <li>
-          <button onClick={() => setShowFull(!showFull)}>full annotation [{showFull ? '-' : '+'}]</button>
+          <button className="show-full" onClick={(e) => {
+            e.stopPropagation();
+            setShowFull(!showFull)
+          }}>full annotation {String.fromCharCode(showFull ? 9663 : 9657)}
+          </button>
           <br/>
           {showFull ? <pre style={{overflow: "auto"}}>{JSON.stringify(ann.source, null, 2)}</pre> : null}
         </li>

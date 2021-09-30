@@ -93,12 +93,6 @@ export default function App() {
     setCurrentCreator(created.creator);
   }
 
-  const setSelectedAnnotation = async (selectedAnn: number) => {
-    setMyAnnotations(myAnnotations.map((annot: Annotation, index: number) => {
-      return {...annot, selected: index === selectedAnn};
-    }));
-  }
-
   return (
     <div className="container">
       {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
@@ -113,7 +107,6 @@ export default function App() {
               currentCreator={currentCreator}
               selectionRange={selectionRange}
               onAddAnnotation={onAddAnnotation}
-              onSelectAnnotation={setSelectedAnnotation}
               myAnnotations={myAnnotations}
             />
           </>
