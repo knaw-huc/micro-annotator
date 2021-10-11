@@ -72,19 +72,21 @@ export default class Elucidate {
     return items ? items[0] as ElucidateAnnotation : undefined;
   }
 
-  public static async getAllFilteredBy(id: string, filter: (ea: ElucidateAnnotation) => boolean) {
+  public static async getAllFilteredBy(id: string, creator: string) {
     let result: ElucidateAnnotation[] = [];
     let page = 0;
     let annotationPage;
     do {
-      const response = await fetch(`${this.host}/annotation/w3c/${id}/?page=${page++}&desc=1`, {headers: this.headers});
+      creator = encodeURIComponent(creator);
+      const response = await fetch(
+        `${this.host}/annotation/w3c/services/search/creator?levels=annotation&type=id&value=${creator}&page=${page}&desc=1`,
+        {headers: this.headers}
+      );
       annotationPage = await response.json();
-
-      // Off-by-one error: next link added when last page exactly filled:
-      if(!annotationPage.items) continue;
-
-      const filtered = annotationPage.items.filter(filter);
-      result.push(...filtered);
+      if(annotationPage.items) {
+        result.push(...annotationPage.items);
+      }
+      page++;
     } while (annotationPage.next);
     return result;
   }

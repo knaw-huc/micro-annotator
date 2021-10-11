@@ -29,25 +29,13 @@ export default function App() {
         return;
       }
       const foundByCreatorAndVersion = (await Elucidate
-        .getAllFilteredBy(versionId, ea => ea.creator === currentCreator))
+        .getAllFilteredBy(versionId, currentCreator))
         .map(toAnnotation)
-        .map(setRelativeOffsets);
+        .map(ann => setRelativeOffsets(ann, beginOffsetInResource));
       setMyAnnotations(foundByCreatorAndVersion);
     }
     getResources()
   }, [versionId, currentCreator, beginOffsetInResource]);
-
-  function setRelativeOffsets(a: Annotation): Annotation {
-    a.begin_anchor -= beginOffsetInResource;
-    a.end_anchor -= beginOffsetInResource;
-    return a;
-  }
-
-  function setAbsoluteOffsets(a: Annotation) {
-    a.begin_anchor += beginOffsetInResource;
-    a.end_anchor += beginOffsetInResource;
-    return a;
-  }
 
   const searchAnnotation = async (annotation: any) => {
     let foundAnn = await Elucidate.getByBodyId(annotation.id);
@@ -86,11 +74,11 @@ export default function App() {
       setError('Cannot save annotation when version id is not set')
       return;
     }
-    ann = setAbsoluteOffsets(ann);
+    ann = setAbsoluteOffsets(ann, beginOffsetInResource);
 
     const created = await Elucidate.createAnnotation(versionId, ann)
     setSelectionRange(undefined);
-    setMyAnnotations([...myAnnotations, setRelativeOffsets(created)]);
+    setMyAnnotations([...myAnnotations, setRelativeOffsets(created, beginOffsetInResource)]);
     setCurrentCreator(created.creator);
   }
 
@@ -122,3 +110,16 @@ export default function App() {
     </div>
   );
 }
+
+function setRelativeOffsets(a: Annotation, offset: number): Annotation {
+  a.begin_anchor -= offset;
+  a.end_anchor -= offset;
+  return a;
+}
+
+function setAbsoluteOffsets(a: Annotation, offset: number) {
+  a.begin_anchor += offset;
+  a.end_anchor += offset;
+  return a;
+}
+

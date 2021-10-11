@@ -69,7 +69,7 @@ h4 {
 
 .annotation-snippet {
     user-select: none;
-    margin: 5px;
+    margin: 5px 0;
     padding: 10px;
     cursor: pointer;
     font-size: 0.8em;
