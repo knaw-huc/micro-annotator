@@ -2,12 +2,12 @@
 set -x
 set -e
 
-EXTERNAL_ID=1728-textstore
-TEXT_STORE_PATH=/usr/src/app/data/1728/10mrt-v1/1728-textstore.json
-
 cd /usr/src/app/textrepo
 pip install -r requirements.txt
+
+# Expects TEXTREPO_HOST and TEXT_STORE_PATH:
 VERSION_ID=$(python ./import-text-store.py)
+
 echo "VERSION_ID: [${VERSION_ID}]"
 
 cd /usr/src/app
