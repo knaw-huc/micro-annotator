@@ -63,7 +63,7 @@ services:
 
   textrepo-app:
     container_name: tr_textrepo
-    image: textrepo-elasticsearch:txt_anchor
+    image: textrepo-app:txt_anchor
     expose:
       - 8080
       - 8081
