@@ -2,7 +2,6 @@ import {FormEvent, useEffect, useState} from 'react'
 import {Annotation} from "../model/Annotation";
 import {AnnRange} from "../model/AnnRange";
 import SelectEntityType from "./SelectEntityType";
-import {EntityType, fromValue} from "../model/EntityType";
 import {toRangeStr} from "../util/toRangeStr";
 
 type AddAnnotationProps = {
@@ -14,7 +13,7 @@ type AddAnnotationProps = {
 export default function AddAnnotation(props: AddAnnotationProps) {
   const [comment, setComment] = useState('')
   const [creator, setCreator] = useState(props.currentCreator)
-  const [entityType, setEntityType] = useState<EntityType>()
+  const [entityType, setEntityType] = useState('')
   const [selRangeStr, setSelRangeStr] = useState('geen selectie gezet')
 
   let selectedRange = props.selectedRange;
@@ -58,7 +57,7 @@ export default function AddAnnotation(props: AddAnnotationProps) {
     } as Annotation;
 
     setSelRangeStr('');
-    setEntityType(undefined);
+    setEntityType('');
     setComment('');
     setCreator(creator);
 
@@ -77,7 +76,7 @@ export default function AddAnnotation(props: AddAnnotationProps) {
         />
       </div>
       <div className='form-control'>
-        <SelectEntityType selected={entityType} selectOption={(e) => setEntityType(fromValue(e.target.value))} />
+        <SelectEntityType selected={entityType} select={(option: string) => setEntityType(option)} />
       </div>
 
       <div className='form-control'>

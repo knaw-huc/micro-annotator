@@ -7,26 +7,27 @@ type SearchProps = {
 }
 
 export default function Search(props: SearchProps) {
-    const [id, setID] = useState(Config.PLACEHOLDER_SEARCH_ID)
+  const [id, setID] = useState(Config.PLACEHOLDER_SEARCH_ID)
 
-    const onSubmit = (e: any) => {
-        e.preventDefault()
-        if (!id) {
-            return;
-        }
-        props.onSearch({id})
+  const onSubmit = (e: any) => {
+    e.preventDefault()
+    if (!id) {
+      return;
     }
+    props.onSearch({id});
+  }
 
-    return <form className='add-form' onSubmit={onSubmit}>
-            <div className='form-control'>
-                <label>Annotation ID</label>
-                <input
-                    type='text'
-                    value={id}
-                    onChange={e => setID(e.target.value)}
-                />
-            </div>
+  return <form className='add-form' onSubmit={onSubmit}>
+    <div className='form-control'>
+      <label>Annotation ID</label>
+      <input
+        type='text'
+        value={id}
+        onChange={e => setID(e.target.value)}
+      />
 
-            <input type='submit' value='Search' className='btn btn-block'/>
-        </form>;
+    </div>
+
+    <input type='submit' value='Search' className='btn btn-block'/>
+  </form>;
 }

@@ -1,21 +1,19 @@
-import {ChangeEvent} from "react";
 import {EntityType} from "../model/EntityType";
+import ComboBox, {ComboBoxItem} from "./ComboBox";
 
 type SelectEntityTypeProps = {
-  selected: EntityType | undefined
-  selectOption: (e: ChangeEvent<HTMLSelectElement>) => void
+  selected: string
+  select: (option: string) => void
 }
 
 export default function SelectEntityType(props: SelectEntityTypeProps) {
+
   return <div className="form-control">
-    <select
-      id="formControlSelect"
-      onChange={props.selectOption}
-      value={props.selected ? props.selected : ""}
-    >
-      <option value="">Pick an entity type</option>
-      {createOptions()}
-    </select>
+    <label>Pick an entity type</label>
+    <ComboBox
+      items={createOptions()}
+      onSubmit={(i: ComboBoxItem) => props.select(i.value)}
+    />
   </div>;
 }
 
@@ -36,11 +34,6 @@ export const EntityTypes = [
 
 function createOptions() {
   return Object.entries(EntityTypes).map(([name, value]) => {
-    return <option
-      key={name}
-      value={value.name}
-    >
-      {value.placeholder}
-    </option>
+    return {value: value.name};
   });
 }
