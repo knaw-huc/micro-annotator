@@ -83,12 +83,22 @@ export default class Elucidate {
         {headers: this.headers}
       );
       annotationPage = await response.json();
-      if(annotationPage.items) {
+      if (annotationPage.items) {
         result.push(...annotationPage.items);
       }
       page++;
     } while (annotationPage.next);
     return result;
+  }
+
+  public static async getByIdPrefix(idPrefix: string) : Promise<ElucidateAnnotation[]>{
+    idPrefix = encodeURIComponent(idPrefix);
+    const response = await fetch(
+      `${this.host}/annotation/w3c/services/search/body?fields=id&value=${idPrefix}&page=0&desc=1`,
+      {headers: this.headers}
+    );
+    const annotationPage = await response.json();
+    return annotationPage.items;
   }
 }
 

@@ -160,6 +160,10 @@ footer {
     text-align: center;
 }
 
+.combobox, .combobox-input, .combobox-input li {
+    width: 100%;
+}
+
 .combobox {
     display: inline-block;
 }
@@ -178,12 +182,25 @@ footer {
     border: 1px solid;
 }
 
+.combobox-menu, .typeahead-menu {
+    overflow-y: scroll;
+    padding: 0 10px;
+    list-style: none;
+    position: relative;
+    border: 1px solid;
+    border-top: 0;
+    border-bottom: 0;
+}
+
 .combobox-menu {
     max-height: 80px;
     max-width: 300px;
-    overflow-y: scroll;
-    background-color: #eee;
-    padding: 0;
-    list-style: none;
-    position: relative;
+}
+
+.typeahead-input {
+    width: 100%;
+}
+
+.form-control-small {
+    margin: 0;
 }
