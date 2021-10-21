@@ -54,7 +54,6 @@ export default function Search(props: SearchProps) {
         .map(i => {
           return {value: i}
         });
-      console.log('foundIds', foundIds);
       setItems(foundIds)
     });
 

@@ -61,7 +61,6 @@ export default function Typeahead(props: TypeaheadProps) {
                   })}
                   onClick={(e: React.FormEvent<HTMLElement>) => {
                     let newValue = e.currentTarget.innerText;
-                    console.log('click', newValue);
                     props.onSelect(newValue);
                     closeMenu()
                   }}
