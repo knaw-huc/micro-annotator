@@ -50,10 +50,11 @@ export default function Search(props: SearchProps) {
         found.map(i => (i.body as ElucidateBodyType).id)
       )).filter(i => i)
         .slice(0, 10)
+        .sort()
         .map(i => {
           return {value: i}
-        })
-        .sort();
+        });
+      console.log('foundIds', foundIds);
       setItems(foundIds)
     });
 
