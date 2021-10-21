@@ -5,11 +5,11 @@ export type TypeaheadItem = {
 };
 
 type TypeaheadProps = {
-  placeholder: string,
   items: TypeaheadItem[],
   input: string,
-  onType: (input: string) => void
-  onSelect: (input: string) => void
+  selected: string,
+  onType: (input: string) => void,
+  onSelect: (input: string) => void,
 };
 
 export default function Typeahead(props: TypeaheadProps) {
@@ -28,13 +28,18 @@ export default function Typeahead(props: TypeaheadProps) {
         closeMenu
       }) => (
       <div className="combobox form-control form-control-small">
-        <input
-          {...getInputProps()}
-          className="typeahead-input"
-          value={props.input}
-          onSelect={() => openMenu()}
-          onChange={(e: React.FormEvent<HTMLInputElement>) => props.onType(e.currentTarget.value)}
-        />
+        <div>
+          <input
+            {...getInputProps()}
+            className="typeahead-input"
+            value={props.input}
+            onSelect={() => openMenu()}
+            onChange={(e: React.FormEvent<HTMLInputElement>) => props.onType(e.currentTarget.value)}
+          />
+          <div className="typeahead-status">
+            {props.selected === props.input ? "✅" : "✏️"}️
+          </div>
+        </div>
         <ul
           className="typeahead-menu"
           {...getMenuProps()}

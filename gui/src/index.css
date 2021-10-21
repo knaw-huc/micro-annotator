@@ -201,6 +201,13 @@ footer {
     width: 100%;
 }
 
+.typeahead-status {
+    margin-top: -43px;
+    font-size: 1.5em;
+    text-align: right;
+    padding-right: 8px;
+}
+
 .form-control-small {
     margin: 0;
 }

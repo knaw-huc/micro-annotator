@@ -14,7 +14,7 @@ type SearchProps = {
 export default function Search(props: SearchProps) {
   const [id, setId] = useState(Config.PLACEHOLDER_SEARCH_ID)
   const [items, setItems] = useState<TypeaheadItem[]>([]);
-  const [input, setInput] = useState<string>(Config.PLACEHOLDER_SEARCH_ID);
+  const [input, setInput] = useState<string>(id);
   const debouncedInput = useDebounce<string>(input, 250)
   const previousInput = usePrevious(debouncedInput);
 
@@ -32,7 +32,7 @@ export default function Search(props: SearchProps) {
   }
 
   useEffect(() => {
-    if(previousInput === debouncedInput) {
+    if (previousInput === debouncedInput) {
       return;
     }
     if (debouncedInput === id) {
@@ -52,7 +52,8 @@ export default function Search(props: SearchProps) {
         .slice(0, 10)
         .map(i => {
           return {value: i}
-        }).sort();
+        })
+        .sort();
       setItems(foundIds)
     });
 
@@ -72,15 +73,15 @@ export default function Search(props: SearchProps) {
     <div className='form-control'>
       <label>Annotation ID</label>
       <Typeahead
-        placeholder={Config.PLACEHOLDER_SEARCH_ID}
         items={items}
         input={input}
+        selected={id}
         onType={handleTyping}
         onSelect={handleSelected}
       />
       <input
         type='submit'
-        value={"Search: " + id}
+        value="Search"
         className='btn btn-block'
       />
     </div>
