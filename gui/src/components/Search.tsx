@@ -47,7 +47,13 @@ export default function Search(props: SearchProps) {
       }
 
       const foundIds = Array.from(new Set(
-        found.map(i => (i.body as ElucidateBodyType).id)
+        found.map(i => {
+          if (Array.isArray(i.body)) {
+            return (i.body[0] as ElucidateBodyType).id
+          } else {
+            return (i.body as ElucidateBodyType).id
+          }
+        })
       )).filter(i => i)
         .slice(0, 10)
         .sort()
