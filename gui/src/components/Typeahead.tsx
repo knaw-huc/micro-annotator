@@ -40,35 +40,38 @@ export default function Typeahead(props: TypeaheadProps) {
             {props.selected === props.input ? "✅" : "✏️"}️
           </div>
         </div>
-        <ul
-          className="typeahead-menu"
-          {...getMenuProps()}
-        >
-          {isOpen &&
-          props.items
-            .map((item, index) => (
-              <li
-                {...getItemProps({
-                  key: `${item.value}${index}`,
-                  item,
-                  index,
-                  style: {
-                    backgroundColor:
-                      highlightedIndex === index ? 'lightgray' : 'white',
-                    fontWeight: selectedItem === item ? 'bold' : 'normal',
-                  },
-                })}
-                onClick={(e: React.FormEvent<HTMLElement>) => {
-                  let newValue = e.currentTarget.innerText;
-                  console.log('click', newValue);
-                  props.onSelect(newValue);
-                  closeMenu()
-                }}
-              >
-                {item.value}
-              </li>
-            ))}
-        </ul>
+        <div className="typeahead-menu-item-container">
+          <ul
+            className="typeahead-menu"
+            {...getMenuProps()}
+          >
+            {isOpen &&
+            props.items
+              .map((item, index) => (
+                <li
+                  {...getItemProps({
+                    key: `${item.value}${index}`,
+                    item,
+                    index,
+                    style: {
+                      backgroundColor:
+                        highlightedIndex === index ? 'lightgray' : 'white',
+                      fontWeight: selectedItem === item ? 'bold' : 'normal',
+                    },
+                  })}
+                  onClick={(e: React.FormEvent<HTMLElement>) => {
+                    let newValue = e.currentTarget.innerText;
+                    console.log('click', newValue);
+                    props.onSelect(newValue);
+                    closeMenu()
+                  }}
+                >
+                  {item.value}
+                </li>
+              ))}
+          </ul>
+
+        </div>
       </div>
     )}
   </Downshift>;

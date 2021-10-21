@@ -82,7 +82,8 @@ export default function Search(props: SearchProps) {
       <input
         type='submit'
         value="Search"
-        className='btn btn-block'
+        className={'btn btn-block' + (id !== input ? ' disabled' : '')}
+        disabled={id !== input}
       />
     </div>
   </form>;
