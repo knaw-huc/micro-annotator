@@ -31,10 +31,12 @@ export default function Search(props: SearchProps) {
     setInput(inputValue);
   }
 
+  // Get suggestions by debounced input:
   useEffect(() => {
-    if (previousInput === debouncedInput) {
+    if (debouncedInput === previousInput) {
       return;
     }
+
     if (debouncedInput === id) {
       setItems([]);
       return;
@@ -46,7 +48,7 @@ export default function Search(props: SearchProps) {
         return;
       }
 
-      const foundIds = Array.from(new Set(
+      let ids = Array.from(new Set(
         found.map(i => {
           if (Array.isArray(i.body)) {
             return (i.body as ElucidateBodyType[]).find(b => b.id)?.id
@@ -54,17 +56,19 @@ export default function Search(props: SearchProps) {
             return (i.body as ElucidateBodyType).id
           }
         })
-      )).filter(i => i)
+      ));
+
+      const items = ids
+        .filter(i => i)
         .slice(0, 10)
         .sort()
         .map(i => {
           return {value: i} as TypeaheadItem
         });
-      setItems(foundIds)
+      setItems(items)
     });
 
   }, [debouncedInput, previousInput, id, setItems])
-
 
   function handleSelected(selected: string) {
     if (selected === id) {
