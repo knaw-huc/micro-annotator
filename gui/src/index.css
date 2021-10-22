@@ -19,6 +19,10 @@ h4 {
     opacity: 0.5;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .row {
     display: flex;
     flex-direction: row;
@@ -84,7 +88,6 @@ body, #root, .container {
     user-select: none;
     margin: 5px 0;
     padding: 10px;
-    cursor: pointer;
     font-size: 0.8em;
     border-style: solid;
     border-color: black;
@@ -122,6 +125,12 @@ body, #root, .container {
     font-size: 11px;
 }
 
+.annotation-preview {
+    overflow: auto;
+    user-select: text;
+}
+
+
 .show-full {
     margin-top: 5px;
     padding: 0 5px;
@@ -139,6 +148,10 @@ body, #root, .container {
 
 .form-control {
     margin: 20px 0;
+}
+
+.form-control-small {
+    margin: 0;
 }
 
 .form-control label {
@@ -173,6 +186,7 @@ footer {
     text-align: center;
 }
 
+/* Combobox and Typeahead */
 .combobox, .combobox-input, .combobox-input li {
     width: 100%;
 }
@@ -221,10 +235,6 @@ footer {
     font-size: 1.5em;
     text-align: right;
     padding-right: 8px;
-}
-
-.form-control-small {
-    margin: 0;
 }
 
 .typeahead-menu-item-container {

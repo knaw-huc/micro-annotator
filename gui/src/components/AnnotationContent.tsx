@@ -25,7 +25,7 @@ export default function AnnotationContent(props: AnnotationContentProps) {
           }}>full annotation {String.fromCharCode(showFull ? 9663 : 9657)}
           </button>
           <br/>
-          {showFull ? <pre style={{overflow: "auto"}}>{JSON.stringify(ann.source, null, 2)}</pre> : null}
+          {showFull ? <pre className="annotation-preview" >{JSON.stringify(ann.source, null, 2)}</pre> : null}
         </li>
       </ul>
     </div>
