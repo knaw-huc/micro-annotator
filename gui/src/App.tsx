@@ -55,7 +55,7 @@ export default function App() {
     // Get text by version uuid (first uuid in ann id):
     const foundVersionId = foundAnn.id.match(/.*\/w3c\/([0-9a-f-]{36})\/([0-9a-f-]{36})/)?.[1] as string;
     if (!foundVersionId) {
-      setError('No version ID found in ' + foundAnn.id);
+      setError(`No version ID found in ${foundAnn.id}`);
       return;
     }
 
@@ -111,6 +111,7 @@ export default function App() {
   );
 }
 
+// TODO: determine relative offsets only in text containing anno
 function setRelativeOffsets(a: Annotation, offset: number): Annotation {
   a.begin_anchor -= offset;
   a.end_anchor -= offset;

@@ -41,6 +41,9 @@ export default function ComboBox(props: ComboBoxProps) {
     },
   });
 
+  let arrowRight = 9655;
+  let arrowDown = 9661;
+
   return (
     <>
       <div className="combobox" {...getComboboxProps()}>
@@ -54,7 +57,7 @@ export default function ComboBox(props: ComboBoxProps) {
           {...getToggleButtonProps()}
           aria-label={'toggle menu'}
         >
-          {String.fromCharCode(isOpen ? 9655 : 9661)}
+          {String.fromCharCode(isOpen ? arrowRight : arrowDown)}
         </button>
       </div>
       <ul {...getMenuProps()} className="combobox-menu">

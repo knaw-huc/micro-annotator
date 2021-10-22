@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 
-export default function useDebounce<T>(value: T, delay?: number): T {
+/**
+ * Source: https://usehooks-typescript.com/react-hook/use-debounce
+ */
+export function useDebounce<T>(value: T, delay?: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import AnnotationForm from './AddAnnotation'
+import AnnotationForm from './AnnotationForm'
 import AnnotationList from './AnnotationList'
 import {Annotation} from "../model/Annotation";
 import {AnnRange} from "../model/AnnRange";

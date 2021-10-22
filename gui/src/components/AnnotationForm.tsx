@@ -10,11 +10,11 @@ type AddAnnotationProps = {
   onAdd: (ann: Annotation) => void
 };
 
-export default function AddAnnotation(props: AddAnnotationProps) {
+export default function AnnotationForm(props: AddAnnotationProps) {
   const [comment, setComment] = useState('')
   const [creator, setCreator] = useState(props.currentCreator)
   const [entityType, setEntityType] = useState('')
-  const [selRangeStr, setSelRangeStr] = useState('geen selectie gezet')
+  const [selectedRangeLabel, setSelectedRangeLabel] = useState('geen selectie gezet')
 
   let selectedRange = props.selectedRange;
 
@@ -22,8 +22,8 @@ export default function AddAnnotation(props: AddAnnotationProps) {
     if(!selectedRange) {
       return;
     }
-    setSelRangeStr(toRangeStr(selectedRange));
-  }, [selectedRange, setSelRangeStr])
+    setSelectedRangeLabel(toRangeStr(selectedRange));
+  }, [selectedRange, setSelectedRangeLabel])
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -56,7 +56,7 @@ export default function AddAnnotation(props: AddAnnotationProps) {
       entity_comment: comment
     } as Annotation;
 
-    setSelRangeStr('');
+    setSelectedRangeLabel('');
     setEntityType('');
     setComment('');
     setCreator(creator);
@@ -70,7 +70,7 @@ export default function AddAnnotation(props: AddAnnotationProps) {
         <label>Selection range</label>
         <input
           type='text'
-          value={selRangeStr}
+          value={selectedRangeLabel}
           placeholder='Make selection in text'
           readOnly
         />

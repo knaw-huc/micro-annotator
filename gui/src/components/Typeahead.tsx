@@ -54,8 +54,7 @@ export default function Typeahead(props: TypeaheadProps) {
                     item,
                     index,
                     style: {
-                      backgroundColor:
-                        highlightedIndex === index ? 'lightgray' : 'white',
+                      backgroundColor: highlightedIndex === index ? 'lightgray' : 'white',
                       fontWeight: selectedItem === item ? 'bold' : 'normal',
                     },
                   })}

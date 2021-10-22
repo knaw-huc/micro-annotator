@@ -3,8 +3,8 @@ import Config from "../Config";
 import Typeahead, {TypeaheadItem} from "./Typeahead";
 import Elucidate from "../resources/Elucidate";
 import {ElucidateBodyType} from "../model/ElucidateAnnotation";
-import useDebounce from "./useDebounce";
-import {usePrevious} from "./usePrevious";
+import {useDebounce} from "../util/useDebounce";
+import {usePrevious} from "../util/usePrevious";
 
 
 type SearchProps = {
