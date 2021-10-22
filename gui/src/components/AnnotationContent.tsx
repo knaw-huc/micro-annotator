@@ -2,6 +2,7 @@ import {Annotation} from "../model/Annotation";
 import {toRangeStr} from "../util/toRangeStr";
 import {toRange} from "../model/AnnRange";
 import {useState} from "react";
+import ReactLinkify from "react-linkify";
 
 type AnnotationContentProps = {
   ann: Annotation | undefined
@@ -25,7 +26,22 @@ export default function AnnotationContent(props: AnnotationContentProps) {
           }}>full annotation {String.fromCharCode(showFull ? 9663 : 9657)}
           </button>
           <br/>
-          {showFull ? <pre className="annotation-preview" >{JSON.stringify(ann.source, null, 2)}</pre> : null}
+          {showFull
+            ? <pre className="annotation-preview">
+              <ReactLinkify
+                // Set target blank using decorator
+                // source: https://github.com/tasti/react-linkify/issues/96
+                componentDecorator={(decoratedHref, decoratedText, key) => (
+                  <a target="blank" href={decoratedHref} key={key}>
+                    {decoratedText}
+                  </a>
+                )}
+              >
+                {JSON.stringify(ann.source, null, 2)}
+              </ReactLinkify>
+            </pre>
+            : null
+          }
         </li>
       </ul>
     </div>
