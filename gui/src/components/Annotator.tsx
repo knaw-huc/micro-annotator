@@ -1,4 +1,4 @@
-import AddAnnotation from './AddAnnotation'
+import AnnotationForm from './AddAnnotation'
 import AnnotationList from './AnnotationList'
 import {Annotation} from "../model/Annotation";
 import {AnnRange} from "../model/AnnRange";
@@ -17,7 +17,7 @@ export default function Annotator(props: AnnotatorProps) {
     <div style={{'minWidth': '150px', 'width': '280px'}}>
       <h4>Annotator</h4>
       {props.selectionRange
-        ? <AddAnnotation
+        ? <AnnotationForm
           currentCreator={props.currentCreator}
           selectedRange={props.selectionRange}
           onAdd={props.onAddAnnotation}

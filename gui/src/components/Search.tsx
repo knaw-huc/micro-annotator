@@ -8,7 +8,7 @@ import {usePrevious} from "./usePrevious";
 
 
 type SearchProps = {
-  onSearch: (params: { id: string }) => void
+  onSearch: (id: string) => void
 }
 
 export default function Search(props: SearchProps) {
@@ -22,9 +22,8 @@ export default function Search(props: SearchProps) {
     e.preventDefault()
     if (!id) {
       return;
-
     }
-    props.onSearch({id});
+    props.onSearch(id);
   }
 
   async function handleTyping(inputValue: string) {
@@ -42,7 +41,7 @@ export default function Search(props: SearchProps) {
       return;
     }
 
-    Elucidate.getByIdPrefix(debouncedInput).then((found) => {
+    Elucidate.getByBodyIdPrefix(debouncedInput).then((found) => {
       if (!found) {
         setItems([]);
         return;

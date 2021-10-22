@@ -24,27 +24,27 @@ export default function App() {
   const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation>()
 
   useEffect(() => {
-    const getResources = async () => {
+    const getResourcesAsync = async () => {
       if (!(versionId && currentCreator && beginOffsetInResource)) {
         return;
       }
       const foundByCreatorAndVersion = (await Elucidate
-        .getAllFilteredBy(versionId, currentCreator))
+        .getByCreator(currentCreator))
         .map(toAnnotation)
         .map(ann => setRelativeOffsets(ann, beginOffsetInResource));
       setMyAnnotations(foundByCreatorAndVersion);
     }
-    getResources()
+    getResourcesAsync()
   }, [versionId, currentCreator, beginOffsetInResource]);
 
-  const searchAnnotation = async (annotation: any) => {
-    let foundAnn = await Elucidate.getByBodyId(annotation.id);
+  const searchAnnotation = async (bodyId: string) => {
+    let foundAnn = await Elucidate.getByBodyId(bodyId);
     if (!foundAnn) {
       setError('No elucidate annotation found');
       return;
     }
     if (typeof foundAnn.target === 'string') {
-      setError('Could not find img and txt targets in annotation: ' + JSON.stringify(annotation));
+      setError(`Could not find img and txt targets in annotation with body id: ${bodyId}`);
       return;
     }
     const target: ElucidateTargetType[] = foundAnn.target;
@@ -76,7 +76,7 @@ export default function App() {
     }
     ann = setAbsoluteOffsets(ann, beginOffsetInResource);
 
-    const created = await Elucidate.createAnnotation(versionId, ann)
+    const created = await Elucidate.create(versionId, ann)
     setSelectionRange(undefined);
     setMyAnnotations([...myAnnotations, setRelativeOffsets(created, beginOffsetInResource)]);
     setCurrentCreator(created.creator);
