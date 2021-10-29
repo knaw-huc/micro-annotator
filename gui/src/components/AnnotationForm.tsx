@@ -12,7 +12,6 @@ type AddAnnotationProps = {
 
 export default function AnnotationForm(props: AddAnnotationProps) {
   const [comment, setComment] = useState('')
-  const [creator, setCreator] = useState(props.currentCreator)
   const [entityType, setEntityType] = useState('')
   const [selectedRangeLabel, setSelectedRangeLabel] = useState('geen selectie gezet')
 
@@ -28,7 +27,7 @@ export default function AnnotationForm(props: AddAnnotationProps) {
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!creator) {
+    if (!props.currentCreator) {
       alert('Please add creator')
       return;
     }
@@ -47,7 +46,7 @@ export default function AnnotationForm(props: AddAnnotationProps) {
 
     const newAnnotation = {
       label: 'entity',
-      creator: creator,
+      creator: props.currentCreator,
       begin_anchor: selectedRange.beginAnchor,
       end_anchor: selectedRange.endAnchor,
       begin_char_offset: selectedRange.beginOffset,
@@ -59,7 +58,6 @@ export default function AnnotationForm(props: AddAnnotationProps) {
     setSelectedRangeLabel('');
     setEntityType('');
     setComment('');
-    setCreator(creator);
 
     props.onAdd(newAnnotation);
   }
@@ -92,9 +90,9 @@ export default function AnnotationForm(props: AddAnnotationProps) {
         <label>Creator</label>
         <input
           type='text'
-          value={creator}
+          value={props.currentCreator}
+          disabled={true}
           placeholder='Add Creator'
-          onChange={(e) => setCreator(e.target.value)}
         />
       </div>
 

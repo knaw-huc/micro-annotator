@@ -10,6 +10,7 @@ import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
+import {CreatorField} from "./components/CreatorField";
 
 export default function App() {
 
@@ -79,12 +80,12 @@ export default function App() {
     const created = await Elucidate.create(versionId, ann)
     setSelectionRange(undefined);
     setMyAnnotations([...myAnnotations, setRelativeOffsets(created, beginOffsetInResource)]);
-    setCurrentCreator(created.creator);
   }
 
   return (
     <div className="container">
       {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
+      <CreatorField onChange={(newCreator:string) => setCurrentCreator(newCreator)} creator={currentCreator}/>
       <Search onSearch={searchAnnotation}/>
       <div className='row'>
         <ImageParts images={regionLinks}/>
