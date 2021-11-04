@@ -45,7 +45,7 @@ services:
 
   postgres:
     container_name: tr_postgres
-    image: registry.diginfra.net/micro-annotator/textrepo-db:1728-full
+    image: registry.diginfra.net/micro-annotator/textrepo-db:${COLLECTION_TAG}
     shm_size: 1g
     networks:
       - textrepo_network

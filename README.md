@@ -9,8 +9,8 @@ by an instance of [TextRepo](https://github.com/knaw-huc/textrepo) and annotatio
 
 - Remove `.example` postfix of env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
 - Run:
-
 ```
+COLLECTION_TAG=1728-06-19
 docker-compose -f dev/elucidate/docker-compose.yml up -d
 docker-compose -f dev/textrepo/docker-compose.yml up -d
 docker-compose up
