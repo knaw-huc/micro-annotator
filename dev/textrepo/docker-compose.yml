@@ -58,13 +58,7 @@ services:
       POSTGRES_HOST: postgres.textrepo
       POSTGRES_PORT: ${POSTGRES_PORT}
       PGDATA: /var/lib/textrepo/data
-    volumes:
-      - postgresdata-prod:/var/lib/textrepo/data
 
 networks:
   textrepo_network:
     name: textrepo_network
-
-volumes:
-  postgresdata-prod:
-    driver: local
