@@ -6,7 +6,7 @@ services:
 
   textrepo-app:
     container_name: tr_textrepo
-    image: textrepo-app:txt_anchor
+    image: registry.diginfra.net/micro-annotator/textrepo-app:txt_anchor
     expose:
       - 8080
       - 8081
@@ -45,7 +45,7 @@ services:
 
   postgres:
     container_name: tr_postgres
-    image: postgres:11-alpine
+    image: registry.diginfra.net/micro-annotator/textrepo-db:1728-full
     shm_size: 1g
     networks:
       - textrepo_network

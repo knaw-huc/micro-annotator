@@ -20,7 +20,7 @@ services:
 
   database:
     container_name: elucidate_db
-    image: postgres:13-alpine
+    image: registry.diginfra.net/micro-annotator/elucidate-db:1728-full
     shm_size: 1g
     networks:
       - elucidate_network

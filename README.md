@@ -7,9 +7,10 @@ by an instance of [TextRepo](https://github.com/knaw-huc/textrepo) and annotatio
 
 ### Option 1: Use existing images
 
-Run:
+- Remove `.example` postfix of env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
+- Run:
+
 ```
-cp ./.env{.example,}
 docker-compose -f dev/elucidate/docker-compose.yml up -d
 docker-compose -f dev/textrepo/docker-compose.yml up -d
 docker-compose up
