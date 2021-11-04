@@ -48,8 +48,8 @@ Start containers of elucidate, textrepo, annotator and init:
 ```
 docker-compose -f dev/elucidate/docker-compose.yml up -d
 docker-compose -f dev/textrepo/docker-compose.yml up -d
-docker-compose up -f docker-compose.yml -d
-docker-compose -f dev/textrepo/docker-compose.yml up
+docker-compose up -d
+docker-compose -f docker-compose-init.yml up
 ```
 
 Open http://localhost:8000
