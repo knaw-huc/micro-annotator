@@ -9,6 +9,7 @@ by an instance of [TextRepo](https://github.com/knaw-huc/textrepo) and annotatio
 
 Run:
 ```
+cp ./.env{.example,}
 docker-compose -f dev/elucidate/docker-compose.yml up -d
 docker-compose -f dev/textrepo/docker-compose.yml up -d
 docker-compose up
