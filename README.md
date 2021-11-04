@@ -42,7 +42,7 @@ source docker-compose.env && docker-compose -f docker-compose-dev.yml build text
 In micro-annotator:
 - Remove `.example` postfix of env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
 - Change image `postgres` service in `./dev/textrepo/docker-compose.yml` to `postgres:11-alpine` 
-- Change image `database` service in `./dev/elucidate/docker-compose.yml` to `postgres:13-alpine`
+- Change `image` section of `database` service in `./dev/elucidate/docker-compose.yml` into `build: .`
 - Change image `textrepo-app` service in `./dev/elucidate/docker-compose.yml` to `textrepo-app:txt_anchor`
 - Update env vars `TEXT_STORE_PATH` and `ANNO_STORE_PATH` in `docker-compose-init.yml` to desired un-t-ann-gle files 
 
