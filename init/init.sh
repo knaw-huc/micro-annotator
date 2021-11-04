@@ -22,7 +22,6 @@ pip install .
 if [[ ! -v ANNO_STORE_PATH ]]; then
     echo "ANNO_STORE_PATH is not set"
 fi
-ls -alR /usr/src/app/data/1728
 python ./scripts/convert_to_web_annotations.py $ANNO_STORE_PATH
 
 python ./scripts/export_to_elucidate.py -e http://elucidate:8080/annotation -c "$VERSION_ID"
