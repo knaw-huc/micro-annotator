@@ -10,7 +10,7 @@ services:
     environment:
       TEXTREPO_HOST: http://textrepo-app:8080
       TEXT_STORE_PATH: /usr/src/app/data/1728/10mrt-v1/1728-textstore.json
-      ANNO_STORE_PATH: data/1728/1728-full/1728-annotationstore-full.json
+      ANNO_STORE_PATH: data/1728-06-19-annotationstore.json
     volumes:
       - ../untangle2elucidate/:/usr/src/app/
       - ./scripts/wait-for-it.sh:/scripts/wait-for-it.sh
@@ -21,7 +21,6 @@ services:
         "/scripts/wait-for-it.sh", "elucidate:8080", "--timeout=0", "--",
         "./init.sh"
     ]
-
 
 networks:
   elucidate_network:
