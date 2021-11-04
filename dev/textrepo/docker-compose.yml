@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.8'
 # docker-compose file for production setup
 # -> uses production volumes for production data
 
@@ -6,7 +6,7 @@ services:
 
   textrepo-app:
     container_name: tr_textrepo
-    image: registry.diginfra.net/micro-annotator/textrepo-app:txt_anchor
+    image: textrepo-app:txt_anchor
     expose:
       - 8080
       - 8081
@@ -15,7 +15,6 @@ services:
     volumes:
       - ../../scripts/wait-for-it.sh:/textrepo-app/wait-for-it.sh
     command: [
-        "./wait-for-it.sh", "file-indexer:8080", "--timeout=0", "--",
         "./start.sh"
     ]
     environment:
@@ -46,7 +45,7 @@ services:
 
   postgres:
     container_name: tr_postgres
-    image: registry.diginfra.net/micro-annotator/textrepo-db:1728-full
+    image: postgres:11-alpine
     shm_size: 1g
     networks:
       - textrepo_network
@@ -62,55 +61,10 @@ services:
     volumes:
       - postgresdata-prod:/var/lib/textrepo/data
 
-  elasticsearch:
-    container_name: tr_elasticsearch
-    image: knawhuc/textrepo-elasticsearch:${DOCKER_TAG}
-    environment:
-      - node.name=${ES_NODE_NAME}
-      - cluster.initial_master_nodes=${ES_CLUSTER_INITIAL_MASTER_NODES}
-      - cluster.name=${ES_CLUSTER_NAME}
-      - bootstrap.memory_lock=${ES_BOOTSTRAP_MEMORY_LOCK}
-      - ES_JAVA_OPTS=${ES_JAVA_OPTS}
-      - path.repo=/snapshot-repo
-    restart: always
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - esdata-prod:/usr/share/elasticsearch/data
-      - essnapshotdata-prod:/snapshot-repo
-    ports:
-      - 9200
-    networks:
-      - textrepo_network
-
-  file-indexer:
-    container_name: tr_file_indexer
-    image: knawhuc/textrepo-file-indexer:${DOCKER_TAG}
-    ports:
-      - 8080
-    networks:
-      - textrepo_network
-    environment:
-      INTERNAL_TR_HOST: ${INTERNAL_TR_HOST}
-      TR_DATE_FORMAT: ${TR_DATE_FORMAT}
-    volumes:
-      - ../../scripts/wait-for-it.sh:/indexer/wait-for-it.sh
-    command: [
-        "./wait-for-it.sh", "tr_elasticsearch:9200", "--timeout=0", "--",
-        "./start.sh"
-    ]
-
 networks:
   textrepo_network:
-    external: false
     name: textrepo_network
 
 volumes:
-  esdata-prod:
-    driver: local
-  essnapshotdata-prod:
-    driver: local
   postgresdata-prod:
     driver: local

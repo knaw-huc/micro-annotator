@@ -5,6 +5,7 @@ services:
     container_name: ma_init
     build: ./py
     networks:
+      - init_network
       - textrepo_network
       - elucidate_network
     environment:
@@ -23,6 +24,7 @@ services:
     ]
 
 networks:
+  init_network:
   elucidate_network:
     external: true
     name: elucidate_network
