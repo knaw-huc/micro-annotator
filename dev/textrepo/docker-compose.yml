@@ -3,9 +3,50 @@ version: '3.5'
 # -> uses production volumes for production data
 
 services:
+
+  textrepo-app:
+    container_name: tr_textrepo
+    image: registry.diginfra.net/micro-annotator/textrepo-app:txt_anchor
+    expose:
+      - 8080
+      - 8081
+    networks:
+      - textrepo_network
+    volumes:
+      - ../../scripts/wait-for-it.sh:/textrepo-app/wait-for-it.sh
+    command: [
+        "./wait-for-it.sh", "file-indexer:8080", "--timeout=0", "--",
+        "./start.sh"
+    ]
+    environment:
+      TR_DATABASE_DRIVER_CLASS: ${TR_DATABASE_DRIVER_CLASS}
+      TR_DATABASE_USER: ${TR_DATABASE_USER}
+      TR_DATABASE_PASSWORD: ${TR_DATABASE_PASSWORD}
+      TR_DATABASE_URL: ${TR_DATABASE_URL}
+      TR_DATABASE_PROPERTIES_CHAR_SET: ${TR_DATABASE_PROPERTIES_CHAR_SET}
+      TR_DATABASE_MAX_WAIT_FOR_CONNECTION: ${TR_DATABASE_MAX_WAIT_FOR_CONNECTION}
+      TR_DATABASE_VALIDATION_QUERY_TIMEOUT: ${TR_DATABASE_VALIDATION_QUERY_TIMEOUT}
+      TR_DATABASE_MIN_SIZE: ${TR_DATABASE_MIN_SIZE}
+      TR_DATABASE_MAX_SIZE: ${TR_DATABASE_MAX_SIZE}
+      TR_DATABASE_CHECK_CONNECTION_WHILE_IDLE: ${TR_DATABASE_CHECK_CONNECTION_WHILE_IDLE}
+      TR_DATABASE_EVICTION_INTERVAL: ${TR_DATABASE_EVICTION_INTERVAL}
+      TR_LOGGING_LEVEL: ${TR_LOGGING_LEVEL}
+      TR_LOGGING_LOGGERS: ${TR_LOGGING_LOGGERS}
+      TR_LOGGING_APPENDERS: ${TR_LOGGING_APPENDERS}
+      TR_INDEXERS: ${TR_INDEXERS}
+      TR_SWAGGER_RESOURCE_PACKAGE: ${TR_SWAGGER_RESOURCE_PACKAGE}
+      TR_SWAGGER_CONTEXT_ROOT: ${TR_SWAGGER_CONTEXT_ROOT}
+      TR_SWAGGER_SCHEMES: ${TR_SWAGGER_SCHEMES}
+      TR_PAGINATION_DEFAULT_OFFSET: ${TR_PAGINATION_DEFAULT_OFFSET}
+      TR_PAGINATION_DEFAULT_LIMIT: ${TR_PAGINATION_DEFAULT_LIMIT}
+      TR_DATE_FORMAT: ${TR_DATE_FORMAT}
+      TR_CONTENT_DECOMPRESSION_LIMIT: ${TR_CONTENT_DECOMPRESSION_LIMIT}
+      TR_FLYWAY_CLEAN_DISABLED: ${TR_FLYWAY_CLEAN_DISABLED}
+      TR_FLYWAY_LOCATIONS: ${TR_FLYWAY_LOCATIONS}
+
   postgres:
     container_name: tr_postgres
-    image: postgres:11-alpine
+    image: registry.diginfra.net/micro-annotator/textrepo-db:1728-full
     shm_size: 1g
     networks:
       - textrepo_network
@@ -60,46 +101,6 @@ services:
         "./wait-for-it.sh", "tr_elasticsearch:9200", "--timeout=0", "--",
         "./start.sh"
     ]
-
-  textrepo-app:
-    container_name: tr_textrepo
-    image: textrepo-app:txt_anchor
-    expose:
-      - 8080
-      - 8081
-    networks:
-      - textrepo_network
-    volumes:
-      - ../../scripts/wait-for-it.sh:/textrepo-app/wait-for-it.sh
-    command: [
-        "./wait-for-it.sh", "file-indexer:8080", "--timeout=0", "--",
-        "./start.sh"
-    ]
-    environment:
-      TR_DATABASE_DRIVER_CLASS: ${TR_DATABASE_DRIVER_CLASS}
-      TR_DATABASE_USER: ${TR_DATABASE_USER}
-      TR_DATABASE_PASSWORD: ${TR_DATABASE_PASSWORD}
-      TR_DATABASE_URL: ${TR_DATABASE_URL}
-      TR_DATABASE_PROPERTIES_CHAR_SET: ${TR_DATABASE_PROPERTIES_CHAR_SET}
-      TR_DATABASE_MAX_WAIT_FOR_CONNECTION: ${TR_DATABASE_MAX_WAIT_FOR_CONNECTION}
-      TR_DATABASE_VALIDATION_QUERY_TIMEOUT: ${TR_DATABASE_VALIDATION_QUERY_TIMEOUT}
-      TR_DATABASE_MIN_SIZE: ${TR_DATABASE_MIN_SIZE}
-      TR_DATABASE_MAX_SIZE: ${TR_DATABASE_MAX_SIZE}
-      TR_DATABASE_CHECK_CONNECTION_WHILE_IDLE: ${TR_DATABASE_CHECK_CONNECTION_WHILE_IDLE}
-      TR_DATABASE_EVICTION_INTERVAL: ${TR_DATABASE_EVICTION_INTERVAL}
-      TR_LOGGING_LEVEL: ${TR_LOGGING_LEVEL}
-      TR_LOGGING_LOGGERS: ${TR_LOGGING_LOGGERS}
-      TR_LOGGING_APPENDERS: ${TR_LOGGING_APPENDERS}
-      TR_INDEXERS: ${TR_INDEXERS}
-      TR_SWAGGER_RESOURCE_PACKAGE: ${TR_SWAGGER_RESOURCE_PACKAGE}
-      TR_SWAGGER_CONTEXT_ROOT: ${TR_SWAGGER_CONTEXT_ROOT}
-      TR_SWAGGER_SCHEMES: ${TR_SWAGGER_SCHEMES}
-      TR_PAGINATION_DEFAULT_OFFSET: ${TR_PAGINATION_DEFAULT_OFFSET}
-      TR_PAGINATION_DEFAULT_LIMIT: ${TR_PAGINATION_DEFAULT_LIMIT}
-      TR_DATE_FORMAT: ${TR_DATE_FORMAT}
-      TR_CONTENT_DECOMPRESSION_LIMIT: ${TR_CONTENT_DECOMPRESSION_LIMIT}
-      TR_FLYWAY_CLEAN_DISABLED: ${TR_FLYWAY_CLEAN_DISABLED}
-      TR_FLYWAY_LOCATIONS: ${TR_FLYWAY_LOCATIONS}
 
 networks:
   textrepo_network:
