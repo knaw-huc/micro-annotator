@@ -42,6 +42,7 @@ In micro-annotator:
 - Change image `postgres` service in `./dev/textrepo/docker-compose.yml` to `postgres:11-alpine` 
 - Change image `database` service in `./dev/elucidate/docker-compose.yml` to `postgres:13-alpine`
 - Change image `textrepo-app` service in `./dev/elucidate/docker-compose.yml` to `textrepo-app:txt_anchor`
+- Update env vars `TEXT_STORE_PATH` and `ANNO_STORE_PATH` in `docker-compose-init.yml` to desired un-t-ann-gle files 
 
 #### Run
 
