@@ -19,18 +19,19 @@ docker-compose up
 Open http://localhost:8000
 
 
-### Option 2: Build from scratch
+### Option 2: Build and import from scratch
 
 #### Preparation
 
 In parent dir:
-
 - Get untanngle-elucidate data and import scripts:
 ```shell
 git clone -b tt-878-republic-annotaties-omzetten https://github.com/knaw-huc/un-t-ann-gle.git untangle2elucidate
 ```
 
-- Create textrepo `txt_anchor` image using the development docker-compose setup:
+#### Optional: build new txt_anchor branch
+
+Create textrepo `txt_anchor` image using the development docker-compose setup:
 ```
 git clone -b txt_anchor https://github.com/knaw-huc/textrepo.git textrepo
 cd textrepo
@@ -38,12 +39,13 @@ cp examples/development/* .
 sed -i '' 's#knawhuc/textrepo-app:${DOCKER_TAG}#textrepo-app:txt_anchor#' docker-compose-dev.yml
 source docker-compose.env && docker-compose -f docker-compose-dev.yml build textrepo-app
 ```
+Change image `textrepo-app` service in `./dev/elucidate/docker-compose.yml` to `textrepo-app:txt_anchor`
 
+#### Re-configure micro-annotator
 In micro-annotator:
 - Remove `.example` postfix of env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
 - Change image `postgres` service in `./dev/textrepo/docker-compose.yml` to `postgres:11-alpine` 
 - Change `image` section of `database` service in `./dev/elucidate/docker-compose.yml` into `build: .`
-- Change image `textrepo-app` service in `./dev/elucidate/docker-compose.yml` to `textrepo-app:txt_anchor`
 - Update env vars `TEXT_STORE_PATH` and `ANNO_STORE_PATH` in `docker-compose-init.yml` to desired un-t-ann-gle files 
 
 #### Run
