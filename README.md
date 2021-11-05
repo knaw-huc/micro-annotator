@@ -23,14 +23,15 @@ Open http://localhost:8000
 
 #### Preparation
 
-In parent dir:
-- Get untanngle-elucidate data and import scripts:
+In parent dir: 
+Get untanngle-elucidate data and import scripts:
 ```shell
 git clone -b tt-878-republic-annotaties-omzetten https://github.com/knaw-huc/un-t-ann-gle.git untangle2elucidate
 ```
 
 #### Optional: build new txt_anchor branch
 
+In parent dir:
 Create textrepo `txt_anchor` image using the development docker-compose setup:
 ```
 git clone -b txt_anchor https://github.com/knaw-huc/textrepo.git textrepo
@@ -39,7 +40,8 @@ cp examples/development/* .
 sed -i '' 's#knawhuc/textrepo-app:${DOCKER_TAG}#textrepo-app:txt_anchor#' docker-compose-dev.yml
 source docker-compose.env && docker-compose -f docker-compose-dev.yml build textrepo-app
 ```
-Change image `textrepo-app` service in `./dev/elucidate/docker-compose.yml` to `textrepo-app:txt_anchor`
+
+Change image of `textrepo-app` service in `./dev/elucidate/docker-compose.yml` to `textrepo-app:txt_anchor`
 
 #### Re-configure micro-annotator
 In micro-annotator:
