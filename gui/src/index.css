@@ -6,6 +6,10 @@
     padding: 0;
 }
 
+.clearfix {
+    overflow: auto;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
 }
@@ -73,11 +77,6 @@ body, #root, .container {
 
 .btn:active {
     transform: scale(0.98);
-}
-
-.btn-block {
-    display: block;
-    width: 100%;
 }
 
 .anchor {
@@ -252,4 +251,22 @@ footer {
 
 .typeahead-menu li {
     background-color: white;
+}
+
+/* Tabs */
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.btn-tab {
+    width: 45%;
+    float: left;
+    margin-right: 0.5em;
+}
+
+.btn-tab-unselected {
+    border: 1px solid black;
+    background-color: white;
+    color: black;
 }

@@ -26,7 +26,11 @@ export default function Annotator(props: AnnotatorProps) {
       }
       {props.myAnnotations.length
         ? <>
-          <h4>Existing user annotations</h4>
+          <h4>Annotations</h4>
+          <div className="tabs clearfix">
+            <button className="btn btn-block btn-tab">By user</button>
+            <button className="btn btn-block btn-tab btn-tab-unselected">In range</button>
+          </div>
           <AnnotationList
             myAnnotations={props.myAnnotations}
             select={props.select}
