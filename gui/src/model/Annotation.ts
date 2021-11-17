@@ -1,4 +1,9 @@
-import {ElucidateAnnotation, EntityBodyType} from "./ElucidateAnnotation";
+import {
+  ClassifyingEntityBodyType,
+  ElucidateAnnotation,
+  ElucidateTargetType,
+  EntityBodyType
+} from "./ElucidateAnnotation";
 
 export const NS_PREFIX = "http://example.org/customwebannotationfield#";
 export const ENTITY = "Entity";
@@ -21,18 +26,33 @@ export type Annotation = {
 export function toAnnotation(ea: ElucidateAnnotation): Annotation {
   const result = {} as Annotation;
   result.creator = ea.creator;
+  result.source = ea;
 
   // ID contains url with version ID followed by annotation ID:
   result.id = ea.id.match(/[0-9a-f-]{36}/g)?.[1] as string;
   let type = ea.type;
-
   result.label = getType(type);
 
-  if (result.label !== ENTITY) {
-    return result;
+  if (result.label === ENTITY) {
+    return fromUserAnnToAnnotation(ea, result);
+  } else {
+    return fromUntanngleAnnToAnnotation(ea, result);
   }
-  result.entity_comment = getEntityComment(ea);
+}
+
+function fromUntanngleAnnToAnnotation(ea: ElucidateAnnotation, result: Annotation) {
   result.entity_type = getEntityType(ea);
+  let c = fromUntanngleToCoordinates(ea.target as ElucidateTargetType[]);
+  result.begin_anchor = c[0];
+  result.begin_char_offset = c[1];
+  result.end_anchor = c[2];
+  result.end_char_offset = c[3];
+  return result;
+}
+
+function fromUserAnnToAnnotation(ea: ElucidateAnnotation, result: Annotation) {
+  result.entity_type = getEntityType(ea);
+  result.entity_comment = getEntityComment(ea);
 
   let c = toCoordinates(ea.target as string);
   result.begin_anchor = c[0];
@@ -58,8 +78,9 @@ function getType(type: string | string[]) {
     throw Error('Could not find type in ' + JSON.stringify(type));
   }
 }
+
 function getEntityComment(ea: ElucidateAnnotation) {
-  const b = ea.body as EntityBodyType;
+  const b = ea.body as ClassifyingEntityBodyType;
   let entityText = b.find(b => b.purpose === "commenting")?.value;
   if (!entityText) {
     throw Error('No commenting TextualBody found in ' + JSON.stringify(b));
@@ -67,9 +88,17 @@ function getEntityComment(ea: ElucidateAnnotation) {
   return entityText;
 }
 
-function getEntityType(ea: ElucidateAnnotation) {
+function getEntityType(ea: ElucidateAnnotation) : string {
   const b = ea.body as EntityBodyType;
-  let entityType = b.find(b => b.purpose === "classifying")?.value;
+
+  const isClassifying = (body: any) => {
+    return body.purpose === "classifying";
+  }
+
+  let entityType = Array.isArray(b)
+    ? b.find(isClassifying)?.value
+    : isClassifying(b) ? b.value : undefined;
+
   if (!entityType) {
     throw Error('No classifying TextualBody found in ' + JSON.stringify(b));
   }
@@ -82,4 +111,9 @@ export function toCoordinates(textrepoTarget: string): number[] {
     throw Error('Cannot find coordinates in elucidate target: ' + textrepoTarget);
   }
   return [parseInt(groups[1]), parseInt(groups[2]), parseInt(groups[3]), parseInt(groups[4])];
+}
+
+export function fromUntanngleToCoordinates(targets: any[]): number[] {
+  const target = targets.find(t => t.selector.type === 'urn:example:republic:TextAnchorSelector');
+  return [target.selector.start, 0, target.selector.end, 0]
 }

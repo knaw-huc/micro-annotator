@@ -8,18 +8,19 @@ export type ElucidateBodyType = AnnotatorBodyType & {
   "purpose": string
 };
 
-export type EntityBodyType = [
-  {
-    "type": "TextualBody",
-    "purpose": "classifying",
-    "value": string
-  },
-  {
-    "type": "TextualBody",
-    "purpose": "commenting",
-    "value": string
-  }
-];
+type ClassifyingBodyType = {
+  "type": "TextualBody",
+  "purpose": "classifying",
+  "value": string
+};
+
+export type ClassifyingEntityBodyType = [ClassifyingBodyType, {
+  "type": "TextualBody",
+  "purpose": "commenting",
+  "value": string
+}];
+
+export type EntityBodyType = ClassifyingBodyType | ClassifyingEntityBodyType;
 
 export type SelectorTarget = {
   "type": undefined,
