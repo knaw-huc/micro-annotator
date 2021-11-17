@@ -19,24 +19,33 @@ export default function App() {
   const [annotatableText, setAnnotatableText] = useState([] as string[])
   const [selectionRange, setSelectionRange] = useState<AnnRange>()
   const [myAnnotations, setMyAnnotations] = useState<Annotation[]>([])
-  const [beginOffsetInResource, setBeginOffsetInResource] = useState(0)
+  const [beginRange, setBeginRange] = useState(0)
+  const [annotationId, setAnnotationId] = useState<string>()
+  const [endRange, setEndRange] = useState(0)
   const [versionId, setVersionId] = useState<string>()
+  const [targetId, setTargetId] = useState('')
   const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR)
   const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation>()
 
   useEffect(() => {
     const getResourcesAsync = async () => {
-      if (!(versionId && currentCreator && beginOffsetInResource)) {
+      if (!(targetId && currentCreator && beginRange && endRange)) {
         return;
       }
       const foundByCreatorAndVersion = (await Elucidate
-        .getByCreator(currentCreator))
+        .getByRange(targetId, beginRange, endRange))
         .map(toAnnotation)
-        .map(ann => setRelativeOffsets(ann, beginOffsetInResource));
+        .map(ann => setRelativeOffsets(ann, beginRange));
       setMyAnnotations(foundByCreatorAndVersion);
     }
     getResourcesAsync()
-  }, [versionId, currentCreator, beginOffsetInResource]);
+  }, [targetId, currentCreator, beginRange, endRange]);
+
+  useEffect(() => {
+    if (annotationId) {
+      searchAnnotation(annotationId);
+    }
+  }, [annotationId])
 
   const searchAnnotation = async (bodyId: string) => {
     let foundAnn = await Elucidate.getByBodyId(bodyId);
@@ -56,7 +65,7 @@ export default function App() {
     // Get text by version uuid (first uuid in ann id):
     const foundVersionId = foundAnn.id.match(/.*\/w3c\/([0-9a-f-]{36})\/([0-9a-f-]{36})/)?.[1] as string;
     if (!foundVersionId) {
-      setError(`No version ID found in ${foundAnn.id}`);
+      setError(`No version ID found in ${foundAnn.id}`)
       return;
     }
 
@@ -64,9 +73,10 @@ export default function App() {
     const grid: string[] = await TextRepo.getByVersionIdAndRange(
       foundVersionId, selectorTarget.selector.start, selectorTarget.selector.end
     );
-
-    setVersionId(foundVersionId);
-    setBeginOffsetInResource(selectorTarget.selector.start)
+    setTargetId(selectorTarget.source)
+    setVersionId(foundVersionId)
+    setBeginRange(selectorTarget.selector.start)
+    setEndRange(selectorTarget.selector.end)
     setAnnotatableText(grid)
   }
 
@@ -75,18 +85,18 @@ export default function App() {
       setError('Cannot save annotation when version id is not set')
       return;
     }
-    ann = setAbsoluteOffsets(ann, beginOffsetInResource);
+    ann = setAbsoluteOffsets(ann, beginRange);
 
     const created = await Elucidate.create(versionId, ann)
     setSelectionRange(undefined);
-    setMyAnnotations([...myAnnotations, setRelativeOffsets(created, beginOffsetInResource)]);
+    setMyAnnotations([...myAnnotations, setRelativeOffsets(created, beginRange)]);
   }
 
   return (
     <div className="container">
       {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
-      <CreatorField onChange={(newCreator:string) => setCurrentCreator(newCreator)} creator={currentCreator}/>
-      <Search onSearch={searchAnnotation}/>
+      <CreatorField onChange={(newCreator: string) => setCurrentCreator(newCreator)} creator={currentCreator}/>
+      <Search onSearch={setAnnotationId}/>
       <div className='row'>
         <ImageParts images={regionLinks}/>
         {annotatableText.length

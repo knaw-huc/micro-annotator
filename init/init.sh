@@ -22,7 +22,7 @@ pip install .
 if [[ ! -v ANNO_STORE_PATH ]]; then
     echo "ANNO_STORE_PATH is not set"
 fi
-python ./scripts/convert_to_web_annotations.py $ANNO_STORE_PATH
+python ./scripts/convert_to_web_annotations.py $ANNO_STORE_PATH --textrepo-base-url http://localhost:8000/textrepo
 
 python ./scripts/export_to_elucidate.py -e http://elucidate:8080/annotation -c "$VERSION_ID"
 

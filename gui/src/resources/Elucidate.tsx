@@ -54,29 +54,25 @@ export default class Elucidate {
   }
 
   /**
-   * Get items by creator
+   * Get all by creator
    */
   public static async getByCreator(creator: string) {
-    let result: ElucidateAnnotation[] = [];
-    let page = 0;
-    let annotationPage;
-    do {
-      creator = encodeURIComponent(creator);
-      const response = await fetch(
-        `${this.host}/annotation/w3c/services/search/creator?levels=annotation&type=id&value=${creator}&page=${page}&desc=1`,
-        {headers: this.headers}
-      );
-      annotationPage = await response.json();
-      if (annotationPage.items) {
-        result.push(...annotationPage.items);
-      }
-      page++;
-    } while (annotationPage.next);
-    return result;
+    let url = `${this.host}/annotation/w3c/services/search/creator`;
+    const params = new URLSearchParams({value: creator, levels: 'annotation', type: 'id'});
+    return this.getAllPages(url, params)
   }
 
   /**
-   * Get items by full body id
+   * Get all by range
+   */
+  public static async getByRange(targetId: string, rangeStart: number, rangeEnd: number): Promise<ElucidateAnnotation[]> {
+    let url = `${this.host}/annotation/w3c/services/search/range`;
+    const params = new URLSearchParams({target_id: targetId, range_start: '' + rangeStart, range_end: '' + rangeEnd});
+    return this.getAllPages(url, params)
+  }
+
+  /**
+   * Search items by full body id
    */
   public static async getByBodyId(id: string): Promise<ElucidateAnnotation | undefined> {
     let queryParam = encodeURIComponent(id);
@@ -90,7 +86,7 @@ export default class Elucidate {
   }
 
   /**
-   * Get all items by partial ID
+   * Search items by partial ID
    */
   public static async getByBodyIdPrefix(idPrefix: string): Promise<ElucidateAnnotation[]> {
     idPrefix = encodeURIComponent(idPrefix);
@@ -100,6 +96,25 @@ export default class Elucidate {
     );
     const annotationPage = await response.json();
     return annotationPage.items;
+  }
+
+  private static async getAllPages(url: string, params: URLSearchParams) {
+    let result: ElucidateAnnotation[] = [];
+    let annotationPage;
+    let page = 0;
+    do {
+      params.set('page', '' + page)
+      const response = await fetch(
+        url + '?' + params.toString(),
+        {headers: this.headers}
+      );
+      annotationPage = await response.json();
+      if (annotationPage.items) {
+        result.push(...annotationPage.items);
+      }
+      page++;
+    } while (annotationPage.next);
+    return result;
   }
 }
 
