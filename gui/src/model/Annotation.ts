@@ -25,7 +25,6 @@ export type Annotation = {
 
 export function toAnnotation(ea: ElucidateAnnotation): Annotation {
   const result = {} as Annotation;
-  result.creator = ea.creator;
   result.source = ea;
 
   // ID contains url with version ID followed by annotation ID:
@@ -51,6 +50,7 @@ function fromUntanngleAnnToAnnotation(ea: ElucidateAnnotation, result: Annotatio
 }
 
 function fromUserAnnToAnnotation(ea: ElucidateAnnotation, result: Annotation) {
+  result.creator = ea.creator;
   result.entity_type = getEntityType(ea);
   result.entity_comment = getEntityComment(ea);
 
@@ -88,7 +88,7 @@ function getEntityComment(ea: ElucidateAnnotation) {
   return entityText;
 }
 
-function getEntityType(ea: ElucidateAnnotation) : string {
+function getEntityType(ea: ElucidateAnnotation): string {
   const b = ea.body as EntityBodyType;
 
   const isClassifying = (body: any) => {
@@ -115,5 +115,5 @@ export function toCoordinates(textrepoTarget: string): number[] {
 
 export function fromUntanngleToCoordinates(targets: any[]): number[] {
   const target = targets.find(t => t.selector.type === 'urn:example:republic:TextAnchorSelector');
-  return [target.selector.start, 0, target.selector.end, 0]
+  return [target.selector.start, 0, target.selector.end + 1, 0]
 }

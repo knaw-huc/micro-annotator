@@ -32,8 +32,10 @@ export default function App() {
       if (!(targetId && currentCreator && beginRange && endRange)) {
         return;
       }
-      const foundByCreatorAndVersion = (await Elucidate
-        .getByRange(targetId, beginRange, endRange))
+      let found = await Elucidate
+        .getByRange(targetId, beginRange, endRange);
+      // TODO: fix toggle
+      const foundByCreatorAndVersion = found
         .map(toAnnotation)
         .map(ann => setRelativeOffsets(ann, beginRange));
       setMyAnnotations(foundByCreatorAndVersion);
