@@ -11,6 +11,7 @@ import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
+import {AnnotationListType} from "./components/AnnotationList";
 
 export default function App() {
 
@@ -19,6 +20,7 @@ export default function App() {
   const [annotatableText, setAnnotatableText] = useState([] as string[])
   const [selectionRange, setSelectionRange] = useState<AnnRange>()
   const [myAnnotations, setMyAnnotations] = useState<Annotation[]>([])
+  const [annotationType, setAnnotationType] = useState<AnnotationListType>(AnnotationListType.USER)
   const [beginRange, setBeginRange] = useState(0)
   const [annotationId, setAnnotationId] = useState<string>()
   const [endRange, setEndRange] = useState(0)
@@ -32,16 +34,17 @@ export default function App() {
       if (!(targetId && currentCreator && beginRange && endRange)) {
         return;
       }
-      let found = await Elucidate
-        .getByRange(targetId, beginRange, endRange);
-      // TODO: fix toggle
-      const foundByCreatorAndVersion = found
+
+      const found = annotationType === AnnotationListType.USER
+        ? await Elucidate.getByCreator(currentCreator)
+        : await Elucidate.getByRange(targetId, beginRange, endRange);
+      const annotations = found
         .map(toAnnotation)
         .map(ann => setRelativeOffsets(ann, beginRange));
-      setMyAnnotations(foundByCreatorAndVersion);
+      setMyAnnotations(annotations);
     }
     getResourcesAsync()
-  }, [targetId, currentCreator, beginRange, endRange]);
+  }, [targetId, currentCreator, beginRange, endRange, annotationType]);
 
   useEffect(() => {
     if (annotationId) {
@@ -116,6 +119,8 @@ export default function App() {
               myAnnotations={myAnnotations}
               select={setSelectedAnnotation}
               selected={selectedAnnotation}
+              annotationType={annotationType}
+              setAnnotationType={setAnnotationType}
             />
           </>
           : <>Click search to find an annotation by its ID</>}

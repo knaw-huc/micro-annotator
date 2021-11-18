@@ -7,6 +7,11 @@ type AnnotationListProps = {
   myAnnotations: Annotation[];
 }
 
+export enum AnnotationListType {
+  USER = 'user',
+  RANGE = 'range'
+}
+
 export default function AnnotationList(props: AnnotationListProps) {
   return (
     <div>
