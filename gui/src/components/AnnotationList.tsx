@@ -4,7 +4,7 @@ import {Annotation} from "../model/Annotation";
 type AnnotationListProps = {
   select: (a: Annotation | undefined) => void;
   selected: Annotation | undefined;
-  myAnnotations: Annotation[];
+  annotations: Annotation[];
 }
 
 export enum AnnotationListType {
@@ -15,7 +15,7 @@ export enum AnnotationListType {
 export default function AnnotationList(props: AnnotationListProps) {
   return (
     <div>
-      {props.myAnnotations.map((annotation, index) => (
+      {props.annotations.map((annotation, index) => (
         <AnnotationSnippet
           key={index}
           annot_id={index}

@@ -15,19 +15,66 @@ import {AnnotationListType} from "./components/AnnotationList";
 
 export default function App() {
 
+  /**
+   * Error message
+   */
   const [error, setError] = useState<string>()
+
+  /**
+   * Image regions
+   */
   const [regionLinks, setRegionLinks] = useState([] as string[])
+
+  /**
+   * Array of lines that can be annotated
+   */
   const [annotatableText, setAnnotatableText] = useState([] as string[])
+
+  /**
+   * Array of lines that can be annotated
+   */
   const [selectionRange, setSelectionRange] = useState<AnnRange>()
-  const [myAnnotations, setMyAnnotations] = useState<Annotation[]>([])
-  const [annotationType, setAnnotationType] = useState<AnnotationListType>(AnnotationListType.USER)
-  const [beginRange, setBeginRange] = useState(0)
-  const [annotationId, setAnnotationId] = useState<string>()
-  const [endRange, setEndRange] = useState(0)
-  const [versionId, setVersionId] = useState<string>()
-  const [targetId, setTargetId] = useState('')
-  const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR)
+
+  /**
+   * Annotations on display
+   */
+  const [annotations, setAnnotations] = useState<Annotation[]>([])
+
+  /**
+   * Expanded annotation on display
+   */
   const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation>()
+
+  /**
+   * Type of annotations on display
+   */
+  const [annotationType, setAnnotationType] = useState<AnnotationListType>(AnnotationListType.USER)
+
+  /**
+   * Id of annotation linking to current text
+   */
+  const [annotationId, setAnnotationId] = useState<string>()
+
+  /**
+   * Target ID of annotation linking to current text
+   */
+  const [targetId, setTargetId] = useState('')
+
+  /**
+   * Line range of current text
+   */
+  const [beginRange, setBeginRange] = useState(0)
+  const [endRange, setEndRange] = useState(0)
+
+  /**
+   * Version ID, also used as elucidate collection ID
+   */
+  const [versionId, setVersionId] = useState<string>()
+
+  /**
+   * Name used in creating new annotations or searching for existing user annotations
+   */
+  const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR)
 
   useEffect(() => {
     const getResourcesAsync = async () => {
@@ -38,11 +85,11 @@ export default function App() {
       const found = annotationType === AnnotationListType.USER
         ? await Elucidate.getByCreator(currentCreator)
         : await Elucidate.getByRange(targetId, beginRange, endRange);
-      const annotations = found
+      const converted = found
         .map(toAnnotation)
         .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
         .map(ann => setRelativeOffsets(ann, beginRange));
-      setMyAnnotations(annotations);
+      setAnnotations(converted);
     }
     getResourcesAsync()
   }, [targetId, currentCreator, beginRange, endRange, annotationType]);
@@ -95,7 +142,7 @@ export default function App() {
 
     const created = await Elucidate.create(versionId, ann)
     setSelectionRange(undefined);
-    setMyAnnotations([...myAnnotations, setRelativeOffsets(created, beginRange)]);
+    setAnnotations([...annotations, setRelativeOffsets(created, beginRange)]);
   }
 
   return (
@@ -117,7 +164,7 @@ export default function App() {
               currentCreator={currentCreator}
               selectionRange={selectionRange}
               onAddAnnotation={onAddAnnotation}
-              myAnnotations={myAnnotations}
+              annotations={annotations}
               select={setSelectedAnnotation}
               selected={selectedAnnotation}
               annotationType={annotationType}

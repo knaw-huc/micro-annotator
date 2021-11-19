@@ -7,7 +7,7 @@ type AnnotatorProps = {
   currentCreator: string;
   selectionRange: AnnRange | undefined;
   onAddAnnotation: (ann: Annotation) => void;
-  myAnnotations: Annotation[];
+  annotations: Annotation[];
   select: (a: Annotation | undefined) => void;
   selected: Annotation | undefined;
   setAnnotationType: (t: AnnotationListType) => void;
@@ -44,10 +44,10 @@ export default function Annotator(props: AnnotatorProps) {
           In range
         </button>
       </div>
-      {props.myAnnotations.length
+      {props.annotations.length
         ? <>
           <AnnotationList
-            myAnnotations={props.myAnnotations}
+            annotations={props.annotations}
             select={props.select}
             selected={props.selected}
           />
