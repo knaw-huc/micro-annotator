@@ -26,12 +26,12 @@ export default function App() {
   const [regionLinks, setRegionLinks] = useState([] as string[])
 
   /**
-   * Array of lines that can be annotated
+   * Array of lines: text that can be annotated
    */
   const [annotatableText, setAnnotatableText] = useState([] as string[])
 
   /**
-   * Array of lines that can be annotated
+   * Coordinates of selected text
    */
   const [selectionRange, setSelectionRange] = useState<AnnRange>()
 
