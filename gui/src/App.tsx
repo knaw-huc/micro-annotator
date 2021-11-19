@@ -40,6 +40,7 @@ export default function App() {
         : await Elucidate.getByRange(targetId, beginRange, endRange);
       const annotations = found
         .map(toAnnotation)
+        .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
         .map(ann => setRelativeOffsets(ann, beginRange));
       setMyAnnotations(annotations);
     }
@@ -74,7 +75,7 @@ export default function App() {
       return;
     }
 
-    const selectorTarget = foundAnn.target.find(t => t.type === undefined) as SelectorTarget;
+    const selectorTarget = foundAnn.target.find(t => [undefined, 'Text'].includes(t.type)) as SelectorTarget;
     const grid: string[] = await TextRepo.getByVersionIdAndRange(
       foundVersionId, selectorTarget.selector.start, selectorTarget.selector.end
     );

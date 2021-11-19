@@ -1,7 +1,8 @@
 # Micro-annotator
 Micro-annotator is a small, proof-of-concept webapp to create web annotations on segments of collection
 documents, including both image segments and text segments. Image segments are provided by a IIIF server, text segments
-by an instance of [TextRepo](https://github.com/knaw-huc/textrepo) and annotations by an adapted version of the [Elucidate](https://github.com/dlcs/elucidate-server) web annotation server.
+by an instance of [TextRepo](https://github.com/knaw-huc/textrepo) and annotations by an adapted version of the 
+[Elucidate](https://github.com/dlcs/elucidate-server) web annotation server.
 
 ## WIP: Development setup
 
@@ -41,7 +42,7 @@ sed -i '' 's#knawhuc/textrepo-app:${DOCKER_TAG}#textrepo-app:txt_anchor#' docker
 source docker-compose.env && docker-compose -f docker-compose-dev.yml build textrepo-app
 ```
 
-Change image of `textrepo-app` service in `./dev/elucidate/docker-compose.yml` to `textrepo-app:txt_anchor`
+Change image of `textrepo-app` service in `./dev/textrepo/docker-compose.yml` to `textrepo-app:txt_anchor`
 
 #### Re-configure micro-annotator
 In micro-annotator:
