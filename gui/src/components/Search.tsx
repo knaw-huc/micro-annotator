@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import Config from "../Config";
-import Typeahead, {TypeaheadItem} from "./Typeahead";
+import Typeahead, {TypeaheadItem} from "./common/Typeahead";
 import Elucidate from "../resources/Elucidate";
 import {ElucidateBodyType} from "../model/ElucidateAnnotation";
 import {useDebounce} from "../util/useDebounce";

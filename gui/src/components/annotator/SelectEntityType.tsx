@@ -1,5 +1,5 @@
-import {EntityType} from "../model/EntityType";
-import ComboBox, {ComboBoxItem} from "./ComboBox";
+import {EntityType} from "../../model/EntityType";
+import ComboBox, {ComboBoxItem} from "../common/ComboBox";
 
 type SelectEntityTypeProps = {
   selected: string

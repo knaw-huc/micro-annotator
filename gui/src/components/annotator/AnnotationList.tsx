@@ -1,5 +1,5 @@
 import AnnotationSnippet from './AnnotationSnippet'
-import {Annotation} from "../model/Annotation";
+import {Annotation} from "../../model/Annotation";
 
 type AnnotationListProps = {
   annotations: Annotation[];

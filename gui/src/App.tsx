@@ -1,9 +1,9 @@
 import {useEffect, useState} from 'react'
 
 import Search from './components/Search'
-import ImageParts from './components/ImageParts'
-import AnnotatableText from './components/AnnotatableText'
-import Annotator from './components/Annotator'
+import ImageColumn from './components/image/ImageColumn'
+import AnnotatableText from './components/annotatable/AnnotatableText'
+import Annotator from './components/annotator/Annotator'
 import {AnnRange} from "./model/AnnRange";
 import {Annotation, toAnnotation} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
@@ -11,7 +11,7 @@ import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
-import {AnnotationListType} from "./components/AnnotationList";
+import {AnnotationListType} from "./components/annotator/AnnotationList";
 
 export default function App() {
 
@@ -156,7 +156,7 @@ export default function App() {
         onSearch={setAnnotationId}
       />
       <div className='row'>
-        <ImageParts
+        <ImageColumn
           images={regionLinks}
         />
         {annotatableText.length

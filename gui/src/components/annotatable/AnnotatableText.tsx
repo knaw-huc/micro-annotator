@@ -1,8 +1,8 @@
 import {useEffect, useRef} from 'react'
 import TextLine from "./TextLine";
-import {AnnRange, toRange} from "../model/AnnRange";
+import {AnnRange, toRange} from "../../model/AnnRange";
 import HighlightLine from "./HighlightLine";
-import {Annotation} from "../model/Annotation";
+import {Annotation} from "../../model/Annotation";
 
 type AnnotatableTextProps = {
   text: string[],

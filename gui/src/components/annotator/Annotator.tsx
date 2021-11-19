@@ -1,7 +1,7 @@
 import AnnotationForm from './AnnotationForm'
 import AnnotationList, {AnnotationListType} from './AnnotationList'
-import {Annotation} from "../model/Annotation";
-import {AnnRange} from "../model/AnnRange";
+import {Annotation} from "../../model/Annotation";
+import {AnnRange} from "../../model/AnnRange";
 
 type AnnotatorProps = {
   currentCreator: string;

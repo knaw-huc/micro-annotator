@@ -1,8 +1,8 @@
 import {FormEvent, useEffect, useState} from 'react'
-import {Annotation} from "../model/Annotation";
-import {AnnRange} from "../model/AnnRange";
+import {Annotation} from "../../model/Annotation";
+import {AnnRange} from "../../model/AnnRange";
 import SelectEntityType from "./SelectEntityType";
-import {toRangeStr} from "../util/toRangeStr";
+import {toRangeStr} from "../../util/toRangeStr";
 
 type AddAnnotationProps = {
   currentCreator: string;

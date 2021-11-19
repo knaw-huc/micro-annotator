@@ -4,7 +4,7 @@ type ImagePartsProps = {
   images: string[]
 }
 
-export default function ImageParts(props: ImagePartsProps) {
+export default function ImageColumn(props: ImagePartsProps) {
   return (
     <div style={{'maxHeight': '500px'}}>
       {props.images.map((img, index) => (

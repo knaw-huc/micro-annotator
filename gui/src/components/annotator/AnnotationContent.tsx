@@ -1,6 +1,6 @@
-import {Annotation} from "../model/Annotation";
-import {toRangeStr} from "../util/toRangeStr";
-import {toRange} from "../model/AnnRange";
+import {Annotation} from "../../model/Annotation";
+import {toRangeStr} from "../../util/toRangeStr";
+import {toRange} from "../../model/AnnRange";
 import {useState} from "react";
 import ReactLinkify from "react-linkify";
 
