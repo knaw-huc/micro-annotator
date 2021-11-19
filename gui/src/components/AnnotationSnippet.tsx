@@ -6,16 +6,16 @@ import AnnotationContent from "./AnnotationContent";
 type AnnotationSnippetProps = {
   annot_id: number;
   annotation: Annotation;
-  select: (a: Annotation | undefined) => void,
   selected: Annotation | undefined
+  onSelect: (a: Annotation | undefined) => void,
 }
 
 export default function AnnotationSnippet(props: AnnotationSnippetProps) {
   function toggleSelection() {
     if (props.selected?.id === props.annotation.id) {
-      props.select(undefined);
+      props.onSelect(undefined);
     } else {
-      props.select(props.annotation);
+      props.onSelect(props.annotation);
     }
   }
 

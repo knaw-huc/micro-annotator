@@ -133,7 +133,7 @@ export default function App() {
     setAnnotatableText(grid)
   }
 
-  const onAddAnnotation = async (ann: Annotation) => {
+  const addAnnotation = async (ann: Annotation) => {
     if (!versionId) {
       setError('Cannot save annotation when version id is not set')
       return;
@@ -148,10 +148,17 @@ export default function App() {
   return (
     <div className="container">
       {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
-      <CreatorField onChange={(newCreator: string) => setCurrentCreator(newCreator)} creator={currentCreator}/>
-      <Search onSearch={setAnnotationId}/>
+      <CreatorField
+        onChange={(newCreator: string) => setCurrentCreator(newCreator)}
+        creator={currentCreator}
+      />
+      <Search
+        onSearch={setAnnotationId}
+      />
       <div className='row'>
-        <ImageParts images={regionLinks}/>
+        <ImageParts
+          images={regionLinks}
+        />
         {annotatableText.length
           ?
           <>
@@ -163,12 +170,12 @@ export default function App() {
             <Annotator
               currentCreator={currentCreator}
               selectionRange={selectionRange}
-              onAddAnnotation={onAddAnnotation}
               annotations={annotations}
-              select={setSelectedAnnotation}
+              onAddAnnotation={addAnnotation}
               selected={selectedAnnotation}
+              onSelect={setSelectedAnnotation}
               annotationType={annotationType}
-              setAnnotationType={setAnnotationType}
+              onSetAnnotationType={setAnnotationType}
             />
           </>
           : <>Click search to find an annotation by its ID</>}
@@ -177,7 +184,6 @@ export default function App() {
   );
 }
 
-// TODO: determine relative offsets only in text containing anno
 function setRelativeOffsets(a: Annotation, offset: number): Annotation {
   a.begin_anchor -= offset;
   a.end_anchor -= offset;

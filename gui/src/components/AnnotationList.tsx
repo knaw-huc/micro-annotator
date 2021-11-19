@@ -2,9 +2,9 @@ import AnnotationSnippet from './AnnotationSnippet'
 import {Annotation} from "../model/Annotation";
 
 type AnnotationListProps = {
-  select: (a: Annotation | undefined) => void;
-  selected: Annotation | undefined;
   annotations: Annotation[];
+  selected: Annotation | undefined;
+  onSelect: (a: Annotation | undefined) => void;
 }
 
 export enum AnnotationListType {
@@ -20,8 +20,8 @@ export default function AnnotationList(props: AnnotationListProps) {
           key={index}
           annot_id={index}
           annotation={annotation}
-          select={props.select}
           selected={props.selected}
+          onSelect={props.onSelect}
         />
       ))}
     </div>

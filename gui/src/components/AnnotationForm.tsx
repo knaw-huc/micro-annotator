@@ -7,7 +7,7 @@ import {toRangeStr} from "../util/toRangeStr";
 type AddAnnotationProps = {
   currentCreator: string;
   selectedRange: AnnRange | undefined;
-  onAdd: (ann: Annotation) => void
+  onAddAnnotation: (ann: Annotation) => void
 };
 
 export default function AnnotationForm(props: AddAnnotationProps) {
@@ -59,7 +59,7 @@ export default function AnnotationForm(props: AddAnnotationProps) {
     setEntityType('');
     setComment('');
 
-    props.onAdd(newAnnotation);
+    props.onAddAnnotation(newAnnotation);
   }
 
   return (

@@ -8,15 +8,15 @@ type AnnotatorProps = {
   selectionRange: AnnRange | undefined;
   onAddAnnotation: (ann: Annotation) => void;
   annotations: Annotation[];
-  select: (a: Annotation | undefined) => void;
+  onSelect: (a: Annotation | undefined) => void;
   selected: Annotation | undefined;
-  setAnnotationType: (t: AnnotationListType) => void;
+  onSetAnnotationType: (t: AnnotationListType) => void;
   annotationType: AnnotationListType;
 }
 
 export default function Annotator(props: AnnotatorProps) {
-  const changeToUser = () => props.setAnnotationType(AnnotationListType.USER)
-  const changeToRange = () => props.setAnnotationType(AnnotationListType.RANGE)
+  const changeToUser = () => props.onSetAnnotationType(AnnotationListType.USER)
+  const changeToRange = () => props.onSetAnnotationType(AnnotationListType.RANGE)
 
   return (
     <div style={{'minWidth': '150px', 'width': '280px'}}>
@@ -25,7 +25,7 @@ export default function Annotator(props: AnnotatorProps) {
         ? <AnnotationForm
           currentCreator={props.currentCreator}
           selectedRange={props.selectionRange}
-          onAdd={props.onAddAnnotation}
+          onAddAnnotation={props.onAddAnnotation}
         />
         : <small>Select text to create an annotation</small>
       }
@@ -48,8 +48,8 @@ export default function Annotator(props: AnnotatorProps) {
         ? <>
           <AnnotationList
             annotations={props.annotations}
-            select={props.select}
             selected={props.selected}
+            onSelect={props.onSelect}
           />
         </>
         : <>(No annotations)</>
