@@ -53,7 +53,7 @@ declare module '@recogito/recogito-js' {
      */
     loadAnnotations(url: string): Promise<Annotation[]>;
 
-    on(event: string, handler: () => void);
+    on(event: string, handler: (...args) => void);
 
     getAnnotations(): Annotation[];
   }

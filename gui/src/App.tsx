@@ -1,18 +1,32 @@
-import {useEffect, useState} from 'react'
+import {MutableRefObject, useEffect, useRef, useState} from 'react'
 
 import Search from './components/Search'
 import ImageColumn from './components/image/ImageColumn'
 import AnnotatableText from './components/annotatable/AnnotatableText'
 import Annotator from './components/annotator/Annotator'
 import {AnnRange} from "./model/AnnRange";
-import {Annotation, toAnnotation} from "./model/Annotation";
+import {Annotation} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
-import RecogitoExample from "./components/poc/RecogitoExample";
+import RecogitoDocument from "./components/poc/RecogitoDocument";
+import {TextContainer} from "./TextContainer";
+
+let text = `Inventaris ende specificatie van
+432
+alle den huysraet Imboel porceleijne
+Liwaet potgelt gout en silverwerck
+by Catharina Cleyburgh naergelaten
+voor soo veel desselfs gesamentlycke
+Erfgenamen competeren in gevolgen
+van d Testamente van deselve Catharina
+Cleyburgh
+en nooteboome kas
+Twaelf ses karsseboome stoelen
+ses spaense stoelen`;
 
 export default function App() {
 
@@ -79,18 +93,40 @@ export default function App() {
 
   useEffect(() => {
     const getResourcesAsync = async () => {
-      if (!(targetId && currentCreator && beginRange && endRange)) {
-        return;
-      }
+      // if (!(targetId && currentCreator && beginRange && endRange)) {
+      //   return;
+      // }
+      //
+      // const found = annotationType === AnnotationListType.USER
+      //   ? await Elucidate.getByCreator(currentCreator)
+      //   : await Elucidate.getByRange(targetId, beginRange, endRange);
+      // const converted = found
+      //   .map(toAnnotation)
+      //   .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
+      //   .map(ann => setRelativeOffsets(ann, beginRange));
+      // setAnnotations(converted);
 
-      const found = annotationType === AnnotationListType.USER
-        ? await Elucidate.getByCreator(currentCreator)
-        : await Elucidate.getByRange(targetId, beginRange, endRange);
-      const converted = found
-        .map(toAnnotation)
-        .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
-        .map(ann => setRelativeOffsets(ann, beginRange));
-      setAnnotations(converted);
+      const getAnnotations = async () => {
+        const res = await fetch("annotations.json", {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+
+        return await res.json();
+      };
+
+      // Load the annotations from the file
+      getAnnotations().then((annotations: any) => {
+        setAnnotations(annotations
+          .filter((a: any) => {
+            const position = a.target.selector.find((s: any) => s.type === "TextPositionSelector");
+            return position.start >= 0 && position.end <= text.length
+          }));
+      });
+
+
     }
     getResourcesAsync()
   }, [targetId, currentCreator, beginRange, endRange, annotationType]);
@@ -146,11 +182,32 @@ export default function App() {
     setAnnotations([...annotations, setRelativeOffsets(created, beginRange)]);
   }
 
+  const docRef: MutableRefObject<any> = useRef(null);
+  const [hasRef, setHasRef] = useState(docRef.current);
+  useEffect(() => {
+    if (docRef.current) {
+      setHasRef(true)
+    }
+  }, [docRef]);
+
+  function renderRecogito() {
+
+    console.log('v3 Cannot be undefined', docRef.current);
+
+    return <RecogitoDocument
+      docRef={docRef}
+      text={text}
+      annotations={annotations}
+      onAddAnnotation={addAnnotation}
+    />
+  }
+
   return (
     <div className="container">
+      <TextContainer svgRef={docRef}/>
 
       <div>
-        <RecogitoExample annotations={annotations} setAnnotations={(anns) => setAnnotations(anns as Annotation[])}/>
+        {hasRef ? renderRecogito() : null}
       </div>
 
       {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
