@@ -1,0 +1,1506 @@
+[{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "https://recogito.pelagios.org/annotation/245da76f-023a-4b70-a793-9ec74c4913da",
+  "type": "Annotation",
+  "generator": {
+    "id": "https://recogito.pelagios.org/",
+    "type": "Software",
+    "name": "Recogito",
+    "homepage": "https://recogito.pelagios.org/"
+  },
+  "generated": "2021-10-19T15:49:18+00:00",
+  "body": [{
+    "type": "TextualBody",
+    "id": "http://example.org/terms/material",
+    "value": "material",
+    "modified": "2021-10-05T11:36:25+00:00",
+    "purpose": "tagging"
+  },
+    {
+      "type": "TextualBody",
+      "value": "porselein",
+      "modified": "2021-10-05T11:36:25+00:00",
+      "purpose": "commenting"
+    }
+  ],
+  "target": {
+    "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+    "type": "Text",
+    "label": "A25555000316.txt",
+    "selector": [{
+      "type": "TextPositionSelector",
+      "start": 1084,
+      "end": 1094
+    },
+      {
+        "type": "TextQuoteSelector",
+        "exact": "porceleyne"
+      }
+    ]
+  }
+},
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/ee2c601a-d055-4aa2-8f56-cb293ea5cd10",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:36:25+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "porselein",
+        "modified": "2021-10-05T11:36:25+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 937,
+        "end": 947
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "porceleyne"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/5dfb9ba1-8eb0-4868-8329-2e58bcbdc9ab",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:35:18+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "tin",
+        "modified": "2021-10-05T11:35:18+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 738,
+        "end": 743
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Tinne"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/edb21d81-316c-4eb7-a467-f4a48115c105",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:37:54+00:00",
+      "purpose": "identifying"
+    },
+      {
+        "type": "TextualBody",
+        "id": "http://example.org/terms/person",
+        "value": "person",
+        "creator": "https://recogito.pelagios.org/lvanwissen",
+        "modified": "2021-10-05T13:24:28+00:00",
+        "purpose": "tagging"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 2655,
+        "end": 2674
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Daniel E is kalijet"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/f41d00e3-6d57-4efb-8133-86136bf58ff8",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:37:16+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1449,
+        "end": 1462
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Sr. Liscalhet"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/622e87bc-fc5e-4f08-bb7f-25124de47ec3",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T10:23:50+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1801,
+        "end": 1820
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Catharina Cleyburgh"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/6be39e2a-288b-4a9a-ae40-3c9fed86bf35",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:35:18+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "tin",
+        "modified": "2021-10-05T11:35:18+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 767,
+        "end": 772
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Tinne"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/ac08f73a-e2ef-4895-af5a-85d1936d3fd3",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/object",
+      "value": "object",
+      "modified": "2021-10-05T11:41:22+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "brandewijnpimpeltje",
+        "modified": "2021-10-05T11:41:22+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1212,
+        "end": 1234
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "brandewyns\npimpeltjens"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/d6fbece9-4d82-4a43-9025-1f857b7b5266",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:38:22+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 2718,
+        "end": 2734
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "wdijle blijbingh"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/a51b51f6-d831-4d5b-9c49-41d4aa3cdfd7",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:38:11+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 2700,
+        "end": 2717
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "huybert lieileers"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/329b1279-e12b-46e5-a698-de494cc1029b",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:32:55+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "notenhout",
+        "modified": "2021-10-05T11:32:55+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 267,
+        "end": 277
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "nooteboome"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/abf7842b-aa62-4b4b-88cd-736d568e4131",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:34:28+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "koper",
+        "modified": "2021-10-05T11:34:28+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 630,
+        "end": 637
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "koopere"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/0556a21c-02db-4769-8c81-1a3b14cbe82b",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:34:28+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "koper",
+        "modified": "2021-10-05T11:34:28+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 608,
+        "end": 615
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "koopere"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/3563608f-d377-4806-88c2-f358afa70044",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/object",
+      "value": "object",
+      "modified": "2021-10-05T11:39:51+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "Tafelkleed",
+        "modified": "2021-10-05T11:39:51+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1281,
+        "end": 1295
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Taeffelkleeden"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/5c2ef8fc-7474-47ba-852c-a3e02c7b6242",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:38:38+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 2772,
+        "end": 2786
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "d van der groe"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/36772fb3-9aac-4fdb-83bd-037a3a299c5a",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:35:06+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "tin",
+        "modified": "2021-10-05T11:35:06+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 701,
+        "end": 706
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "tinne"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/af3dcb74-4235-4b98-a09a-a24f4b878a00",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:36:25+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "porselein",
+        "modified": "2021-10-05T11:36:25+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 889,
+        "end": 899
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "porceleyne"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/55fb6d32-2756-4087-9c71-a844cd64785d",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/object",
+      "value": "object",
+      "modified": "2021-10-05T11:36:02+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "keukengoed",
+        "modified": "2021-10-05T11:36:02+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 842,
+        "end": 853
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "kenckengoet"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/d7833541-5092-4a67-9ee9-efce34dae47d",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/object",
+      "value": "object",
+      "modified": "2021-10-05T11:43:01+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "waterpot",
+        "modified": "2021-10-05T11:43:01+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 773,
+        "end": 782
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Water pot"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/bf8f0bc0-dacf-47df-891f-13654cb7c327",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:38:00+00:00",
+      "purpose": "identifying"
+    },
+      {
+        "type": "TextualBody",
+        "id": "http://example.org/terms/person",
+        "value": "person",
+        "creator": "https://recogito.pelagios.org/lvanwissen",
+        "modified": "2021-10-05T13:24:38+00:00",
+        "purpose": "tagging"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 2675,
+        "end": 2699
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Harmen Dirckse Modeiller"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/50d1564a-a2c3-4878-962b-30a247d1cfb5",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T10:23:50+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 112,
+        "end": 131
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Catharina Cleyburgh"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/90d5b98b-961c-431d-8985-a627e8776173",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:34:51+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "koper",
+        "modified": "2021-10-05T11:34:51+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 676,
+        "end": 681
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "koper"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/cf6d8a6c-b689-4973-af93-a660fe835270",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:36:25+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "porselein",
+        "modified": "2021-10-05T11:36:25+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 866,
+        "end": 876
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "porceleyne"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/c934a2b3-9dd1-4fa3-91ba-48244b4298ce",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:38:32+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 2742,
+        "end": 2749
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "DMannek"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/0c7c61ee-200c-492c-94f7-abac93452960",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:37:37+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1852,
+        "end": 1868
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Daniel liscaljet"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/8c01b8b7-a0e4-4bdb-b0eb-4a12af39bf7d",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:38:27+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 2735,
+        "end": 2741
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "GvGroe"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/d716ddb6-d321-473b-83aa-fef36a2954a3",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:43:41+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "koper",
+        "modified": "2021-10-05T11:43:41+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 661,
+        "end": 667
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "metale"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/8eaa9992-e5eb-4794-8250-435bc5621714",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/object",
+      "value": "object",
+      "modified": "2021-10-05T11:42:01+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "kopje",
+        "modified": "2021-10-05T11:42:01+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1197,
+        "end": 1204
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "kopjens"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/85b56778-8fc4-4b8d-b4f1-85d904663805",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/object",
+      "value": "object",
+      "modified": "2021-10-05T11:42:15+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "klapmuts",
+        "modified": "2021-10-05T11:42:15+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1173,
+        "end": 1185
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Clapmutsjens"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/5b3cedfc-31a1-45f9-929e-432ce8563453",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:39:25+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1701,
+        "end": 1710
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "liscaljet"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/88ec5f09-f111-4fe9-b882-7545fa08b57d",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:38:51+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 2586,
+        "end": 2604
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Jacob van der groe"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/7d881d79-0b61-49a7-bacb-95191165bd06",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T10:24:10+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 244,
+        "end": 263
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Catharina\nCleyburgh"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/02e735b9-16d5-433d-b192-1e54edb10e2c",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/object",
+      "value": "object",
+      "modified": "2021-10-05T11:33:19+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "kast",
+        "modified": "2021-10-05T11:33:19+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 278,
+        "end": 281
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "kas"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/1a9b4afb-dc85-4c41-bcb8-d07faae1eae9",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:32:31+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "kersenhout",
+        "modified": "2021-10-05T11:32:31+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 293,
+        "end": 304
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "karsseboome"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/cabfadf5-db3c-4911-ae27-fbae5ae1a204",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:37:09+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1547,
+        "end": 1567
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Catharina Cleijburgh"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/cb4e0bd2-31ad-4966-a4c3-7d58bdb1295e",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:36:25+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "porselein",
+        "modified": "2021-10-05T11:36:25+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 994,
+        "end": 1004
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "porceleyne"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/d9bfed8c-e7ba-4fec-b951-9453eb31018a",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/material",
+      "value": "material",
+      "modified": "2021-10-05T11:35:44+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "tin",
+        "modified": "2021-10-05T11:35:44+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 787,
+        "end": 794
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "coopere"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/2cf6b22a-15db-4e84-8cf7-24b25b5c5873",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:37:27+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1591,
+        "end": 1612
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "Sr David van der meer"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/d48d87be-6af9-47fd-8c0f-d2fb4b87dfb1",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "SpecificResource",
+      "modified": "2021-10-05T11:39:00+00:00",
+      "purpose": "identifying"
+    }],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 2610,
+        "end": 2622
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "gere. Mnnick"
+        }
+      ]
+    }
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "https://recogito.pelagios.org/annotation/cf61de76-c5cd-43ad-b9bb-ef035bad3175",
+    "type": "Annotation",
+    "generator": {
+      "id": "https://recogito.pelagios.org/",
+      "type": "Software",
+      "name": "Recogito",
+      "homepage": "https://recogito.pelagios.org/"
+    },
+    "generated": "2021-10-19T15:49:18+00:00",
+    "body": [{
+      "type": "TextualBody",
+      "id": "http://example.org/terms/object",
+      "value": "object",
+      "modified": "2021-10-05T11:42:31+00:00",
+      "purpose": "tagging"
+    },
+      {
+        "type": "TextualBody",
+        "value": "kommetje",
+        "modified": "2021-10-05T11:42:31+00:00",
+        "purpose": "commenting"
+      }
+    ],
+    "target": {
+      "source": "https://recogito.pelagios.org/part/31903972-9334-4c89-b7ec-e74d4f7252e8",
+      "type": "Text",
+      "label": "A25555000316.txt",
+      "selector": [{
+        "type": "TextPositionSelector",
+        "start": 1154,
+        "end": 1164
+      },
+        {
+          "type": "TextQuoteSelector",
+          "exact": "kommetjens"
+        }
+      ]
+    }
+  }
+]

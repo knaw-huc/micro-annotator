@@ -12,6 +12,7 @@ import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
+import RecogitoExample from "./components/poc/RecogitoExample";
 
 export default function App() {
 
@@ -147,6 +148,11 @@ export default function App() {
 
   return (
     <div className="container">
+
+      <div>
+        <RecogitoExample annotations={annotations} setAnnotations={(anns) => setAnnotations(anns as Annotation[])}/>
+      </div>
+
       {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
       <CreatorField
         onChange={(newCreator: string) => setCurrentCreator(newCreator)}
