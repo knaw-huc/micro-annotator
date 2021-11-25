@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import {Recogito} from "@recogito/recogito-js";
 import "@recogito/recogito-js/dist/recogito.min.css";
 import {Annotation} from "../../model/Annotation";
+import isString from "../../util/isString";
 
 const VOCABULARY = [
   {label: "material", uri: "http://vocab.getty.edu/aat/300010358"},
@@ -43,7 +44,7 @@ export default function RecogitoDocument(props: DocumentProps) {
       relationVocabulary: ["isRelated", "isPartOf", "isSameAs "],
       formatter: (annotation: any) => {
         const tags = annotation.bodies.flatMap((body: any) =>
-          body.purpose === "tagging" ? body.value : []
+          body && body.purpose === "tagging" ? body.value : []
         );
 
         const tagClasses: string[] = [];
@@ -65,15 +66,7 @@ export default function RecogitoDocument(props: DocumentProps) {
     annotations.forEach((annotation: {}) => r.addAnnotation(annotation));
 
     r.on("createAnnotation", (a: any) => {
-      const toSave = {} as Annotation;
-      toSave.entity_comment = a.body.find((b: any) => b.purpose === 'commenting').value;
-      toSave.entity_type = a.body.find((b: any) => b.purpose === 'tagging').value;
-      toSave.creator = props.creator;
-      const c = convertCoordinates(a, text);
-      toSave.begin_anchor = c[0];
-      toSave.begin_char_offset = c[1];
-      toSave.end_anchor = c[2];
-      toSave.end_char_offset = c[3];
+      const toSave = convertToUntanngleAnn(a, props.creator, text);
       onAddAnnotation(toSave);
     });
 
@@ -83,7 +76,49 @@ export default function RecogitoDocument(props: DocumentProps) {
 
 }
 
-function convertCoordinates(a: any, text: string) {
+export function convertToRecogitoAnno(a: any, text: string[]): Annotation {
+  if (isString(a.target)) {
+    const source = a.target;
+    a.target = {}
+    a.target.source = source;
+  } else {
+    a.target = {}
+  }
+
+  a.target.selector = convertToRecogitoSelector(a, text)
+  return a;
+}
+
+function convertToRecogitoSelector(a: Annotation, lines: string[]) {
+  const lineEnd = 1;
+  let charCount = 0;
+  const lineCount = lines.map(l => charCount += l.length + lineEnd);
+
+  const start = lineCount[a.begin_anchor-1]+a.begin_char_offset;
+  const end = a.begin_anchor === a.end_anchor
+    ? start + a.end_char_offset + 1
+    : lineCount[a.end_anchor-1] + a.end_char_offset + 1;
+  // TODO: Fix `Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'purpose')`
+  return [{
+    type: "TextPositionSelector",
+    start,
+    end
+  }];
+}
+
+function convertToUntanngleAnn(a: any, creator: string, text: string) {
+  const toSave = {} as Annotation;
+  toSave.entity_comment = a.body.find((b: any) => b.purpose === 'commenting').value;
+  toSave.entity_type = a.body.find((b: any) => b.purpose === 'tagging').value;
+  toSave.creator = creator;
+  const c = convertToUntanngleCoordinates(a, text);
+  toSave.begin_anchor = c[0];
+  toSave.begin_char_offset = c[1];
+  toSave.end_anchor = c[2];
+  toSave.end_char_offset = c[3];
+  return toSave;
+}
+function convertToUntanngleCoordinates(a: any, text: string) {
   const position = a.target.selector.find((t: any) => t.type === 'TextPositionSelector');
   const start = position.start;
   const end = position.end;

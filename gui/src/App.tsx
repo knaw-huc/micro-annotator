@@ -5,27 +5,14 @@ import ImageColumn from './components/image/ImageColumn'
 import AnnotatableText from './components/annotatable/AnnotatableText'
 import Annotator from './components/annotator/Annotator'
 import {AnnRange} from "./model/AnnRange";
-import {Annotation} from "./model/Annotation";
+import {Annotation, toAnnotation} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
-import RecogitoDocument from "./components/poc/RecogitoDocument";
-
-let text = `Inventaris ende specificatie van
-432
-alle den huysraet Imboel porceleijne
-Liwaet potgelt gout en silverwerck
-by Catharina Cleyburgh naergelaten
-voor soo veel desselfs gesamentlycke
-Erfgenamen competeren in gevolgen
-van d Testamente van deselve Catharina
-Cleyburgh
-en nooteboome kas
-Twaelf ses karsseboome stoelen
-ses spaense stoelen`;
+import RecogitoDocument, {convertToRecogitoAnno} from "./components/poc/RecogitoDocument";
 
 export default function App() {
 
@@ -52,11 +39,6 @@ export default function App() {
   /**
    * Annotations on display
    */
-  const [rAnnotations, setRAnnotations] = useState<Annotation[]>([])
-
-  /**
-   * Annotations on display
-   */
   const [annotations, setAnnotations] = useState<Annotation[]>([])
 
   /**
@@ -68,6 +50,7 @@ export default function App() {
    * Type of annotations on display
    */
   const [annotationType, setAnnotationType] = useState<AnnotationListType>(AnnotationListType.USER)
+
 
   /**
    * Id of annotation linking to current text
@@ -95,51 +78,26 @@ export default function App() {
    */
   const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR)
 
-  /**
-   * Name used in creating new annotations or searching for existing user annotations
-   */
-  const [newAnnotation, setNewAnnotation] = useState<Annotation>()
-
   useEffect(() => {
-    const getResourcesAsync = async () => {
-      // if (!(targetId && currentCreator && beginRange && endRange)) {
-      //   return;
-      // }
-      //
-      // const found = annotationType === AnnotationListType.USER
-      //   ? await Elucidate.getByCreator(currentCreator)
-      //   : await Elucidate.getByRange(targetId, beginRange, endRange);
-      // const converted = found
-      //   .map(toAnnotation)
-      //   .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
-      //   .map(ann => setRelativeOffsets(ann, beginRange));
-      // setAnnotations(converted);
+    const getAnnotationListsAsync = async () => {
+      if (!(targetId && currentCreator && beginRange && endRange && annotatableText.length)) {
+        return;
+      }
 
+      const found = annotationType === AnnotationListType.USER
+        ? await Elucidate.getByCreator(currentCreator)
+        : await Elucidate.getByRange(targetId, beginRange, endRange);
+      const converted = found
+        .map(toAnnotation)
+        .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
+        .filter(ann => ann.begin_anchor >= beginRange && ann.end_anchor <= endRange)
+        .map(ann => setRelativeOffsets(ann, beginRange))
+        .map(ann => convertToRecogitoAnno(ann, annotatableText));
 
-      const getAnnotations = async () => {
-        const res = await fetch("annotations.json", {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        });
-
-        return await res.json();
-      };
-
-      // Load the annotations from the file
-      getAnnotations().then((annotations: any) => {
-        setRAnnotations(annotations
-          .filter((a: any) => {
-            const position = a.target.selector.find((s: any) => s.type === "TextPositionSelector");
-            return position.start >= 0 && position.end <= text.length
-          }));
-      });
-
-
+      setAnnotations(converted);
     }
-    getResourcesAsync()
-  }, [targetId, currentCreator, beginRange, endRange, annotationType]);
+    getAnnotationListsAsync()
+  }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
 
   useEffect(() => {
     if (annotationId) {
@@ -156,7 +114,8 @@ export default function App() {
     const created = await Elucidate.create(versionId, ann)
     setSelectionRange(undefined);
     setAnnotations([...annotations, setRelativeOffsets(created, beginRange)]);
-  }, [versionId, beginRange]);
+  }, [versionId, beginRange, annotations]);
+
 
   const searchAnnotation = async (bodyId: string) => {
     let foundAnn = await Elucidate.getByBodyId(bodyId);
@@ -185,17 +144,17 @@ export default function App() {
       foundVersionId, selectorTarget.selector.start, selectorTarget.selector.end
     );
     setTargetId(selectorTarget.source)
-    setVersionId(foundVersionId)
     setBeginRange(selectorTarget.selector.start)
     setEndRange(selectorTarget.selector.end)
     setAnnotatableText(grid)
+    setVersionId(foundVersionId)
   }
 
   return (
     <div className="container">
       {versionId ? <RecogitoDocument
-        text={text}
-        annotations={rAnnotations}
+        text={annotatableText.join("\n")}
+        annotations={annotations}
         onAddAnnotation={(a) => addAnnotation(a)}
         creator={currentCreator}
       /> : null}
