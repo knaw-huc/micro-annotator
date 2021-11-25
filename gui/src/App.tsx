@@ -1,4 +1,4 @@
-import {MutableRefObject, useEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 
 import Search from './components/Search'
 import ImageColumn from './components/image/ImageColumn'
@@ -13,7 +13,6 @@ import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
 import RecogitoDocument from "./components/poc/RecogitoDocument";
-import {TextContainer} from "./TextContainer";
 
 let text = `Inventaris ende specificatie van
 432
@@ -49,6 +48,11 @@ export default function App() {
    * Coordinates of selected text
    */
   const [selectionRange, setSelectionRange] = useState<AnnRange>()
+
+  /**
+   * Annotations on display
+   */
+  const [rAnnotations, setRAnnotations] = useState<Annotation[]>([])
 
   /**
    * Annotations on display
@@ -91,6 +95,11 @@ export default function App() {
    */
   const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR)
 
+  /**
+   * Name used in creating new annotations or searching for existing user annotations
+   */
+  const [newAnnotation, setNewAnnotation] = useState<Annotation>()
+
   useEffect(() => {
     const getResourcesAsync = async () => {
       // if (!(targetId && currentCreator && beginRange && endRange)) {
@@ -106,6 +115,7 @@ export default function App() {
       //   .map(ann => setRelativeOffsets(ann, beginRange));
       // setAnnotations(converted);
 
+
       const getAnnotations = async () => {
         const res = await fetch("annotations.json", {
           headers: {
@@ -119,7 +129,7 @@ export default function App() {
 
       // Load the annotations from the file
       getAnnotations().then((annotations: any) => {
-        setAnnotations(annotations
+        setRAnnotations(annotations
           .filter((a: any) => {
             const position = a.target.selector.find((s: any) => s.type === "TextPositionSelector");
             return position.start >= 0 && position.end <= text.length
@@ -136,6 +146,17 @@ export default function App() {
       searchAnnotation(annotationId);
     }
   }, [annotationId])
+
+  const addAnnotation = useCallback(async (ann: Annotation) => {
+    if (!versionId) {
+      setError('Cannot save annotation when version id is not set')
+      return;
+    }
+    ann = setAbsoluteOffsets(ann, beginRange);
+    const created = await Elucidate.create(versionId, ann)
+    setSelectionRange(undefined);
+    setAnnotations([...annotations, setRelativeOffsets(created, beginRange)]);
+  }, [versionId, beginRange]);
 
   const searchAnnotation = async (bodyId: string) => {
     let foundAnn = await Elucidate.getByBodyId(bodyId);
@@ -170,45 +191,14 @@ export default function App() {
     setAnnotatableText(grid)
   }
 
-  const addAnnotation = async (ann: Annotation) => {
-    if (!versionId) {
-      setError('Cannot save annotation when version id is not set')
-      return;
-    }
-    ann = setAbsoluteOffsets(ann, beginRange);
-
-    const created = await Elucidate.create(versionId, ann)
-    setSelectionRange(undefined);
-    setAnnotations([...annotations, setRelativeOffsets(created, beginRange)]);
-  }
-
-  const docRef: MutableRefObject<any> = useRef(null);
-  const [hasRef, setHasRef] = useState(docRef.current);
-  useEffect(() => {
-    if (docRef.current) {
-      setHasRef(true)
-    }
-  }, [docRef]);
-
-  function renderRecogito() {
-
-    console.log('v3 Cannot be undefined', docRef.current);
-
-    return <RecogitoDocument
-      docRef={docRef}
-      text={text}
-      annotations={annotations}
-      onAddAnnotation={addAnnotation}
-    />
-  }
-
   return (
     <div className="container">
-      <TextContainer svgRef={docRef}/>
-
-      <div>
-        {hasRef ? renderRecogito() : null}
-      </div>
+      {versionId ? <RecogitoDocument
+        text={text}
+        annotations={rAnnotations}
+        onAddAnnotation={(a) => addAnnotation(a)}
+        creator={currentCreator}
+      /> : null}
 
       {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
       <CreatorField

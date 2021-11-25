@@ -270,3 +270,8 @@ footer {
     background-color: white;
     color: black;
 }
+
+/* Recogito */
+.recogito-doc {
+    white-space: pre-wrap;
+}
