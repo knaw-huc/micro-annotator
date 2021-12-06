@@ -2,9 +2,6 @@ import {useCallback, useEffect, useState} from 'react'
 
 import Search from './components/Search'
 import ImageColumn from './components/image/ImageColumn'
-import AnnotatableText from './components/annotatable/AnnotatableText'
-import Annotator from './components/annotator/Annotator'
-import {AnnRange} from "./model/AnnRange";
 import {Annotation, toAnnotation} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
@@ -12,7 +9,7 @@ import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
-import RecogitoDocument, {convertToRecogitoAnno} from "./components/poc/RecogitoDocument";
+import RecogitoDocument, {convertToRecogitoAnn} from "./components/poc/RecogitoDocument";
 
 export default function App() {
 
@@ -32,25 +29,14 @@ export default function App() {
   const [annotatableText, setAnnotatableText] = useState([] as string[])
 
   /**
-   * Coordinates of selected text
-   */
-  const [selectionRange, setSelectionRange] = useState<AnnRange>()
-
-  /**
    * Annotations on display
    */
   const [annotations, setAnnotations] = useState<Annotation[]>([])
 
   /**
-   * Expanded annotation on display
-   */
-  const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation>()
-
-  /**
    * Type of annotations on display
    */
-  const [annotationType, setAnnotationType] = useState<AnnotationListType>(AnnotationListType.USER)
-
+  const [annotationType] = useState<AnnotationListType>(AnnotationListType.USER)
 
   /**
    * Id of annotation linking to current text
@@ -88,22 +74,17 @@ export default function App() {
         ? await Elucidate.getByCreator(currentCreator)
         : await Elucidate.getByRange(targetId, beginRange, endRange);
       const converted = found
-        .map(toAnnotation)
+        // TODO: remove merge of web anno and Annotation objects
+        .map(a => Object.assign(a, toAnnotation(a)))
         .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
         .filter(ann => ann.begin_anchor >= beginRange && ann.end_anchor <= endRange)
         .map(ann => setRelativeOffsets(ann, beginRange))
-        .map(ann => convertToRecogitoAnno(ann, annotatableText));
+        .map(ann => convertToRecogitoAnn(ann, annotatableText));
 
       setAnnotations(converted);
     }
     getAnnotationListsAsync()
   }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
-
-  useEffect(() => {
-    if (annotationId) {
-      searchAnnotation(annotationId);
-    }
-  }, [annotationId])
 
   const addAnnotation = useCallback(async (ann: Annotation) => {
     if (!versionId) {
@@ -112,9 +93,16 @@ export default function App() {
     }
     ann = setAbsoluteOffsets(ann, beginRange);
     const created = await Elucidate.create(versionId, ann)
-    setSelectionRange(undefined);
-    setAnnotations([...annotations, setRelativeOffsets(created, beginRange)]);
-  }, [versionId, beginRange, annotations]);
+    const recogitoAnn = convertToRecogitoAnn(setRelativeOffsets(created, beginRange), annotatableText);
+    let newAnnotations = [...annotations, recogitoAnn];
+    setAnnotations(newAnnotations);
+  }, [versionId, beginRange, annotations, annotatableText]);
+
+  useEffect(() => {
+    if (annotationId) {
+      searchAnnotation(annotationId);
+    }
+  }, [annotationId])
 
 
   const searchAnnotation = async (bodyId: string) => {
@@ -152,13 +140,6 @@ export default function App() {
 
   return (
     <div className="container">
-      {versionId ? <RecogitoDocument
-        text={annotatableText.join("\n")}
-        annotations={annotations}
-        onAddAnnotation={(a) => addAnnotation(a)}
-        creator={currentCreator}
-      /> : null}
-
       {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
       <CreatorField
         onChange={(newCreator: string) => setCurrentCreator(newCreator)}
@@ -171,24 +152,16 @@ export default function App() {
         <ImageColumn
           images={regionLinks}
         />
+
         {annotatableText.length
           ?
           <>
-            <AnnotatableText
-              text={annotatableText}
-              onReadSelection={setSelectionRange}
-              selected={selectedAnnotation}
-            />
-            <Annotator
-              currentCreator={currentCreator}
-              selectionRange={selectionRange}
+            {versionId ? <RecogitoDocument
+              text={annotatableText.join("\n")}
               annotations={annotations}
-              onAddAnnotation={addAnnotation}
-              selected={selectedAnnotation}
-              onSelect={setSelectedAnnotation}
-              annotationType={annotationType}
-              onSetAnnotationType={setAnnotationType}
-            />
+              onAddAnnotation={(a) => addAnnotation(a)}
+              creator={currentCreator}
+            /> : null}
           </>
           : <>Click search to find an annotation by its ID</>}
       </div>

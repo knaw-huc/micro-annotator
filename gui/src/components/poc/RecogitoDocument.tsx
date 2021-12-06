@@ -25,6 +25,7 @@ export default function RecogitoDocument(props: DocumentProps) {
   let text = props.text;
   let onAddAnnotation = props.onAddAnnotation;
   useEffect(() => {
+    console.log('rerender recogito');
     if (!docRef.current) {
       return;
     }
@@ -76,7 +77,7 @@ export default function RecogitoDocument(props: DocumentProps) {
 
 }
 
-export function convertToRecogitoAnno(a: any, text: string[]): Annotation {
+export function convertToRecogitoAnn(a: any, text: string[]): Annotation {
   if (isString(a.target)) {
     const source = a.target;
     a.target = {}
@@ -84,21 +85,16 @@ export function convertToRecogitoAnno(a: any, text: string[]): Annotation {
   } else {
     a.target = {}
   }
-
   a.target.selector = convertToRecogitoSelector(a, text)
   return a;
 }
 
 function convertToRecogitoSelector(a: Annotation, lines: string[]) {
-  const lineEnd = 1;
-  let charCount = 0;
-  const lineCount = lines.map(l => charCount += l.length + lineEnd);
-
-  const start = lineCount[a.begin_anchor-1]+a.begin_char_offset;
+  const lineCount = toLineCount(lines);
+  const start = lineCount[a.begin_anchor - 1] + a.begin_char_offset;
   const end = a.begin_anchor === a.end_anchor
     ? start + a.end_char_offset + 1
-    : lineCount[a.end_anchor-1] + a.end_char_offset + 1;
-  // TODO: Fix `Uncaught (in promise) TypeError: Cannot read properties of undefined (reading 'purpose')`
+    : lineCount[a.end_anchor - 1] + a.end_char_offset + 1;
   return [{
     type: "TextPositionSelector",
     start,
@@ -118,17 +114,29 @@ function convertToUntanngleAnn(a: any, creator: string, text: string) {
   toSave.end_char_offset = c[3];
   return toSave;
 }
+
 function convertToUntanngleCoordinates(a: any, text: string) {
   const position = a.target.selector.find((t: any) => t.type === 'TextPositionSelector');
   const start = position.start;
   const end = position.end;
   const lines = text.split('\n');
+  const lineCount = toLineCount(lines);
+  const startAnchor = lineCount.findIndex(lc => lc > start);
+  const endAnchor = lineCount.findIndex(lc => lc > end);
+  const startChar = startAnchor > 0
+    ? start - lineCount[startAnchor - 1]
+    : start;
+  let endChar = endAnchor > 0
+    ? end - lineCount[endAnchor - 1] - 1
+    : end - 1;
+  if (endAnchor === startAnchor) {
+    endChar = endChar - startChar
+  }
+  return [startAnchor, startChar, endAnchor, endChar];
+}
+
+function toLineCount(lines: string[]) {
   const lineEnd = 1;
   let charCount = 0;
-  const lineCount = lines.map(l => charCount += l.length + lineEnd);
-  const startAnchor = lineCount.findIndex(lc => lc > start) - 1;
-  const startChar = start - lineCount[startAnchor];
-  const endAnchor = lineCount.findIndex(lc => lc > end) - 1;
-  const endChar = end - lineCount[endAnchor];
-  return [startAnchor, startChar, endAnchor, endChar];
+  return lines.map(l => charCount += l.length + lineEnd);
 }

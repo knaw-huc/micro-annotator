@@ -54,7 +54,7 @@ function fromUserAnnToAnnotation(ea: ElucidateAnnotation, result: Annotation) {
   result.entity_type = getEntityType(ea);
   result.entity_comment = getEntityComment(ea);
 
-  let c = toCoordinates(ea.target as string);
+  let c = fromUserAnnToCoordinates(ea.target as string);
   result.begin_anchor = c[0];
   result.begin_char_offset = c[1];
   result.end_anchor = c[2];
@@ -105,7 +105,7 @@ function getEntityType(ea: ElucidateAnnotation): string {
   return entityType;
 }
 
-export function toCoordinates(textrepoTarget: string): number[] {
+export function fromUserAnnToCoordinates(textrepoTarget: string): number[] {
   const groups = textrepoTarget.match(/.*\/segments\/index\/(\d*)\/(\d*)\/(\d*)\/(\d*)/);
   if (!groups || groups.length !== 5) {
     throw Error('Cannot find coordinates in elucidate target: ' + textrepoTarget);
