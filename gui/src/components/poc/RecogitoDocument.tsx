@@ -91,10 +91,17 @@ export function convertToRecogitoAnn(a: any, text: string[]): Annotation {
 
 function convertToRecogitoSelector(a: Annotation, lines: string[]) {
   const lineCount = toLineCount(lines);
-  const start = lineCount[a.begin_anchor - 1] + a.begin_char_offset;
-  const end = a.begin_anchor === a.end_anchor
-    ? start + a.end_char_offset + 1
-    : lineCount[a.end_anchor - 1] + a.end_char_offset + 1;
+  const start = a.begin_anchor > 0
+    ? lineCount[a.begin_anchor - 1] + a.begin_char_offset
+    : a.begin_char_offset;
+
+  let end = a.end_anchor > 0
+    ? lineCount[a.end_anchor - 1] + a.end_char_offset + 1
+    : a.end_char_offset + 1
+  if (a.end_anchor === a.begin_anchor) {
+    end = start - a.begin_char_offset + 1
+  }
+
   return [{
     type: "TextPositionSelector",
     start,

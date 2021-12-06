@@ -65,6 +65,10 @@ export default function App() {
   const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR)
 
   useEffect(() => {
+    console.log('annotations?', annotations.length);
+  }, [annotations]);
+
+  useEffect(() => {
     const getAnnotationListsAsync = async () => {
       if (!(targetId && currentCreator && beginRange && endRange && annotatableText.length)) {
         return;
@@ -94,8 +98,11 @@ export default function App() {
     ann = setAbsoluteOffsets(ann, beginRange);
     const created = await Elucidate.create(versionId, ann)
     const recogitoAnn = convertToRecogitoAnn(setRelativeOffsets(created, beginRange), annotatableText);
-    let newAnnotations = [...annotations, recogitoAnn];
-    setAnnotations(newAnnotations);
+    annotations.push(recogitoAnn);
+    setAnnotations((anns: Annotation[]) => {
+      anns.push(recogitoAnn);
+      return anns
+    });
   }, [versionId, beginRange, annotations, annotatableText]);
 
   useEffect(() => {
