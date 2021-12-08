@@ -36,6 +36,7 @@ declare module '@recogito/recogito-js' {
   }
 
   class Recogito {
+
     constructor(options?: RecogitoOptions);
 
     /**
@@ -55,7 +56,16 @@ declare module '@recogito/recogito-js' {
 
     on(event: string, handler: (...args) => void);
 
+    /**
+     * Returns all annotations, according to the current rendered state.
+     */
     getAnnotations(): Annotation[];
+
+    /**
+     * Removes all text and relationship annotations.
+     */
+    clearAnnotations(): void;
+
   }
 
 }

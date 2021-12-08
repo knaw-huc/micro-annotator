@@ -21,18 +21,20 @@ interface DocumentProps {
 export default function RecogitoDocument(props: DocumentProps) {
 
   const [docRef] = useState(useRef<HTMLDivElement>(null));
+  const [recogito, setRecogito] = useState<Recogito>()
+
   const annotations = props.annotations;
 
   let text = props.text;
   let onAddAnnotation = props.onAddAnnotation;
+
+  // Create recogito instance:
   useEffect(() => {
-    console.log('rerender recogito');
-    if (!docRef.current) {
+    if (!docRef.current || recogito) {
       return;
     }
-    docRef.current.textContent = text;
 
-    const r = new Recogito({
+    setRecogito(new Recogito({
       content: docRef.current,
       locale: "auto",
       mode: "pre",
@@ -60,14 +62,27 @@ export default function RecogitoDocument(props: DocumentProps) {
             tagClasses.push("tag-person");
           }
         }
-
         return tagClasses.join(" ");
       },
+    }));
+
+  }, [docRef, recogito]);
+
+  // Add text and annotations to recogito:
+  useEffect(() => {
+    if (!docRef.current || !recogito) {
+      return;
+    }
+
+    docRef.current.textContent = text;
+
+    recogito.clearAnnotations();
+
+    annotations.forEach((annotation: any) => {
+      recogito.addAnnotation(annotation)
     });
 
-    annotations.forEach((annotation: {}) => r.addAnnotation(annotation));
-
-    r.on("createAnnotation", (a: any) => {
+    recogito.on("createAnnotation", (a: any) => {
       const toSave = toUntanngleAnn(a, props.creator, text);
       onAddAnnotation(toSave);
     });
@@ -75,7 +90,6 @@ export default function RecogitoDocument(props: DocumentProps) {
   }, [annotations, docRef, text, onAddAnnotation, props.creator]);
 
   return <div className="recogito-doc" ref={docRef}/>;
-
 }
 
 export function toRecogitoAnn(a: any, text: string[]): MicroAnnotation {
@@ -87,7 +101,16 @@ export function toRecogitoAnn(a: any, text: string[]): MicroAnnotation {
     a.target = {}
   }
   a.target.selector = toRecogitoSelector(a, text)
+  a.body.map((b: any) => b.creator = toRecogitoCreator(a.creator));
+  a.body.find((b: any) => b.purpose === 'classifying').purpose = 'tagging';
   return a;
+}
+
+function toRecogitoCreator(creator: string) {
+  return {
+    id: creator,
+    name: creator
+  };
 }
 
 function toRecogitoSelector(a: MicroAnnotation, lines: string[]) {
@@ -98,7 +121,7 @@ function toRecogitoSelector(a: MicroAnnotation, lines: string[]) {
     : a.begin_char_offset;
 
   let end;
-  if(a.begin_anchor === a.end_anchor) {
+  if (a.begin_anchor === a.end_anchor) {
     end = start + a.end_char_offset + 1;
   } else {
     end = a.end_anchor
