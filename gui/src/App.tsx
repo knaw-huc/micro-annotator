@@ -2,14 +2,15 @@ import {useCallback, useEffect, useState} from 'react'
 
 import Search from './components/Search'
 import ImageColumn from './components/image/ImageColumn'
-import {Annotation, toAnnotation} from "./model/Annotation";
+import {Annotation, toMicroAnn} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
-import RecogitoDocument, {convertToRecogitoAnn} from "./components/poc/RecogitoDocument";
+import RecogitoDocument, {toRecogitoAnn} from "./components/poc/RecogitoDocument";
+import {MicroAnnotation} from "./model/MicroAnnotation";
 
 export default function App() {
 
@@ -74,18 +75,15 @@ export default function App() {
       if (!(targetId && currentCreator && beginRange && endRange && annotatableText.length)) {
         return;
       }
-
       const found = annotationType === AnnotationListType.USER
         ? await Elucidate.getByCreator(currentCreator)
         : await Elucidate.getByRange(targetId, beginRange, endRange);
       const converted = found
-        // TODO: remove merge of web anno and Annotation objects
-        .map(a => Object.assign(a, toAnnotation(a)))
+        .map(a => toMicroAnn(a))
         .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
-        .filter(ann => ann.begin_anchor >= beginRange && ann.end_anchor <= endRange)
-        .map(ann => setRelativeOffsets(ann, beginRange))
-        .map(ann => convertToRecogitoAnn(ann, annotatableText));
-
+        .filter(ann => isInRange(ann, beginRange, endRange))
+        .map(ann => toRelativeOffsets(ann, beginRange))
+        .map(ann => toRecogitoAnn(ann, annotatableText));
       setAnnotations(converted);
     }
     getAnnotationListsAsync()
@@ -96,9 +94,9 @@ export default function App() {
       setError('Cannot save annotation when version id is not set')
       return;
     }
-    ann = setAbsoluteOffsets(ann, beginRange);
+    ann = toAbsoluteOffsets(ann, beginRange);
     const created = await Elucidate.create(versionId, ann)
-    const recogitoAnn = convertToRecogitoAnn(setRelativeOffsets(created, beginRange), annotatableText);
+    const recogitoAnn = toRecogitoAnn(toRelativeOffsets(created, beginRange), annotatableText);
     annotations.push(recogitoAnn);
     setAnnotations((anns: Annotation[]) => {
       anns.push(recogitoAnn);
@@ -177,15 +175,19 @@ export default function App() {
   );
 }
 
-function setRelativeOffsets(a: Annotation, offset: number): Annotation {
+function toRelativeOffsets(a: Annotation, offset: number): Annotation {
   a.begin_anchor -= offset;
   a.end_anchor -= offset;
   return a;
 }
 
-function setAbsoluteOffsets(a: Annotation, offset: number) {
+function toAbsoluteOffsets(a: Annotation, offset: number) {
   a.begin_anchor += offset;
   a.end_anchor += offset;
   return a;
+}
+
+function isInRange(ann: MicroAnnotation, beginRange: number, endRange: number) {
+  return ann.begin_anchor >= beginRange && ann.end_anchor <= endRange;
 }
 

@@ -1,5 +1,5 @@
 import Config from "../Config";
-import {Annotation, ENTITY, NS_PREFIX, toAnnotation} from "../model/Annotation";
+import {Annotation, ENTITY, NS_PREFIX, toMicroAnn} from "../model/Annotation";
 import {ElucidateAnnotation} from "../model/ElucidateAnnotation";
 
 export default class Elucidate {
@@ -50,7 +50,7 @@ export default class Elucidate {
     });
 
     const responseBody = await res.json();
-    return toAnnotation(responseBody as ElucidateAnnotation);
+    return toMicroAnn(responseBody as ElucidateAnnotation);
   }
 
   /**

@@ -5,6 +5,8 @@ import {
   EntityBodyType
 } from "./ElucidateAnnotation";
 
+import {MicroAnnotation} from "./MicroAnnotation";
+
 export const NS_PREFIX = "http://example.org/customwebannotationfield#";
 export const ENTITY = "Entity";
 
@@ -23,44 +25,46 @@ export type Annotation = {
   source: any
 }
 
-export function toAnnotation(ea: ElucidateAnnotation): Annotation {
-  const result = {} as Annotation;
-  result.source = ea;
+/**
+ * Add internal MicroAnnotation fields to Elucidate annotation
+ */
+export function toMicroAnn(ea: ElucidateAnnotation): MicroAnnotation {
+  const result : MicroAnnotation = ea as MicroAnnotation;
+  result.source = JSON.stringify(ea);
 
   // ID contains url with version ID followed by annotation ID:
   result.id = ea.id.match(/[0-9a-f-]{36}/g)?.[1] as string;
   let type = ea.type;
   result.label = getType(type);
-
   if (result.label === ENTITY) {
-    return fromUserAnnToAnnotation(ea, result);
+    return fromUserAnnToAnnotation(result);
   } else {
-    return fromUntanngleAnnToAnnotation(ea, result);
+    return fromUntanngleAnnToAnnotation(result);
   }
+
 }
 
-function fromUntanngleAnnToAnnotation(ea: ElucidateAnnotation, result: Annotation) {
-  result.entity_type = getEntityType(ea);
-  let c = fromUntanngleToCoordinates(ea.target as ElucidateTargetType[]);
-  result.begin_anchor = c[0];
-  result.begin_char_offset = c[1];
-  result.end_anchor = c[2];
-  result.end_char_offset = c[3];
-  return result;
+function fromUntanngleAnnToAnnotation(ann: MicroAnnotation) {
+  ann.entity_type = getEntityType(ann);
+  let c = fromUntanngleToCoordinates(ann.target as ElucidateTargetType[]);
+  ann.begin_anchor = c[0];
+  ann.begin_char_offset = c[1];
+  ann.end_anchor = c[2];
+  ann.end_char_offset = c[3];
+  return ann;
 }
 
-function fromUserAnnToAnnotation(ea: ElucidateAnnotation, result: Annotation) {
-  result.creator = ea.creator;
-  result.entity_type = getEntityType(ea);
-  result.entity_comment = getEntityComment(ea);
+function fromUserAnnToAnnotation(ann: MicroAnnotation) {
+  ann.entity_type = getEntityType(ann);
+  ann.entity_comment = getEntityComment(ann);
 
-  let c = fromUserAnnToCoordinates(ea.target as string);
-  result.begin_anchor = c[0];
-  result.begin_char_offset = c[1];
-  result.end_anchor = c[2];
-  result.end_char_offset = c[3];
-  result.source = ea;
-  return result;
+  let c = fromUserAnnToCoordinates(ann.target as string);
+  ann.begin_anchor = c[0];
+  ann.begin_char_offset = c[1];
+  ann.end_anchor = c[2];
+  ann.end_char_offset = c[3];
+  ann.source = ann;
+  return ann;
 }
 
 function getType(type: string | string[]) {

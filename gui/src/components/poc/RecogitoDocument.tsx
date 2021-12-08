@@ -3,6 +3,7 @@ import {Recogito} from "@recogito/recogito-js";
 import "@recogito/recogito-js/dist/recogito.min.css";
 import {Annotation} from "../../model/Annotation";
 import isString from "../../util/isString";
+import {MicroAnnotation} from "../../model/MicroAnnotation";
 
 const VOCABULARY = [
   {label: "material", uri: "http://vocab.getty.edu/aat/300010358"},
@@ -67,17 +68,17 @@ export default function RecogitoDocument(props: DocumentProps) {
     annotations.forEach((annotation: {}) => r.addAnnotation(annotation));
 
     r.on("createAnnotation", (a: any) => {
-      const toSave = convertToUntanngleAnn(a, props.creator, text);
+      const toSave = toUntanngleAnn(a, props.creator, text);
       onAddAnnotation(toSave);
     });
 
   }, [annotations, docRef, text, onAddAnnotation, props.creator]);
 
-  return <div className="recogito-doc" ref={docRef}>lala</div>;
+  return <div className="recogito-doc" ref={docRef}/>;
 
 }
 
-export function convertToRecogitoAnn(a: any, text: string[]): Annotation {
+export function toRecogitoAnn(a: any, text: string[]): MicroAnnotation {
   if (isString(a.target)) {
     const source = a.target;
     a.target = {}
@@ -85,11 +86,11 @@ export function convertToRecogitoAnn(a: any, text: string[]): Annotation {
   } else {
     a.target = {}
   }
-  a.target.selector = convertToRecogitoSelector(a, text)
+  a.target.selector = toRecogitoSelector(a, text)
   return a;
 }
 
-function convertToRecogitoSelector(a: Annotation, lines: string[]) {
+function toRecogitoSelector(a: MicroAnnotation, lines: string[]) {
   const lineCount = toLineCount(lines);
 
   const start = a.begin_anchor
@@ -112,12 +113,12 @@ function convertToRecogitoSelector(a: Annotation, lines: string[]) {
   }];
 }
 
-function convertToUntanngleAnn(a: any, creator: string, text: string) {
+function toUntanngleAnn(a: any, creator: string, text: string) {
   const toSave = {} as Annotation;
   toSave.entity_comment = a.body.find((b: any) => b.purpose === 'commenting').value;
   toSave.entity_type = a.body.find((b: any) => b.purpose === 'tagging').value;
   toSave.creator = creator;
-  const c = convertToUntanngleCoordinates(a, text);
+  const c = toUntanngleCoordinates(a, text);
   toSave.begin_anchor = c[0];
   toSave.begin_char_offset = c[1];
   toSave.end_anchor = c[2];
@@ -125,7 +126,7 @@ function convertToUntanngleAnn(a: any, creator: string, text: string) {
   return toSave;
 }
 
-function convertToUntanngleCoordinates(a: any, text: string) {
+function toUntanngleCoordinates(a: any, text: string) {
   const position = a.target.selector.find((t: any) => t.type === 'TextPositionSelector');
   const start = position.start;
   const end = position.end;

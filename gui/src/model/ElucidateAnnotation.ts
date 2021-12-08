@@ -1,3 +1,5 @@
+import {Annotation} from "./Annotation";
+
 export type AnnotatorBodyType = {
   "type": string | (string[]),
   "value": string,
