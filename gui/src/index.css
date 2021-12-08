@@ -101,7 +101,6 @@ body, #root, .container {
 .text-box {
     padding: 5px;
     line-height: 76%;
-
     width: 100%;
     position: absolute;
     top: 0;
@@ -274,4 +273,5 @@ footer {
 /* Recogito */
 .recogito-doc {
     white-space: pre-wrap;
+    font-size: 0.5em;
 }
