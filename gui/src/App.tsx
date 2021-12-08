@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react'
 
 import Search from './components/Search'
 import ImageColumn from './components/image/ImageColumn'
-import {Annotation, toMicroAnn} from "./model/Annotation";
+import {Annotation, isInRange, toAbsoluteOffsets} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
@@ -10,7 +10,6 @@ import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
 import RecogitoDocument, {toRecogitoAnn} from "./components/poc/RecogitoDocument";
-import {MicroAnnotation} from "./model/MicroAnnotation";
 
 export default function App() {
 
@@ -72,6 +71,9 @@ export default function App() {
 
   useEffect(() => {
     const getAnnotationListsAsync = async () => {
+      if(!beginRange) {
+        return;
+      }
       if (!(targetId && currentCreator && beginRange && endRange && annotatableText.length)) {
         return;
       }
@@ -79,12 +81,11 @@ export default function App() {
         ? await Elucidate.getByCreator(currentCreator)
         : await Elucidate.getByRange(targetId, beginRange, endRange);
       const converted = found
-        .map(a => toMicroAnn(a))
+        .map(a => toRecogitoAnn(a, annotatableText, beginRange));
+      const filtered = converted
         .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
-        .filter(ann => isInRange(ann, beginRange, endRange))
-        .map(ann => toRelativeOffsets(ann, beginRange))
-        .map(ann => toRecogitoAnn(ann, annotatableText));
-      setAnnotations(converted);
+        .filter(ann => isInRange(ann, endRange - beginRange))
+      setAnnotations(filtered);
     }
     getAnnotationListsAsync()
   }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
@@ -96,7 +97,7 @@ export default function App() {
     }
     ann = toAbsoluteOffsets(ann, beginRange);
     const created = await Elucidate.create(versionId, ann)
-    const recogitoAnn = toRecogitoAnn(toRelativeOffsets(created, beginRange), annotatableText);
+    const recogitoAnn = toRecogitoAnn(created, annotatableText, beginRange);
     annotations.push(recogitoAnn);
     setAnnotations((anns: Annotation[]) => {
       anns.push(recogitoAnn);
@@ -121,7 +122,7 @@ export default function App() {
       setError(`Could not find img and txt targets in annotation with body id: ${bodyId}`);
       return;
     }
-    const target: ElucidateTargetType[] = foundAnn.target;
+    const target = foundAnn.target as ElucidateTargetType[];
     setRegionLinks(target
       .filter(t => !t.selector && t.type === 'Image')
       .map(t => t.source));
@@ -133,7 +134,8 @@ export default function App() {
       return;
     }
 
-    const selectorTarget = foundAnn.target.find(t => [undefined, 'Text'].includes(t.type)) as SelectorTarget;
+    const selectorTarget = (foundAnn.target as SelectorTarget[])
+      .find((t: SelectorTarget) => [undefined, 'Text'].includes(t.type)) as SelectorTarget;
     const grid: string[] = await TextRepo.getByVersionIdAndRange(
       foundVersionId, selectorTarget.selector.start, selectorTarget.selector.end
     );
@@ -143,6 +145,7 @@ export default function App() {
     setAnnotatableText(grid)
     setVersionId(foundVersionId)
   }
+
 
   return (
     <div className="container">
@@ -173,21 +176,5 @@ export default function App() {
       </div>
     </div>
   );
-}
-
-function toRelativeOffsets(a: Annotation, offset: number): Annotation {
-  a.begin_anchor -= offset;
-  a.end_anchor -= offset;
-  return a;
-}
-
-function toAbsoluteOffsets(a: Annotation, offset: number) {
-  a.begin_anchor += offset;
-  a.end_anchor += offset;
-  return a;
-}
-
-function isInRange(ann: MicroAnnotation, beginRange: number, endRange: number) {
-  return ann.begin_anchor >= beginRange && ann.end_anchor <= endRange;
 }
 

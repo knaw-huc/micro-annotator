@@ -5,8 +5,6 @@ import {
   EntityBodyType
 } from "./ElucidateAnnotation";
 
-import {MicroAnnotation} from "./MicroAnnotation";
-
 export const NS_PREFIX = "http://example.org/customwebannotationfield#";
 export const ENTITY = "Entity";
 
@@ -25,12 +23,17 @@ export type Annotation = {
   source: any
 }
 
+export type MicroAnnotation = ElucidateAnnotation & Annotation;
+
 /**
- * Add internal MicroAnnotation fields to Elucidate annotation
+ * Add MicroAnnotation fields to Elucidate annotation
  */
 export function toMicroAnn(ea: ElucidateAnnotation): MicroAnnotation {
-  const result : MicroAnnotation = ea as MicroAnnotation;
-  result.source = JSON.stringify(ea);
+  const result = ea as MicroAnnotation;
+
+  if(!result.source) {
+    result.source = JSON.stringify(ea);
+  }
 
   // ID contains url with version ID followed by annotation ID:
   result.id = ea.id.match(/[0-9a-f-]{36}/g)?.[1] as string;
@@ -41,7 +44,6 @@ export function toMicroAnn(ea: ElucidateAnnotation): MicroAnnotation {
   } else {
     return fromUntanngleAnnToAnnotation(result);
   }
-
 }
 
 function fromUntanngleAnnToAnnotation(ann: MicroAnnotation) {
@@ -121,3 +123,26 @@ export function fromUntanngleToCoordinates(targets: any[]): number[] {
   const target = targets.find(t => t.selector.type === 'urn:example:republic:TextAnchorSelector');
   return [target.selector.start, 0, target.selector.end + 1, 0]
 }
+
+/**
+ * Relative to current text
+ */
+export function toRelativeOffsets(a: Annotation, offset: number): Annotation {
+  a.begin_anchor -= offset;
+  a.end_anchor -= offset;
+  return a;
+}
+
+/**
+ * Absolute, starting at beginning of corpus
+ */
+export function toAbsoluteOffsets(a: Annotation, offset: number) {
+  a.begin_anchor += offset;
+  a.end_anchor += offset;
+  return a;
+}
+
+export function isInRange(ann: Annotation, endRange: number) {
+  return ann.begin_anchor >= 0 && ann.end_anchor <= endRange;
+}
+

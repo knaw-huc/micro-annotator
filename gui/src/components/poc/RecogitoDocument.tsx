@@ -1,9 +1,9 @@
 import {useEffect, useRef, useState} from "react";
 import {Recogito} from "@recogito/recogito-js";
 import "@recogito/recogito-js/dist/recogito.min.css";
-import {Annotation} from "../../model/Annotation";
+import {Annotation, MicroAnnotation, toMicroAnn, toRelativeOffsets} from "../../model/Annotation";
 import isString from "../../util/isString";
-import {MicroAnnotation} from "../../model/MicroAnnotation";
+import {SelectorTarget} from "../../model/ElucidateAnnotation";
 
 const VOCABULARY = [
   {label: "material", uri: "http://vocab.getty.edu/aat/300010358"},
@@ -33,7 +33,6 @@ export default function RecogitoDocument(props: DocumentProps) {
     if (!docRef.current || recogito) {
       return;
     }
-
     setRecogito(new Recogito({
       content: docRef.current,
       locale: "auto",
@@ -65,7 +64,6 @@ export default function RecogitoDocument(props: DocumentProps) {
         return tagClasses.join(" ");
       },
     }));
-
   }, [docRef, recogito]);
 
   // Add text and annotations to recogito:
@@ -87,18 +85,18 @@ export default function RecogitoDocument(props: DocumentProps) {
       onAddAnnotation(toSave);
     });
 
-  }, [annotations, docRef, recogito, text, onAddAnnotation, props.creator]);
+  }, [docRef, recogito, annotations, text, onAddAnnotation, props.creator]);
 
   return <div className="recogito-doc" ref={docRef}/>;
 }
 
-export function toRecogitoAnn(a: any, text: string[]): MicroAnnotation {
+export function toRecogitoAnn(a: any, text: string[], beginRange: number): MicroAnnotation {
+  let result = toMicroAnn(a);
+  result = toRelativeOffsets(result, beginRange) as MicroAnnotation
   if (isString(a.target)) {
     const source = a.target;
-    a.target = {}
-    a.target.source = source;
-  } else {
-    a.target = {}
+    result.target = {} as SelectorTarget;
+    result.target.source = source;
   }
   a.target.selector = toRecogitoSelector(a, text)
   a.body.map((b: any) => b.creator = toRecogitoCreator(a.creator));

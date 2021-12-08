@@ -44,7 +44,7 @@ export type ImageTarget = {
 
 export type ElucidateTargetType = SelectorTarget | ImageTarget;
 
-type TargetType = string | (ElucidateTargetType[]);
+export type TargetType = string | ElucidateTargetType | (ElucidateTargetType[]);
 
 export type ElucidateAnnotation = {
   "id": string,
