@@ -87,7 +87,7 @@ export default function RecogitoDocument(props: DocumentProps) {
       onAddAnnotation(toSave);
     });
 
-  }, [annotations, docRef, text, onAddAnnotation, props.creator]);
+  }, [annotations, docRef, recogito, text, onAddAnnotation, props.creator]);
 
   return <div className="recogito-doc" ref={docRef}/>;
 }
