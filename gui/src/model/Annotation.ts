@@ -32,9 +32,8 @@ export type MicroAnnotation = ElucidateAnnotation & Annotation;
 export function toMicroAnn(ea: ElucidateAnnotation): MicroAnnotation {
   const result = ea as MicroAnnotation;
 
-  if(!result.webAnn) {
-    result.webAnn = JSON.parse(JSON.stringify(result));
-  }
+  // Prevent circular reference:
+  result.webAnn = JSON.parse(JSON.stringify(result));
 
   // ID contains url with version ID followed by annotation ID:
   result.id = ea.id.match(/[0-9a-f-]{36}/g)?.[1] as string;
