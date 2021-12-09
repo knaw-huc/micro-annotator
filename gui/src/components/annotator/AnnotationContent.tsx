@@ -11,6 +11,7 @@ type AnnotationContentProps = {
 export default function AnnotationContent(props: AnnotationContentProps) {
   const ann = props.ann;
   const [showFull, setShowFull] = useState(false);
+
   return ann
     ? <div className="annotation-content">
       <ul>
@@ -37,7 +38,7 @@ export default function AnnotationContent(props: AnnotationContentProps) {
                   </a>
                 )}
               >
-                {JSON.stringify(ann.source, null, 2)}
+                {JSON.stringify(ann.webAnn, null, 2)}
               </ReactLinkify>
             </pre>
             : null

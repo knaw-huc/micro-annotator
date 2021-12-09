@@ -9,7 +9,8 @@ import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
-import RecogitoDocument, {toRecogitoAnn} from "./components/poc/RecogitoDocument";
+import {toRecogitoAnn} from "./components/poc/RecogitoDocument";
+import RecogitoAnnotator from "./components/poc/RecogitoAnnotator";
 
 export default function App() {
 
@@ -34,9 +35,14 @@ export default function App() {
   const [annotations, setAnnotations] = useState<Annotation[]>([])
 
   /**
+   * Expanded annotation on display
+   */
+  const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation>()
+
+  /**
    * Type of annotations on display
    */
-  const [annotationType] = useState<AnnotationListType>(AnnotationListType.USER)
+  const [annotationType, setAnnotationType] = useState(AnnotationListType.USER)
 
   /**
    * Id of annotation linking to current text
@@ -54,7 +60,6 @@ export default function App() {
   const [beginRange, setBeginRange] = useState(0)
   const [endRange, setEndRange] = useState(0)
 
-
   /**
    * Version ID, also used as elucidate collection ID
    */
@@ -64,10 +69,6 @@ export default function App() {
    * Name used in creating new annotations or searching for existing user annotations
    */
   const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR)
-
-  useEffect(() => {
-    console.log('annotations?', annotations.length);
-  }, [annotations]);
 
   useEffect(() => {
     const getAnnotationListsAsync = async () => {
@@ -165,11 +166,15 @@ export default function App() {
         {annotatableText.length
           ?
           <>
-            {versionId ? <RecogitoDocument
+            {versionId ? <RecogitoAnnotator
               text={annotatableText.join("\n")}
               annotations={annotations}
               onAddAnnotation={(a) => addAnnotation(a)}
               creator={currentCreator}
+              selected={selectedAnnotation}
+              onSelect={setSelectedAnnotation}
+              annotationType={annotationType}
+              onSetAnnotationType={setAnnotationType}
             /> : null}
           </>
           : <>Click search to find an annotation by its ID</>}

@@ -8,27 +8,37 @@ export type ElucidateBodyType = AnnotatorBodyType & {
   "purpose": string
 };
 
-type ClassifyingBodyType = {
-  "type": "TextualBody",
-  "purpose": "classifying",
+export type RecogitoCreator = { name: string; id: string };
+
+export type BodyType = {
+  purpose: string;
+  "type": "TextualBody";
   "value": string
+}
+
+export type CommentingBodyType = BodyType & {
+  "purpose": "commenting",
+  "creator": RecogitoCreator
 };
 
-export type ClassifyingEntityBodyType = [ClassifyingBodyType, {
-  "type": "TextualBody",
-  "purpose": "commenting",
-  "value": string
-}];
+type ClassifyingBodyType = BodyType & {
+  // Recogito calls it "tagging"
+  "purpose": "classifying",
+};
+
+export type ClassifyingEntityBodyType = [ClassifyingBodyType, CommentingBodyType];
 
 export type EntityBodyType = ClassifyingBodyType | ClassifyingEntityBodyType;
 
+export type Selector = {
+  "type": string,
+  "end": number,
+  "start": number
+};
+
 export type SelectorTarget = {
-  "type": undefined,
-  "selector": {
-    "type": string,
-    "end": number,
-    "start": number
-  },
+  "type": string,
+  "selector": Selector,
   "source": string
 };
 
@@ -56,7 +66,7 @@ export type ElucidateAnnotation = {
     "type": string,
     "name": string
   } | undefined,
-  "body": EntityBodyType | ElucidateBodyType | (ElucidateBodyType[]),
+  "body": BodyType | EntityBodyType | ElucidateBodyType | (ElucidateBodyType[]),
   "target": TargetType
   "motivation": string
 };

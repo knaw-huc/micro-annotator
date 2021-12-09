@@ -3,7 +3,15 @@ import {Recogito} from "@recogito/recogito-js";
 import "@recogito/recogito-js/dist/recogito.min.css";
 import {Annotation, MicroAnnotation, toMicroAnn, toRelativeOffsets} from "../../model/Annotation";
 import isString from "../../util/isString";
-import {SelectorTarget} from "../../model/ElucidateAnnotation";
+import {
+  BodyType,
+  CommentingBodyType,
+  ElucidateAnnotation,
+  ElucidateTargetType,
+  RecogitoCreator,
+  Selector,
+  SelectorTarget
+} from "../../model/ElucidateAnnotation";
 
 const VOCABULARY = [
   {label: "material", uri: "http://vocab.getty.edu/aat/300010358"},
@@ -90,28 +98,36 @@ export default function RecogitoDocument(props: DocumentProps) {
   return <div className="recogito-doc" ref={docRef}/>;
 }
 
-export function toRecogitoAnn(a: any, text: string[], beginRange: number): MicroAnnotation {
+export function toRecogitoAnn(a: ElucidateAnnotation, text: string[], beginRange: number): MicroAnnotation {
   let result = toMicroAnn(a);
   result = toRelativeOffsets(result, beginRange) as MicroAnnotation
   if (isString(a.target)) {
-    const source = a.target;
-    result.target = {} as SelectorTarget;
+    const source = a.target as string;
+    result.target = {} as ElucidateTargetType;
     result.target.source = source;
   }
-  a.target.selector = toRecogitoSelector(a, text)
-  a.body.map((b: any) => b.creator = toRecogitoCreator(a.creator));
-  a.body.find((b: any) => b.purpose === 'classifying').purpose = 'tagging';
-  return a;
+  const target = result.target as SelectorTarget;
+  target.selector = toRecogitoSelector(result, text)
+  if (Array.isArray(result.body)) {
+    const body = result.body as BodyType[];
+    body
+      .filter((b: BodyType) => b.purpose === "commenting")
+      .forEach((b: BodyType) => (b as CommentingBodyType).creator = toRecogitoCreator(result.creator));
+    body
+      .filter((b: BodyType) => b.purpose === "classifying")
+      .forEach((b: BodyType) => b.purpose = "tagging");
+  }
+  return result;
 }
 
-function toRecogitoCreator(creator: string) {
+function toRecogitoCreator(creator: string): RecogitoCreator {
   return {
     id: creator,
     name: creator
   };
 }
 
-function toRecogitoSelector(a: MicroAnnotation, lines: string[]) {
+function toRecogitoSelector(a: MicroAnnotation, lines: string[]): Selector {
   const lineCount = toLineCount(lines);
 
   const start = a.begin_anchor
@@ -127,11 +143,11 @@ function toRecogitoSelector(a: MicroAnnotation, lines: string[]) {
       : a.end_char_offset + 1
   }
 
-  return [{
+  return {
     type: "TextPositionSelector",
     start,
     end
-  }];
+  };
 }
 
 function toUntanngleAnn(a: any, creator: string, text: string) {

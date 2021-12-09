@@ -5,6 +5,7 @@ import {
   EntityBodyType
 } from "./ElucidateAnnotation";
 
+
 export const NS_PREFIX = "http://example.org/customwebannotationfield#";
 export const ENTITY = "Entity";
 
@@ -20,7 +21,7 @@ export type Annotation = {
   end_anchor: number;
   entity_comment: string;
   selected: Boolean;
-  source: any
+  webAnn: any
 }
 
 export type MicroAnnotation = ElucidateAnnotation & Annotation;
@@ -31,8 +32,8 @@ export type MicroAnnotation = ElucidateAnnotation & Annotation;
 export function toMicroAnn(ea: ElucidateAnnotation): MicroAnnotation {
   const result = ea as MicroAnnotation;
 
-  if(!result.source) {
-    result.source = JSON.stringify(ea);
+  if(!result.webAnn) {
+    result.webAnn = JSON.parse(JSON.stringify(result));
   }
 
   // ID contains url with version ID followed by annotation ID:
@@ -65,7 +66,6 @@ function fromUserAnnToAnnotation(ann: MicroAnnotation) {
   ann.begin_char_offset = c[1];
   ann.end_anchor = c[2];
   ann.end_char_offset = c[3];
-  ann.source = ann;
   return ann;
 }
 

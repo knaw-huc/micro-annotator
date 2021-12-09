@@ -1,5 +1,5 @@
 import Config from "../Config";
-import {Annotation, ENTITY, NS_PREFIX, toMicroAnn} from "../model/Annotation";
+import {Annotation, ENTITY, MicroAnnotation, NS_PREFIX, toMicroAnn} from "../model/Annotation";
 import {ElucidateAnnotation} from "../model/ElucidateAnnotation";
 
 export default class Elucidate {
@@ -18,7 +18,7 @@ export default class Elucidate {
    * - entity type
    * - comment
    */
-  public static async create(versionId: string, a: Annotation): Promise<Annotation> {
+  public static async create(versionId: string, a: Annotation): Promise<MicroAnnotation> {
     if (a.id) {
       throw Error('Cannot recreate an annotation that already has an ID: ' + a.id);
     }
