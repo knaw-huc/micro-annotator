@@ -16,13 +16,21 @@ export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
   const changeToUser = () => props.onSetAnnotationType(AnnotationListType.USER)
   const changeToRange = () => props.onSetAnnotationType(AnnotationListType.RANGE)
 
+  const recogitoAnnotations = props.annotationType === AnnotationListType.USER
+    ? props.annotations
+    : props.selected !== undefined
+      ? [props.selected]
+      : [];
+
   return <>
-    <RecogitoDocument
-      text={props.text}
-      annotations={props.annotations}
-      onAddAnnotation={props.onAddAnnotation}
-      creator={props.creator}
-    />
+    <div className="annotator-column">
+      <RecogitoDocument
+        text={props.text}
+        annotations={recogitoAnnotations}
+        onAddAnnotation={props.onAddAnnotation}
+        creator={props.creator}
+      />
+    </div>
     <div className="annotator-column">
       <h4>Annotations</h4>
       <div className="tabs clearfix">
