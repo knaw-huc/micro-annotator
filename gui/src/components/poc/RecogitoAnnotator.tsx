@@ -29,6 +29,7 @@ export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
         annotations={recogitoAnnotations}
         onAddAnnotation={props.onAddAnnotation}
         creator={props.creator}
+        readOnly={props.annotationType === AnnotationListType.RANGE}
       />
     </div>
     <div className="annotator-column">

@@ -66,6 +66,10 @@ declare module '@recogito/recogito-js' {
      */
     clearAnnotations(): void;
 
+    /**
+     * Destroys the RecogitoJS instance, removing all text and relationship annotations and restoring DOM state from before initialization.
+     */
+    destroy(): void;
   }
 
 }

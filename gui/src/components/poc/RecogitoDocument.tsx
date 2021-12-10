@@ -24,6 +24,7 @@ interface DocumentProps {
   annotations: {}[];
   text: string;
   creator: string;
+  readOnly: boolean;
 }
 
 export default function RecogitoDocument(props: DocumentProps) {
