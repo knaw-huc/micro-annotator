@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import {useEffect} from "react";
 import {Recogito} from "@recogito/recogito-js";
 import "@recogito/recogito-js/dist/recogito.min.css";
 import {Annotation, MicroAnnotation, toMicroAnn, toRelativeOffsets} from "../../model/Annotation";
@@ -12,6 +12,7 @@ import {
   Selector,
   SelectorTarget
 } from "../../model/ElucidateAnnotation";
+import {RecogitoRoot} from "./RecogitoRoot";
 
 const VOCABULARY = [
   {label: "material", uri: "http://vocab.getty.edu/aat/300010358"},
@@ -19,7 +20,7 @@ const VOCABULARY = [
   {label: "person", uri: "http://vocab.getty.edu/aat/300024979"},
 ];
 
-interface DocumentProps {
+interface RecogitoDocumentProps {
   onAddAnnotation: (ann: any) => void;
   annotations: {}[];
   text: string;
@@ -27,23 +28,17 @@ interface DocumentProps {
   readOnly: boolean;
 }
 
-export default function RecogitoDocument(props: DocumentProps) {
+export const RecogitoDocument = (props: RecogitoDocumentProps) => {
+  console.log('render MinimalRecogito');
+  const rootName = 'recogito-root-minimal';
 
-  const [docRef] = useState(useRef<HTMLDivElement>(null));
-  const [recogito, setRecogito] = useState<Recogito>()
-
-  const annotations = props.annotations;
-
-  let text = props.text;
-  let onAddAnnotation = props.onAddAnnotation;
-
-  // Create recogito instance:
   useEffect(() => {
-    if (!docRef.current || recogito) {
-      return;
+    let elementById = document.getElementById(rootName);
+    if(elementById) {
+      elementById.textContent = props.text;
     }
-    setRecogito(new Recogito({
-      content: docRef.current,
+    const r = new Recogito({
+      content: rootName,
       locale: "auto",
       mode: "pre",
       widgets: [
@@ -54,6 +49,7 @@ export default function RecogitoDocument(props: DocumentProps) {
         },
       ],
       relationVocabulary: ["isRelated", "isPartOf", "isSameAs "],
+      readOnly: props.readOnly,
       formatter: (annotation: any) => {
         const tags = annotation.bodies.flatMap((body: any) =>
           body && body.purpose === "tagging" ? body.value : []
@@ -72,31 +68,23 @@ export default function RecogitoDocument(props: DocumentProps) {
         }
         return tagClasses.join(" ");
       },
-    }));
-  }, [docRef, recogito]);
+    });
 
-  // Add text and annotations to recogito:
-  useEffect(() => {
-    if (!docRef.current || !recogito) {
-      return;
+    for (const annotation of props.annotations) {
+      r.addAnnotation(annotation)
     }
-
-    docRef.current.textContent = text;
-
-    recogito.clearAnnotations();
-
-    annotations.forEach((annotation: any) => {
-      recogito.addAnnotation(annotation)
+    r.on("createAnnotation", (a: any) => {
+      const toSave = toUntanngleAnn(a, props.creator, props.text);
+      props.onAddAnnotation(toSave);
     });
 
-    recogito.on("createAnnotation", (a: any) => {
-      const toSave = toUntanngleAnn(a, props.creator, text);
-      onAddAnnotation(toSave);
-    });
+    return () => {
+      r.destroy()
+    }
+  }, [props])
 
-  }, [docRef, recogito, annotations, text, onAddAnnotation, props.creator]);
+  return <RecogitoRoot id={rootName}/>
 
-  return <div className="recogito-doc" ref={docRef}/>;
 }
 
 export function toRecogitoAnn(a: ElucidateAnnotation, text: string[], beginRange: number): MicroAnnotation {

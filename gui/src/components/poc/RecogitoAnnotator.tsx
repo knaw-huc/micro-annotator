@@ -1,6 +1,7 @@
 import AnnotationList, {AnnotationListType} from "../annotator/AnnotationList";
 import {Annotation} from "../../model/Annotation";
-import RecogitoDocument from "./RecogitoDocument";
+import {RecogitoDocument} from "./RecogitoDocument";
+
 
 type RecogitoAnnotatorProps = {
   annotations: Annotation[];
