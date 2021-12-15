@@ -12,5 +12,5 @@ function alwaysMemo() {
  * Create a single, persistent dom node for all recogito instances
  */
 export const RecogitoRoot = memo((props: RecogitoRootProps) => {
-  return <div id={props.id}/>
+  return <div id={props.id} className="recogito-doc"/>
 }, alwaysMemo())
