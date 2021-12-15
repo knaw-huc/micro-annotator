@@ -9,9 +9,9 @@ export type AnnRange = {
 
 export function toRange(ann: Annotation): AnnRange {
   const result = {} as AnnRange;
-  result.beginAnchor = ann.begin_anchor;
-  result.beginOffset = ann.begin_char_offset;
-  result.endAnchor = ann.end_anchor;
-  result.endOffset = ann.end_char_offset;
+  result.beginAnchor = ann.coordinates[0];
+  result.beginOffset = ann.coordinates[1];
+  result.endAnchor = ann.coordinates[2];
+  result.endOffset = ann.coordinates[3];
   return result;
 }

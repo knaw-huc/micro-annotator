@@ -1,9 +1,4 @@
-import {
-  ClassifyingEntityBodyType,
-  ElucidateAnnotation,
-  ElucidateTargetType,
-  EntityBodyType
-} from "./ElucidateAnnotation";
+import {ElucidateAnnotation, EntityBodyType, TargetType} from "./ElucidateAnnotation";
 import isString from "../util/isString";
 
 
@@ -23,6 +18,7 @@ export type Annotation = {
   entity_comment: string;
   selected: Boolean;
   webAnn: any
+  coordinates: number[]
 }
 
 export type MicroAnnotation = ElucidateAnnotation & Annotation;
@@ -32,80 +28,30 @@ export type MicroAnnotation = ElucidateAnnotation & Annotation;
  */
 export function toMicroAnn(ea: ElucidateAnnotation): MicroAnnotation {
   const result = ea as MicroAnnotation;
-
   // Prevent circular reference:
   result.webAnn = JSON.parse(JSON.stringify(result));
-
   // ID contains url with version ID followed by annotation ID:
   result.id = ea.id.match(/[0-9a-f-]{36}/g)?.[1] as string;
-  let type = ea.type;
-  result.label = getType(type);
 
-  if (result.label === ENTITY) {
-    return fromUserAnnToAnnotation(result);
-  } else if (result.label === "Annotation") {
-    return result;
+  let url: string;
+  if(Array.isArray(ea.target)) {
+    url = (ea.target as TargetType[]).find(t => isString(t)) as string;
+  } else if(isString(ea.target)) {
+    url = ea.target as string;
   } else {
-    return fromUntanngleAnnToAnnotation(result);
+    throw new Error('No target url');
   }
-}
+  result.coordinates = fromTrUrlToCoordinates(url);
+  result.entity_type = getEntityType(result);
 
-function fromUntanngleAnnToAnnotation(ann: MicroAnnotation) {
-  ann.entity_type = getEntityType(ann);
-  let c = fromUntanngleToCoordinates(ann.target as ElucidateTargetType[]);
-  ann.begin_anchor = c[0];
-  ann.begin_char_offset = c[1];
-  ann.end_anchor = c[2];
-  ann.end_char_offset = c[3];
-  return ann;
-}
-
-function fromUserAnnToAnnotation(ann: MicroAnnotation) {
-  ann.entity_type = getEntityType(ann);
-  ann.entity_comment = getEntityComment(ann);
-
-  let target : any = ann.target;
-  if(!isString(target) && Array.isArray(target)) {
-    target = target.find(t => isString(t));
-  }
-  let c = fromUserAnnToCoordinates(target as string);
-  ann.begin_anchor = c[0];
-  ann.begin_char_offset = c[1];
-  ann.end_anchor = c[2];
-  ann.end_char_offset = c[3];
-  return ann;
-}
-
-function getType(type: string | string[]) {
-  if (!Array.isArray(type)) {
-    return type;
-  }
-  if (type.length === 1) {
-    return type[0];
-  }
-
-  let found = type.find(t => t !== "Annotation");
-  if (found) {
-    return found.split('#').pop() as string;
-  } else {
-    throw Error('Could not find type in ' + JSON.stringify(type));
-  }
-}
-
-function getEntityComment(ea: ElucidateAnnotation) {
-  const b = ea.body as ClassifyingEntityBodyType;
-  let entityText = b.find(b => b.purpose === "commenting")?.value;
-  if (!entityText) {
-    throw Error('No commenting TextualBody found in ' + JSON.stringify(b));
-  }
-  return entityText;
+  return result;
 }
 
 function getEntityType(ea: ElucidateAnnotation): string {
   const b = ea.body as EntityBodyType;
 
   const isClassifying = (body: any) => {
-    return body.purpose === "classifying";
+    return ["classifying", "tagging"].includes(body.purpose);
   }
 
   let entityType = Array.isArray(b)
@@ -115,12 +61,11 @@ function getEntityType(ea: ElucidateAnnotation): string {
   if (!entityType) {
     console.warn('No classifying TextualBody found in ' + JSON.stringify(b));
     return "recogito_entity_type";
-
   }
   return entityType;
 }
 
-export function fromUserAnnToCoordinates(textrepoTarget: string): number[] {
+export function fromTrUrlToCoordinates(textrepoTarget: string): number[] {
   const groups = textrepoTarget.match(/.*\/segments\/index\/(\d*)\/(\d*)\/(\d*)\/(\d*)/);
   if (!groups || groups.length !== 5) {
     throw Error('Cannot find coordinates in elucidate target: ' + textrepoTarget);
@@ -128,30 +73,25 @@ export function fromUserAnnToCoordinates(textrepoTarget: string): number[] {
   return [parseInt(groups[1]), parseInt(groups[2]), parseInt(groups[3]), parseInt(groups[4])];
 }
 
-export function fromUntanngleToCoordinates(targets: any[]): number[] {
-  const target = targets.find(t => t.selector.type === 'urn:example:republic:TextAnchorSelector');
-  return [target.selector.start, 0, target.selector.end + 1, 0]
-}
-
 /**
  * Relative to current text
  */
-export function toRelativeOffsets(a: Annotation, offset: number): Annotation {
-  a.begin_anchor -= offset;
-  a.end_anchor -= offset;
-  return a;
+export function toRelativeOffsets(c: number[], offset: number): number[] {
+  c[0] -= offset;
+  c[2] -= offset;
+  return c;
 }
 
 /**
  * Absolute, starting at beginning of corpus
  */
-export function toAbsoluteOffsets(a: number[], offset: number) {
-  a[0] += offset;
-  a[2] += offset;
-  return a;
+export function toAbsoluteOffsets(c: number[], offset: number) {
+  c[0] += offset;
+  c[2] += offset;
+  return c;
 }
 
-export function isInRange(ann: Annotation, endRange: number) {
-  return ann.begin_anchor >= 0 && ann.end_anchor <= endRange;
+export function isInRange(c: number[], endRange: number) {
+  return c[0] >= 0 && c[2] <= endRange;
 }
 

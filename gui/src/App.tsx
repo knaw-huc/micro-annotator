@@ -4,7 +4,7 @@ import Search from './components/Search'
 import ImageColumn from './components/image/ImageColumn'
 import {Annotation, ENTITY, isInRange, MicroAnnotation, NS_PREFIX, toAbsoluteOffsets} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
-import {ElucidateTargetType, RecogitoTargetType, SelectorTarget, TargetType} from "./model/ElucidateAnnotation";
+import {ElucidateTargetType, RecogitoTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
@@ -82,11 +82,12 @@ export default function App() {
         ? await Elucidate.getByCreator(currentCreator)
         : await Elucidate.getByRange(targetId, beginRange, endRange);
       const converted = found
-        .map(a => toRecogitoAnn(a, annotatableText, beginRange));
+        .map(a => toRecogitoAnn(a, beginRange));
       const filtered = converted
         .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
-        .filter(ann => isInRange(ann, endRange - beginRange))
+        .filter(ann => isInRange(ann.coordinates, endRange - beginRange));
       setAnnotations(filtered);
+
     }
     getAnnotationListsAsync()
   }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
@@ -119,10 +120,10 @@ export default function App() {
 
     // const recogitoAnn = toRecogitoAnn(created, annotatableText, beginRange);
     setAnnotations((anns: Annotation[]) => {
-      anns.push(created);
+      anns.push(toRecogitoAnn(created, beginRange));
       return anns
     });
-  }, [versionId, beginRange, annotations, annotatableText]);
+  }, [versionId, beginRange, annotatableText, currentCreator]);
 
   useEffect(() => {
     if (annotationId) {

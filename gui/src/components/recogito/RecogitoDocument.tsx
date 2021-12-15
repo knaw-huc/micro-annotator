@@ -1,19 +1,9 @@
 import {useEffect} from "react";
 import {Recogito} from "@recogito/recogito-js";
 import "@recogito/recogito-js/dist/recogito.min.css";
-import {Annotation, MicroAnnotation, toMicroAnn, toRelativeOffsets} from "../../model/Annotation";
-import isString from "../../util/isString";
-import {
-  BodyType,
-  CommentingBodyType,
-  ElucidateAnnotation,
-  ElucidateTargetType,
-  RecogitoCreator,
-  Selector,
-  SelectorTarget
-} from "../../model/ElucidateAnnotation";
+import {MicroAnnotation, toMicroAnn, toRelativeOffsets} from "../../model/Annotation";
+import {ElucidateAnnotation} from "../../model/ElucidateAnnotation";
 import {RecogitoRoot} from "./RecogitoRoot";
-import Config from "../../Config";
 
 const VOCABULARY = [
   {label: "material", uri: "http://vocab.getty.edu/aat/300010358"},
@@ -30,8 +20,7 @@ interface RecogitoDocumentProps {
 }
 
 export const RecogitoDocument = (props: RecogitoDocumentProps) => {
-  console.log('render MinimalRecogito');
-  const rootName = 'recogito-root-minimal';
+  const rootName = 'recogito-root';
 
   useEffect(() => {
     let elementById = document.getElementById(rootName);
@@ -87,60 +76,18 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
   }, [props])
 
   return <RecogitoRoot id={rootName} className="recogito-doc" />
-
 }
 
-export function toRecogitoAnn(a: ElucidateAnnotation, text: string[], beginRange: number): MicroAnnotation {
+export function toRecogitoAnn(a: ElucidateAnnotation, beginRange: number): MicroAnnotation {
   let result = toMicroAnn(a);
-  result = toRelativeOffsets(result, beginRange) as MicroAnnotation
-  if (isString(a.target)) {
-    const source = a.target as string;
-    result.target = {} as ElucidateTargetType;
-    result.target.source = source;
+  result.coordinates = toRelativeOffsets(result.coordinates, beginRange);
+
+  // Recogito expects a.target.selector instead of a.target[*].selector:
+  if(Array.isArray(a.target)) {
+    (a.target as any).selector = (a.target as any[]).find(t => t.selector)?.selector;
   }
 
-  const target = result.target as SelectorTarget;
-  target.selector = toRecogitoSelector(result, text)
-  if (Array.isArray(result.body)) {
-    const body = result.body as BodyType[];
-    body
-      .filter((b: BodyType) => b.purpose === "commenting")
-      .forEach((b: BodyType) => (b as CommentingBodyType).creator = toRecogitoCreator(result.creator));
-    body
-      .filter((b: BodyType) => b.purpose === "classifying")
-      .forEach((b: BodyType) => b.purpose = "tagging");
-  }
   return result;
-}
-
-function toRecogitoCreator(creator: string): RecogitoCreator {
-  return {
-    id: creator,
-    name: creator
-  };
-}
-
-function toRecogitoSelector(a: MicroAnnotation, lines: string[]): Selector {
-  const lineCount = toLineCount(lines);
-
-  const start = a.begin_anchor
-    ? lineCount[a.begin_anchor - 1] + a.begin_char_offset
-    : a.begin_char_offset;
-
-  let end;
-  if (a.begin_anchor === a.end_anchor) {
-    end = start + a.end_char_offset + 1;
-  } else {
-    end = a.end_anchor
-      ? lineCount[a.end_anchor - 1] + a.end_char_offset + 1
-      : a.end_char_offset + 1
-  }
-
-  return {
-    type: "TextPositionSelector",
-    start,
-    end
-  };
 }
 
 export function toUntanngleCoordinates(a: any, text: string) {
