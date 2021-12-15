@@ -1,4 +1,4 @@
-export type AnnotatorBodyType = {
+type AnnotatorBodyType = {
   "type": string | (string[]),
   "value": string,
 };
@@ -54,11 +54,36 @@ export type ImageTarget = {
 
 export type ElucidateTargetType = SelectorTarget | ImageTarget;
 
-export type TargetType = string | ElucidateTargetType | (ElucidateTargetType[]);
+export type TargetType = string | RecogitoTargetType | TextAnchorTargetType | ElucidateTargetType;
+
+
+type RecogitoQuoteSelectorType = {
+  type: "TextQuoteSelector";
+  exact: string
+}
+
+type RecogitoPositionSelectorType = {
+  type: "TextPositionSelector";
+  start: number;
+  end: number;
+}
+
+type RecogitoSelectorType = RecogitoQuoteSelectorType | RecogitoPositionSelectorType;
+
+type TextAnchorTargetType = {
+  "type": "urn:example:republic:TextAnchorSelector",
+  "start": number,
+  "end": number
+}
+
+export type RecogitoTargetType = {
+  selector: RecogitoSelectorType[]
+}
 
 export type ElucidateAnnotation = {
+  "@context": (string | {"Entity": string})[],
   "id": string,
-  "type": string,
+  "type": string | string[],
   "created": string,
   "creator": string,
   "generator": {
@@ -67,6 +92,6 @@ export type ElucidateAnnotation = {
     "name": string
   } | undefined,
   "body": BodyType | EntityBodyType | ElucidateBodyType | (ElucidateBodyType[]),
-  "target": TargetType
+  "target": TargetType | TargetType[]
   "motivation": string
 };

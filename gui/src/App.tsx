@@ -2,14 +2,14 @@ import {useCallback, useEffect, useState} from 'react'
 
 import Search from './components/Search'
 import ImageColumn from './components/image/ImageColumn'
-import {Annotation, isInRange, toAbsoluteOffsets} from "./model/Annotation";
+import {Annotation, ENTITY, isInRange, MicroAnnotation, NS_PREFIX, toAbsoluteOffsets} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
-import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
+import {ElucidateTargetType, RecogitoTargetType, SelectorTarget, TargetType} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
-import {toRecogitoAnn} from "./components/recogito/RecogitoDocument";
+import {toRecogitoAnn, toUntanngleCoordinates} from "./components/recogito/RecogitoDocument";
 import RecogitoAnnotator from "./components/recogito/RecogitoAnnotator";
 
 export default function App() {
@@ -91,17 +91,35 @@ export default function App() {
     getAnnotationListsAsync()
   }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
 
-  const addAnnotation = useCallback(async (ann: Annotation) => {
+  const addAnnotation = useCallback(async (ann: MicroAnnotation) => {
     if (!versionId) {
       setError('Cannot save annotation when version id is not set')
       return;
     }
-    ann = toAbsoluteOffsets(ann, beginRange);
-    const created = await Elucidate.create(versionId, ann)
-    const recogitoAnn = toRecogitoAnn(created, annotatableText, beginRange);
-    annotations.push(recogitoAnn);
+    ann['@context'] = ["http://www.w3.org/ns/anno.jsonld", {
+      "Entity": NS_PREFIX + ENTITY
+    }];
+    ann.type = ["Annotation", "Entity"];
+    ann.creator = currentCreator;
+
+    let c = toUntanngleCoordinates(ann, annotatableText.join("\n"));
+    c = toAbsoluteOffsets(c, beginRange);
+    const target = ann.target as RecogitoTargetType;
+    ann.target = [];
+    ann.target.push(target);
+
+    ann.target.push(`${Config.TEXTREPO_HOST}/view/versions/${versionId}/segments/index/${c[0]}/${c[1]}/${c[2]}/${c[3]}`);
+    ann.target.push({
+      type: "urn:example:republic:TextAnchorSelector",
+      "start": c[0],
+      "end": c[2]
+    });
+
+    const created = await Elucidate.create(versionId, ann);
+
+    // const recogitoAnn = toRecogitoAnn(created, annotatableText, beginRange);
     setAnnotations((anns: Annotation[]) => {
-      anns.push(recogitoAnn);
+      anns.push(created);
       return anns
     });
   }, [versionId, beginRange, annotations, annotatableText]);
@@ -145,6 +163,7 @@ export default function App() {
     setEndRange(selectorTarget.selector.end)
     setAnnotatableText(grid)
     setVersionId(foundVersionId)
+
   }
 
   return (

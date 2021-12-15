@@ -18,35 +18,15 @@ export default class Elucidate {
    * - entity type
    * - comment
    */
-  public static async create(versionId: string, a: Annotation): Promise<MicroAnnotation> {
+  public static async create(versionId: string, a: MicroAnnotation): Promise<MicroAnnotation> {
     if (a.id) {
       throw Error('Cannot recreate an annotation that already has an ID: ' + a.id);
     }
-    const body = {
-      "@context": ["http://www.w3.org/ns/anno.jsonld", {
-        "Entity": NS_PREFIX + ENTITY
-      }],
-      "type": ["Annotation", "Entity"],
-      "creator": a.creator,
-      "body": [
-        {
-          "type": "TextualBody",
-          "purpose": "classifying",
-          "value": a.entity_type
-        },
-        {
-          "type": "TextualBody",
-          "purpose": "commenting",
-          "value": a.entity_comment
-        }
-      ],
-      "target": `${this.tr}/view/versions/${versionId}/segments/index/${a.begin_anchor}/${a.begin_char_offset}/${a.end_anchor}/${a.end_char_offset}`
-    };
 
     const res = await fetch(`${this.host}/annotation/w3c/${versionId}/`, {
       method: "POST",
       headers: this.headers,
-      body: JSON.stringify(body)
+      body: JSON.stringify(a)
     });
 
     const responseBody = await res.json();

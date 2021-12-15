@@ -13,6 +13,7 @@ import {
   SelectorTarget
 } from "../../model/ElucidateAnnotation";
 import {RecogitoRoot} from "./RecogitoRoot";
+import Config from "../../Config";
 
 const VOCABULARY = [
   {label: "material", uri: "http://vocab.getty.edu/aat/300010358"},
@@ -73,14 +74,16 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
     for (const annotation of props.annotations) {
       r.addAnnotation(annotation)
     }
+
     r.on("createAnnotation", (a: any) => {
-      const toSave = toUntanngleAnn(a, props.creator, props.text);
-      props.onAddAnnotation(toSave);
+      delete a.id;
+      props.onAddAnnotation(a);
     });
 
     return () => {
       r.destroy()
     }
+
   }, [props])
 
   return <RecogitoRoot id={rootName} className="recogito-doc" />
@@ -95,6 +98,7 @@ export function toRecogitoAnn(a: ElucidateAnnotation, text: string[], beginRange
     result.target = {} as ElucidateTargetType;
     result.target.source = source;
   }
+
   const target = result.target as SelectorTarget;
   target.selector = toRecogitoSelector(result, text)
   if (Array.isArray(result.body)) {
@@ -139,20 +143,7 @@ function toRecogitoSelector(a: MicroAnnotation, lines: string[]): Selector {
   };
 }
 
-function toUntanngleAnn(a: any, creator: string, text: string) {
-  const toSave = {} as Annotation;
-  toSave.entity_comment = a.body.find((b: any) => b.purpose === 'commenting').value;
-  toSave.entity_type = a.body.find((b: any) => b.purpose === 'tagging').value;
-  toSave.creator = creator;
-  const c = toUntanngleCoordinates(a, text);
-  toSave.begin_anchor = c[0];
-  toSave.begin_char_offset = c[1];
-  toSave.end_anchor = c[2];
-  toSave.end_char_offset = c[3];
-  return toSave;
-}
-
-function toUntanngleCoordinates(a: any, text: string) {
+export function toUntanngleCoordinates(a: any, text: string) {
   const position = a.target.selector.find((t: any) => t.type === 'TextPositionSelector');
   const start = position.start;
   const end = position.end;

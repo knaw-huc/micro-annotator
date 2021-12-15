@@ -4,6 +4,7 @@ import {
   ElucidateTargetType,
   EntityBodyType
 } from "./ElucidateAnnotation";
+import isString from "../util/isString";
 
 
 export const NS_PREFIX = "http://example.org/customwebannotationfield#";
@@ -39,8 +40,11 @@ export function toMicroAnn(ea: ElucidateAnnotation): MicroAnnotation {
   result.id = ea.id.match(/[0-9a-f-]{36}/g)?.[1] as string;
   let type = ea.type;
   result.label = getType(type);
+
   if (result.label === ENTITY) {
     return fromUserAnnToAnnotation(result);
+  } else if (result.label === "Annotation") {
+    return result;
   } else {
     return fromUntanngleAnnToAnnotation(result);
   }
@@ -60,7 +64,11 @@ function fromUserAnnToAnnotation(ann: MicroAnnotation) {
   ann.entity_type = getEntityType(ann);
   ann.entity_comment = getEntityComment(ann);
 
-  let c = fromUserAnnToCoordinates(ann.target as string);
+  let target : any = ann.target;
+  if(!isString(target) && Array.isArray(target)) {
+    target = target.find(t => isString(t));
+  }
+  let c = fromUserAnnToCoordinates(target as string);
   ann.begin_anchor = c[0];
   ann.begin_char_offset = c[1];
   ann.end_anchor = c[2];
@@ -105,7 +113,9 @@ function getEntityType(ea: ElucidateAnnotation): string {
     : isClassifying(b) ? b.value : undefined;
 
   if (!entityType) {
-    throw Error('No classifying TextualBody found in ' + JSON.stringify(b));
+    console.warn('No classifying TextualBody found in ' + JSON.stringify(b));
+    return "recogito_entity_type";
+
   }
   return entityType;
 }
@@ -135,9 +145,9 @@ export function toRelativeOffsets(a: Annotation, offset: number): Annotation {
 /**
  * Absolute, starting at beginning of corpus
  */
-export function toAbsoluteOffsets(a: Annotation, offset: number) {
-  a.begin_anchor += offset;
-  a.end_anchor += offset;
+export function toAbsoluteOffsets(a: number[], offset: number) {
+  a[0] += offset;
+  a[2] += offset;
   return a;
 }
 
