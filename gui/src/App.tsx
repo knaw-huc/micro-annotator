@@ -9,8 +9,8 @@ import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
-import {toRecogitoAnn} from "./components/poc/RecogitoDocument";
-import RecogitoAnnotator from "./components/poc/RecogitoAnnotator";
+import {toRecogitoAnn} from "./components/recogito/RecogitoDocument";
+import RecogitoAnnotator from "./components/recogito/RecogitoAnnotator";
 
 export default function App() {
 
@@ -72,7 +72,7 @@ export default function App() {
 
   useEffect(() => {
     const getAnnotationListsAsync = async () => {
-      if(!beginRange) {
+      if (!beginRange) {
         return;
       }
       if (!(targetId && currentCreator && beginRange && endRange && annotatableText.length)) {
@@ -162,20 +162,17 @@ export default function App() {
           images={regionLinks}
         />
 
-        {annotatableText.length
-          ?
-          <>
-            {versionId ? <RecogitoAnnotator
-              text={annotatableText.join("\n")}
-              annotations={annotations}
-              onAddAnnotation={(a) => addAnnotation(a)}
-              creator={currentCreator}
-              selected={selectedAnnotation}
-              onSelect={setSelectedAnnotation}
-              annotationType={annotationType}
-              onSetAnnotationType={setAnnotationType}
-            /> : null}
-          </>
+        {versionId
+          ? <RecogitoAnnotator
+            text={annotatableText.join("\n")}
+            annotations={annotations}
+            onAddAnnotation={(a) => addAnnotation(a)}
+            creator={currentCreator}
+            selected={selectedAnnotation}
+            onSelect={setSelectedAnnotation}
+            annotationType={annotationType}
+            onSetAnnotationType={setAnnotationType}
+          />
           : <>Click search to find an annotation by its ID</>}
       </div>
     </div>

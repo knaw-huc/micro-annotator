@@ -83,7 +83,7 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
     }
   }, [props])
 
-  return <RecogitoRoot id={rootName}/>
+  return <RecogitoRoot id={rootName} className="recogito-doc" />
 
 }
 
