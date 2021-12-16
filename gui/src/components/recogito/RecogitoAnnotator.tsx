@@ -8,6 +8,7 @@ type RecogitoAnnotatorProps = {
   selected: Annotation | undefined;
   onSelect: (a: Annotation | undefined) => void;
   onAddAnnotation: (ann: any) => void;
+  onUpdateAnnotation: (ann: any) => void;
   text: string;
   creator: string;
   annotationType: AnnotationListType;
@@ -29,6 +30,7 @@ export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
         text={props.text}
         annotations={recogitoAnnotations}
         onAddAnnotation={props.onAddAnnotation}
+        onUpdateAnnotation={props.onUpdateAnnotation}
         creator={props.creator}
         readOnly={props.annotationType === AnnotationListType.RANGE}
       />

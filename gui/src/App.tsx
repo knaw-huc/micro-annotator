@@ -2,7 +2,15 @@ import {useCallback, useEffect, useState} from 'react'
 
 import Search from './components/Search'
 import ImageColumn from './components/image/ImageColumn'
-import {Annotation, ENTITY, isInRange, MicroAnnotation, NS_PREFIX, toAbsoluteOffsets} from "./model/Annotation";
+import {
+  Annotation,
+  ENTITY,
+  isInRange,
+  MicroAnnotation,
+  NS_PREFIX,
+  toAbsoluteOffsets,
+  toElucidateId
+} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, RecogitoTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
@@ -117,13 +125,32 @@ export default function App() {
     });
 
     const created = await Elucidate.create(versionId, ann);
-
-    // const recogitoAnn = toRecogitoAnn(created, annotatableText, beginRange);
     setAnnotations((anns: Annotation[]) => {
       anns.push(toRecogitoAnn(created, beginRange));
       return anns
     });
   }, [versionId, beginRange, annotatableText, currentCreator]);
+
+  const updateAnnotation = useCallback(async (ann: MicroAnnotation) => {
+    if (!versionId) {
+      setError('Cannot update annotation when version id is not set')
+      return;
+    }
+
+    const toUpdate = ann.webAnn;
+    toUpdate['@context'] = ["http://www.w3.org/ns/anno.jsonld", {
+      "Entity": NS_PREFIX + ENTITY
+    }];
+    toUpdate.id = toElucidateId(Config.ELUCIDATE_HOST, versionId, ann.id)
+    toUpdate.body = ann.body;
+    toUpdate.creator = currentCreator;
+
+    const updated = await Elucidate.update(toUpdate);
+    const updatedRecogitoAnn = toRecogitoAnn(updated, beginRange);
+    const i = annotations.findIndex(a => a.id === updatedRecogitoAnn.id);
+    annotations[i] = updatedRecogitoAnn;
+    setAnnotations(annotations);
+  }, [beginRange, currentCreator, versionId, annotations]);
 
   useEffect(() => {
     if (annotationId) {
@@ -187,6 +214,7 @@ export default function App() {
             text={annotatableText.join("\n")}
             annotations={annotations}
             onAddAnnotation={(a) => addAnnotation(a)}
+            onUpdateAnnotation={(a) => updateAnnotation(a)}
             creator={currentCreator}
             selected={selectedAnnotation}
             onSelect={setSelectedAnnotation}

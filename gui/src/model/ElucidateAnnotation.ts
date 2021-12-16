@@ -92,6 +92,7 @@ export type ElucidateAnnotation = {
     "name": string
   } | undefined,
   "body": BodyType | EntityBodyType | ElucidateBodyType | (ElucidateBodyType[]),
-  "target": TargetType | TargetType[]
-  "motivation": string
+  "target": TargetType | TargetType[],
+  "motivation": string,
+  "ETag": string
 };

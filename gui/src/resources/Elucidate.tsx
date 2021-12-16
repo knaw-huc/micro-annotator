@@ -18,18 +18,50 @@ export default class Elucidate {
    * - entity type
    * - comment
    */
-  public static async create(versionId: string, a: MicroAnnotation): Promise<MicroAnnotation> {
+  public static async create(versionId: string, a: MicroAnnotation): Promise<ElucidateAnnotation> {
     if (a.id) {
       throw Error('Cannot recreate an annotation that already has an ID: ' + a.id);
     }
-
-    const res = await fetch(`${this.host}/annotation/w3c/${versionId}/`, {
+    const response = await fetch(`${this.host}/annotation/w3c/${versionId}/`, {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify(a)
     });
+    return await this.withEtag(response);
+  }
 
-    return res.json();
+  static async update(a: MicroAnnotation): Promise<ElucidateAnnotation> {
+    if (!a.id) {
+      throw Error('Cannot update annotation without ID: ' + JSON.stringify(a));
+    }
+    let headers = await this.withETagHeader(a, this.headers);
+    const response = await fetch(a.id, {
+      method: "PUT",
+      headers: headers,
+      body: JSON.stringify(a)
+    });
+
+    return await this.withEtag(response);
+  }
+
+  private static async withETagHeader(a: MicroAnnotation, headers: {}) {
+    const eTag = a.ETag ? a.ETag : await this.requestEtag(a.id);
+    let ifMatch = eTag.match(/W\/"([a-z0-9]*)"/)?.[1];
+    if (!ifMatch) {
+      throw new Error('Could not create If-Match header from ' + eTag);
+    }
+    return Object.assign({"If-Match": ifMatch}, headers);
+  }
+
+  private static async withEtag(response: Response) {
+    const result = await response.json() as ElucidateAnnotation;
+    let eTag = response.headers.get('ETag');
+    if (eTag) {
+      result.ETag = eTag;
+    } else {
+      throw new Error('No etag found in: ' + JSON.stringify(response.headers));
+    }
+    return result;
   }
 
   /**
@@ -48,6 +80,18 @@ export default class Elucidate {
     let url = `${this.host}/annotation/w3c/services/search/range`;
     const params = new URLSearchParams({target_id: targetId, range_start: '' + rangeStart, range_end: '' + rangeEnd});
     return this.getAllPages(url, params)
+  }
+
+  public static async requestEtag(elucidateId: string) {
+    const response = await fetch(
+      elucidateId,
+      {headers: this.headers}
+    );
+    let eTag = response.headers.get('ETag');
+    if (!eTag) {
+      throw new Error('No ETag header could be found in response of ' + elucidateId)
+    }
+    return eTag
   }
 
   /**

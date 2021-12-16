@@ -23,31 +23,17 @@ export type Annotation = {
 
 export type MicroAnnotation = ElucidateAnnotation & Annotation;
 
-/**
- * Add MicroAnnotation fields to Elucidate annotation
- */
-export function toMicroAnn(ea: ElucidateAnnotation): MicroAnnotation {
-  const result = ea as MicroAnnotation;
-  // Prevent circular reference:
-  result.webAnn = JSON.parse(JSON.stringify(result));
-  // ID contains url with version ID followed by annotation ID:
-  result.id = ea.id.match(/[0-9a-f-]{36}/g)?.[1] as string;
-
-  let url: string;
-  if(Array.isArray(ea.target)) {
-    url = (ea.target as TargetType[]).find(t => isString(t)) as string;
-  } else if(isString(ea.target)) {
-    url = ea.target as string;
+export function findTextRepoUrl(ea: ElucidateAnnotation) {
+  if (Array.isArray(ea.target)) {
+    return (ea.target as TargetType[]).find(t => isString(t)) as string;
+  } else if (isString(ea.target)) {
+    return ea.target as string;
   } else {
     throw new Error('No target url');
   }
-  result.coordinates = fromTrUrlToCoordinates(url);
-  result.entity_type = getEntityType(result);
-
-  return result;
 }
 
-function getEntityType(ea: ElucidateAnnotation): string {
+export function getEntityType(ea: ElucidateAnnotation): string {
   const b = ea.body as EntityBodyType;
 
   const isClassifying = (body: any) => {
@@ -71,6 +57,20 @@ export function fromTrUrlToCoordinates(textrepoTarget: string): number[] {
     throw Error('Cannot find coordinates in elucidate target: ' + textrepoTarget);
   }
   return [parseInt(groups[1]), parseInt(groups[2]), parseInt(groups[3]), parseInt(groups[4])];
+}
+
+/**
+ * Annotation ID is the second UUID found in an elucidate ID
+ */
+export function toAnnotationId(id: string) {
+  return id.match(/[0-9a-f-]{36}/g)?.[1] as string;
+}
+
+/**
+ * Elucidate ID is an url with version ID followed by annotation ID
+ */
+export function toElucidateId(elucidateHost: string, versionId: string, annId: string) {
+  return `${elucidateHost}/annotation/w3c/${versionId}/${annId}`;
 }
 
 /**

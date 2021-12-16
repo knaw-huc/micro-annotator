@@ -1,18 +1,26 @@
 import {useEffect} from "react";
 import {Recogito} from "@recogito/recogito-js";
 import "@recogito/recogito-js/dist/recogito.min.css";
-import {MicroAnnotation, toMicroAnn, toRelativeOffsets} from "../../model/Annotation";
-import {ElucidateAnnotation} from "../../model/ElucidateAnnotation";
+import {
+  toAnnotationId,
+  findTextRepoUrl,
+  fromTrUrlToCoordinates,
+  getEntityType,
+  MicroAnnotation,
+  toRelativeOffsets
+} from "../../model/Annotation";
+import {ElucidateAnnotation, RecogitoTargetType} from "../../model/ElucidateAnnotation";
 import {RecogitoRoot} from "./RecogitoRoot";
 
 const VOCABULARY = [
-  {label: "material", uri: "http://vocab.getty.edu/aat/300010358"},
-  {label: "object", uri: "http://vocab.getty.edu/aat/300311889"},
-  {label: "person", uri: "http://vocab.getty.edu/aat/300024979"},
+  {label: "place", uri: "https://dbpedia.org/property/place"},
+  {label: "organisation", uri: "https://dbpedia.org/property/organisation"},
+  {label: "person", uri: "https://dbpedia.org/property/person"},
 ];
 
 interface RecogitoDocumentProps {
   onAddAnnotation: (ann: any) => void;
+  onUpdateAnnotation: (ann: any) => void;
   annotations: {}[];
   text: string;
   creator: string;
@@ -24,7 +32,7 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
 
   useEffect(() => {
     let elementById = document.getElementById(rootName);
-    if(elementById) {
+    if (elementById) {
       elementById.textContent = props.text;
     }
     const r = new Recogito({
@@ -69,25 +77,63 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
       props.onAddAnnotation(a);
     });
 
+    r.on("updateAnnotation", (a: any) => {
+      // delete a.id;
+      props.onUpdateAnnotation(a);
+    });
+
     return () => {
       r.destroy()
     }
 
   }, [props])
 
-  return <RecogitoRoot id={rootName} className="recogito-doc" />
+  return <RecogitoRoot id={rootName} className="recogito-doc"/>
 }
 
+/**
+ * Add micro-annotator specific fields to Elucidate annotation
+ */
 export function toRecogitoAnn(a: ElucidateAnnotation, beginRange: number): MicroAnnotation {
-  let result = toMicroAnn(a);
+  const result = a as MicroAnnotation;
+  if(result.webAnn) {
+    delete result.webAnn;
+  }
+
+  result.id = toAnnotationId(a.id);
+  result.webAnn = JSON.parse(JSON.stringify(result));
+  result.coordinates = fromTrUrlToCoordinates(findTextRepoUrl(a));
+  result.entity_type = getEntityType(a);
   result.coordinates = toRelativeOffsets(result.coordinates, beginRange);
 
-  // Recogito expects a.target.selector instead of a.target[*].selector:
-  if(Array.isArray(a.target)) {
-    (a.target as any).selector = (a.target as any[]).find(t => t.selector)?.selector;
+  if (Array.isArray(a.target)) {
+    setRecogitoTargetSelector(a);
   }
 
   return result;
+}
+
+/**
+ * Recogito expects a.target.selector instead of a.target[*].selector:
+ */
+function setRecogitoTargetSelector(a: ElucidateAnnotation) {
+  const target = a.target as any as RecogitoTargetType;
+  const selectorTarget = (a.target as RecogitoTargetType[]).find(t => t.selector);
+  if(selectorTarget) {
+    target.selector = selectorTarget.selector;
+  }
+}
+
+/**
+ * Elucidate expects a.target[*].selector instead of a.target[] with an [].selector
+ */
+export function unsetRecogitoTargetSelector(a: ElucidateAnnotation) {
+  const target = a.target as any as RecogitoTargetType;
+  const selectorTarget = (a.target as RecogitoTargetType[]).find(t => t.selector);
+  if(selectorTarget) {
+    selectorTarget.selector = target.selector;
+    delete (target as any).selector;
+  }
 }
 
 export function toUntanngleCoordinates(a: any, text: string) {
