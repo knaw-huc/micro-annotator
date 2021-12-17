@@ -2,23 +2,17 @@ import {useCallback, useEffect, useState} from 'react'
 
 import Search from './components/Search'
 import ImageColumn from './components/image/ImageColumn'
-import {
-  Annotation,
-  ENTITY,
-  isInRange,
-  MicroAnnotation,
-  NS_PREFIX,
-  toAbsoluteOffsets,
-  toElucidateId
-} from "./model/Annotation";
+import {Annotation, MicroAnnotation,} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
-import {ElucidateTargetType, RecogitoTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
+import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
 import Config from "./Config";
 import {CreatorField} from "./components/CreatorField";
 import {AnnotationListType} from "./components/annotator/AnnotationList";
-import {toRecogitoAnn, toUntanngleCoordinates} from "./components/recogito/RecogitoDocument";
 import RecogitoAnnotator from "./components/recogito/RecogitoAnnotator";
+import {toMicroAnn} from "./util/convert/toMicroAnn";
+import {toNewElucidateAnn} from "./util/convert/toNewElucidateAnn";
+import {toUpdatableElucidateAnn} from "./util/convert/toUpdatableElucidateAnn";
 
 export default function App() {
 
@@ -90,63 +84,37 @@ export default function App() {
         ? await Elucidate.getByCreator(currentCreator)
         : await Elucidate.getByRange(targetId, beginRange, endRange);
       const converted = found
-        .map(a => toRecogitoAnn(a, beginRange));
+        .map(a => toMicroAnn(a, beginRange));
       const filtered = converted
         .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
-        .filter(ann => isInRange(ann.coordinates, endRange - beginRange));
+        .filter(ann => isInRelativeRange(ann.coordinates, endRange - beginRange));
       setAnnotations(filtered);
 
     }
     getAnnotationListsAsync()
   }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
 
-  const addAnnotation = useCallback(async (ann: MicroAnnotation) => {
+  const addAnnotation = useCallback(async (a: MicroAnnotation) => {
     if (!versionId) {
       setError('Cannot save annotation when version id is not set')
       return;
     }
-    ann['@context'] = ["http://www.w3.org/ns/anno.jsonld", {
-      "Entity": NS_PREFIX + ENTITY
-    }];
-    ann.type = ["Annotation", "Entity"];
-    ann.creator = currentCreator;
-
-    let c = toUntanngleCoordinates(ann, annotatableText.join("\n"));
-    c = toAbsoluteOffsets(c, beginRange);
-    const target = ann.target as RecogitoTargetType;
-    ann.target = [];
-    ann.target.push(target);
-
-    ann.target.push(`${Config.TEXTREPO_HOST}/view/versions/${versionId}/segments/index/${c[0]}/${c[1]}/${c[2]}/${c[3]}`);
-    ann.target.push({
-      type: "urn:example:republic:TextAnchorSelector",
-      "start": c[0],
-      "end": c[2]
-    });
-
-    const created = await Elucidate.create(versionId, ann);
+    const toCreate = toNewElucidateAnn(a, currentCreator, annotatableText, beginRange, versionId);
+    const created = await Elucidate.create(versionId, toCreate);
     setAnnotations((anns: Annotation[]) => {
-      anns.push(toRecogitoAnn(created, beginRange));
+      anns.push(toMicroAnn(created, beginRange));
       return anns
     });
   }, [versionId, beginRange, annotatableText, currentCreator]);
 
-  const updateAnnotation = useCallback(async (ann: MicroAnnotation) => {
+  const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
     if (!versionId) {
       setError('Cannot update annotation when version id is not set')
       return;
     }
-
-    const toUpdate = ann.webAnn;
-    toUpdate['@context'] = ["http://www.w3.org/ns/anno.jsonld", {
-      "Entity": NS_PREFIX + ENTITY
-    }];
-    toUpdate.id = toElucidateId(Config.ELUCIDATE_HOST, versionId, ann.id)
-    toUpdate.body = ann.body;
-    toUpdate.creator = currentCreator;
-
+    const toUpdate = toUpdatableElucidateAnn(a, versionId, currentCreator);
     const updated = await Elucidate.update(toUpdate);
-    const updatedRecogitoAnn = toRecogitoAnn(updated, beginRange);
+    const updatedRecogitoAnn = toMicroAnn(updated, beginRange);
     const i = annotations.findIndex(a => a.id === updatedRecogitoAnn.id);
     annotations[i] = updatedRecogitoAnn;
     setAnnotations(annotations);
@@ -227,3 +195,6 @@ export default function App() {
   );
 }
 
+function isInRelativeRange(c: number[], endRange: number) {
+  return c[0] >= 0 && c[2] <= endRange;
+}

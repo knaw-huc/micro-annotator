@@ -56,7 +56,6 @@ export type ElucidateTargetType = SelectorTarget | ImageTarget;
 
 export type TargetType = string | RecogitoTargetType | TextAnchorTargetType | ElucidateTargetType;
 
-
 type RecogitoQuoteSelectorType = {
   type: "TextQuoteSelector";
   exact: string

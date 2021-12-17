@@ -1,4 +1,4 @@
-import {AnnRange} from "../model/AnnRange";
+import {AnnRange} from "../../model/AnnRange";
 
 export function toRangeStr(range: AnnRange | undefined) {
   if (range === undefined) {
