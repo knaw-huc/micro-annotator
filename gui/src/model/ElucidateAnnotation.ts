@@ -61,7 +61,7 @@ type RecogitoQuoteSelectorType = {
   exact: string
 }
 
-type RecogitoPositionSelectorType = {
+export type RecogitoPositionSelectorType = {
   type: "TextPositionSelector";
   start: number;
   end: number;
@@ -69,18 +69,23 @@ type RecogitoPositionSelectorType = {
 
 type RecogitoSelectorType = RecogitoQuoteSelectorType | RecogitoPositionSelectorType;
 
-type TextAnchorTargetType = {
-  "type": "urn:example:republic:TextAnchorSelector",
-  "start": number,
-  "end": number
-}
+export type TextAnchorTargetType = {
+  "type": "Text",
+  "selector": {
+    "type": "urn:example:republic:TextAnchorSelector",
+    "end": number,
+    "start": number
+  },
+  "source": string
+};
+
 
 export type RecogitoTargetType = {
   selector: RecogitoSelectorType[]
 }
 
 export type ElucidateAnnotation = {
-  "@context": (string | {"Entity": string})[],
+  "@context": (string | { "Entity": string })[],
   "id": string,
   "type": string | string[],
   "created": string,

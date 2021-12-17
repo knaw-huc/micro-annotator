@@ -84,7 +84,7 @@ export default function App() {
         ? await Elucidate.getByCreator(currentCreator)
         : await Elucidate.getByRange(targetId, beginRange, endRange);
       const converted = found
-        .map(a => toMicroAnn(a, beginRange));
+        .map(a => toMicroAnn(a, beginRange, annotatableText));
       const filtered = converted
         .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
         .filter(ann => isInRelativeRange(ann.coordinates, endRange - beginRange));
@@ -102,7 +102,7 @@ export default function App() {
     const toCreate = toNewElucidateAnn(a, currentCreator, annotatableText, beginRange, versionId);
     const created = await Elucidate.create(versionId, toCreate);
     setAnnotations((anns: Annotation[]) => {
-      anns.push(toMicroAnn(created, beginRange));
+      anns.push(toMicroAnn(created, beginRange, annotatableText));
       return anns
     });
   }, [versionId, beginRange, annotatableText, currentCreator]);
@@ -114,7 +114,7 @@ export default function App() {
     }
     const toUpdate = toUpdatableElucidateAnn(a, versionId, currentCreator);
     const updated = await Elucidate.update(toUpdate);
-    const updatedRecogitoAnn = toMicroAnn(updated, beginRange);
+    const updatedRecogitoAnn = toMicroAnn(updated, beginRange, annotatableText);
     const i = annotations.findIndex(a => a.id === updatedRecogitoAnn.id);
     annotations[i] = updatedRecogitoAnn;
     setAnnotations(annotations);

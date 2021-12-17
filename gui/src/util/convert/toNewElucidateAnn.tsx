@@ -1,6 +1,7 @@
 import {ENTITY_CONTEXT, MicroAnnotation} from "../../model/Annotation";
 import {RecogitoTargetType} from "../../model/ElucidateAnnotation";
 import Config from "../../Config";
+import {toLineCount} from "./toLineCount";
 
 export function toNewElucidateAnn(
   a: MicroAnnotation,
@@ -23,7 +24,7 @@ export function toNewElucidateAnn(
     type: "urn:example:republic:TextAnchorSelector",
     "start": c[0],
     "end": c[2]
-  });
+  } as any);
   return a;
 }
 
@@ -56,8 +57,3 @@ function toAbsoluteOffsets(c: number[], offset: number) {
   return c;
 }
 
-function toLineCount(lines: string[]) {
-  const lineEnd = 1;
-  let charCount = 0;
-  return lines.map(l => charCount += l.length + lineEnd);
-}

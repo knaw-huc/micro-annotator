@@ -1,11 +1,19 @@
-import {ElucidateAnnotation, EntityBodyType, RecogitoTargetType, TargetType} from "../../model/ElucidateAnnotation";
+import {
+  ElucidateAnnotation,
+  EntityBodyType,
+  RecogitoPositionSelectorType,
+  RecogitoTargetType,
+  SelectorTarget,
+  TargetType
+} from "../../model/ElucidateAnnotation";
 import {MicroAnnotation} from "../../model/Annotation";
 import isString from "../isString";
+import {toLineCount} from "./toLineCount";
 
 /**
  * Add micro-annotator specific fields to Elucidate annotation
  */
-export function toMicroAnn(a: ElucidateAnnotation, beginRange: number): MicroAnnotation {
+export function toMicroAnn(a: ElucidateAnnotation, beginRange: number, text: string[]): MicroAnnotation {
   const result = a as MicroAnnotation;
   result.id = toAnnotationId(a.id);
 
@@ -14,12 +22,17 @@ export function toMicroAnn(a: ElucidateAnnotation, beginRange: number): MicroAnn
   }
   result.webAnn = JSON.parse(JSON.stringify(result));
 
-  result.coordinates = fromTrUrlToCoordinates(findTextRepoUrl(a));
-  result.entity_type = getEntityType(a);
+  const trUrl = findTextRepoUrl(a);
+  if(trUrl) {
+    result.coordinates = fromTrUrlToCoordinates(trUrl);
+  }else {
+    result.coordinates = fromTrSelectorToCoordinates(a.target as TargetType[])
+  }
   result.coordinates = toRelativeOffsets(result.coordinates, beginRange);
+  result.entity_type = getEntityType(a);
 
   if (Array.isArray(a.target)) {
-    setRecogitoTargetSelector(a);
+    createRecogitoTargetSelector(result, text);
   }
 
   return result;
@@ -61,6 +74,14 @@ function fromTrUrlToCoordinates(textrepoTarget: string): number[] {
   return [parseInt(groups[1]), parseInt(groups[2]), parseInt(groups[3]), parseInt(groups[4])];
 }
 
+function fromTrSelectorToCoordinates(targets: TargetType[]): number[] {
+  let trSelectorTarget = targets.find((t: any) => t.selector?.start) as SelectorTarget;
+  if(!trSelectorTarget) {
+    throw new Error('No tr selector found in ' + JSON.stringify(targets));
+  }
+  return [trSelectorTarget.selector.start, 0, trSelectorTarget.selector.end + 1, 0];
+}
+
 /**
  * Annotation ID is the second UUID found in an elucidate ID
  */
@@ -80,11 +101,40 @@ function toRelativeOffsets(c: number[], offset: number): number[] {
 /**
  * Recogito expects a.target.selector instead of a.target[*].selector:
  */
-function setRecogitoTargetSelector(a: ElucidateAnnotation) {
+function createRecogitoTargetSelector(a: MicroAnnotation, text: string[]) {
   const target = a.target as any as RecogitoTargetType;
-  const selectorTarget = (a.target as RecogitoTargetType[]).find(t => t.selector);
-  if (selectorTarget) {
-    target.selector = selectorTarget.selector;
+  let recogitoTarget = (a.target as RecogitoTargetType[]).find(t => t.selector && Array.isArray(t.selector));
+
+  if (!recogitoTarget) {
+    recogitoTarget = {selector:[]} as RecogitoTargetType;
+    (a.target as TargetType[]).push(recogitoTarget);
+    const newSelector = toRecogitoSelector(a.coordinates, text);
+    recogitoTarget.selector.push(newSelector);
   }
+
+  target.selector = recogitoTarget.selector;
 }
 
+
+function toRecogitoSelector(c: number[], lines: string[]): RecogitoPositionSelectorType {
+  const lineCount = toLineCount(lines);
+
+  const start = c[0] !== 0
+    ? lineCount[c[0] - 1] + c[1]
+    : c[1];
+
+  let end;
+  if (c[0] === c[2]) {
+    end = start + c[3] + 1;
+  } else {
+    end = c[2] !== 0
+      ? lineCount[c[2] - 1] + c[3] + 1
+      : c[3] + 1;
+  }
+
+  return {
+    type: "TextPositionSelector",
+    start,
+    end
+  }
+}
