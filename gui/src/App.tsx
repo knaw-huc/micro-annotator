@@ -101,10 +101,8 @@ export default function App() {
     }
     const toCreate = toNewElucidateAnn(a, currentCreator, annotatableText, beginRange, versionId);
     const created = await Elucidate.create(versionId, toCreate);
-    setAnnotations((anns: Annotation[]) => {
-      anns.push(toMicroAnn(created, beginRange, annotatableText));
-      return anns
-    });
+    annotations.push(toMicroAnn(created, beginRange, annotatableText));
+    setAnnotations(annotations);
   }, [versionId, beginRange, annotatableText, currentCreator]);
 
   const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
@@ -166,7 +164,7 @@ export default function App() {
     <div className="container">
       {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
       <CreatorField
-        onChange={(newCreator: string) => setCurrentCreator(newCreator)}
+        onChange={setCurrentCreator}
         creator={currentCreator}
       />
       <Search
@@ -181,8 +179,8 @@ export default function App() {
           ? <RecogitoAnnotator
             text={annotatableText.join("\n")}
             annotations={annotations}
-            onAddAnnotation={(a) => addAnnotation(a)}
-            onUpdateAnnotation={(a) => updateAnnotation(a)}
+            onAddAnnotation={addAnnotation}
+            onUpdateAnnotation={updateAnnotation}
             creator={currentCreator}
             selected={selectedAnnotation}
             onSelect={setSelectedAnnotation}
