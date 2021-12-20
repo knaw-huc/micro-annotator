@@ -4,7 +4,7 @@ services:
 
   elucidate:
     container_name: elucidate
-    image: registry.diginfra.net/bramb/huc-elucidate-server:1.6.2
+    image: registry.diginfra.net/bramb/huc-elucidate-server:1.6.0
     networks:
       - elucidate_network
     env_file:
