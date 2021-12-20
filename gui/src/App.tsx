@@ -82,7 +82,7 @@ export default function App() {
       }
       const found = annotationType === AnnotationListType.USER
         ? await Elucidate.getByCreator(currentCreator)
-        : await Elucidate.getByRange(targetId, beginRange, endRange);
+        : await Elucidate.getByOverlap(targetId, beginRange, endRange);
       const converted = found
         .map(a => toMicroAnn(a, beginRange, annotatableText));
       const filtered = converted
@@ -103,7 +103,7 @@ export default function App() {
     const created = await Elucidate.create(versionId, toCreate);
     annotations.push(toMicroAnn(created, beginRange, annotatableText));
     setAnnotations(annotations);
-  }, [versionId, beginRange, annotatableText, currentCreator]);
+  }, [annotatableText, annotations, beginRange, currentCreator, versionId]);
 
   const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
     if (!versionId) {
@@ -116,7 +116,7 @@ export default function App() {
     const i = annotations.findIndex(a => a.id === updatedRecogitoAnn.id);
     annotations[i] = updatedRecogitoAnn;
     setAnnotations(annotations);
-  }, [beginRange, currentCreator, versionId, annotations]);
+  }, [annotatableText, annotations, beginRange, currentCreator, versionId]);
 
   useEffect(() => {
     if (annotationId) {

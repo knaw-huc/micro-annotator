@@ -78,6 +78,18 @@ export default class Elucidate {
    */
   public static async getByRange(targetId: string, rangeStart: number, rangeEnd: number): Promise<ElucidateAnnotation[]> {
     let url = `${this.host}/annotation/w3c/services/search/range`;
+    return this.getWithRangePrams(targetId, rangeStart, rangeEnd, url);
+  }
+
+  /**
+   * Get all by overlap
+   */
+  public static async getByOverlap(targetId: string, rangeStart: number, rangeEnd: number): Promise<ElucidateAnnotation[]> {
+    let url = `${this.host}/annotation/w3c/services/search/overlap`;
+    return this.getWithRangePrams(targetId, rangeStart, rangeEnd, url);
+  }
+
+  private static getWithRangePrams(targetId: string, rangeStart: number, rangeEnd: number, url: string) {
     const params = new URLSearchParams({target_id: targetId, range_start: '' + rangeStart, range_end: '' + rangeEnd});
     return this.getAllPages(url, params)
   }
