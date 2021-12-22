@@ -89,7 +89,6 @@ export default function App() {
         .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
         .filter(ann => isInRelativeRange(ann.coordinates, endRange - beginRange));
       setAnnotations(filtered);
-
     }
     getAnnotationListsAsync()
   }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
@@ -101,9 +100,11 @@ export default function App() {
     }
     const toCreate = toNewElucidateAnn(a, currentCreator, annotatableText, beginRange, versionId);
     const created = await Elucidate.create(versionId, toCreate);
-    annotations.push(toMicroAnn(created, beginRange, annotatableText));
-    setAnnotations(annotations);
-  }, [annotatableText, annotations, beginRange, currentCreator, versionId]);
+    setAnnotations(annotations => {
+      const createdRecogitoAnn = toMicroAnn(created, beginRange, annotatableText);
+      return [createdRecogitoAnn, ...annotations];
+    });
+  }, [setAnnotations, annotatableText, beginRange, currentCreator, versionId]);
 
   const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
     if (!versionId) {
@@ -113,17 +114,18 @@ export default function App() {
     const toUpdate = toUpdatableElucidateAnn(a, versionId, currentCreator);
     const updated = await Elucidate.update(toUpdate);
     const updatedRecogitoAnn = toMicroAnn(updated, beginRange, annotatableText);
-    const i = annotations.findIndex(a => a.id === updatedRecogitoAnn.id);
-    annotations[i] = updatedRecogitoAnn;
-    setAnnotations(annotations);
-  }, [annotatableText, annotations, beginRange, currentCreator, versionId]);
+    setAnnotations(annotations => {
+      const i = annotations.findIndex(a => a.id === updatedRecogitoAnn.id);
+      annotations[i] = updatedRecogitoAnn;
+      return [...annotations];
+    });
+  }, [annotatableText, beginRange, currentCreator, versionId]);
 
   useEffect(() => {
     if (annotationId) {
       searchAnnotation(annotationId);
     }
   }, [annotationId])
-
 
   const searchAnnotation = async (bodyId: string) => {
     let foundAnn = await Elucidate.getByBodyId(bodyId);
