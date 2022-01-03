@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react'
 
 import Search from './components/Search'
 import ImageColumn from './components/image/ImageColumn'
-import {Annotation, MicroAnnotation,} from "./model/Annotation";
+import {MicroAnnotation,} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
 import TextRepo from "./resources/TextRepo";
@@ -13,6 +13,15 @@ import RecogitoAnnotator from "./components/recogito/RecogitoAnnotator";
 import {toMicroAnn} from "./util/convert/toMicroAnn";
 import {toNewElucidateAnn} from "./util/convert/toNewElucidateAnn";
 import {toUpdatableElucidateAnn} from "./util/convert/toUpdatableElucidateAnn";
+import isString from './util/isString';
+import {isInRelativeRange} from './util/isInRelativeRange';
+
+// TODO:
+//  waarom krijgen we soms van recogito een:
+//  TypeError: Cannot read properties of undefined (reading 'node')
+//  ? ... Om de een of andere reden wordt er een verkeerde annotatie
+//  doorgegeven, iets dat ook buiten de range lijkt te vallen
+
 
 export default function App() {
 
@@ -34,12 +43,12 @@ export default function App() {
   /**
    * Annotations on display
    */
-  const [annotations, setAnnotations] = useState<Annotation[]>([])
+  const [annotations, setAnnotations] = useState<MicroAnnotation[]>([])
 
   /**
    * Expanded annotation on display
    */
-  const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation>()
+  const [selectedAnnotation, setSelectedAnnotation] = useState<MicroAnnotation>()
 
   /**
    * Type of annotations on display
@@ -47,9 +56,9 @@ export default function App() {
   const [annotationType, setAnnotationType] = useState(AnnotationListType.USER)
 
   /**
-   * Id of annotation linking to current text
+   * Body ID of annotation linking to current text
    */
-  const [annotationId, setAnnotationId] = useState<string>()
+  const [annotationId, setAnnotationId] = useState<string>(Config.PLACEHOLDER_SEARCH_ID);
 
   /**
    * Target ID of annotation linking to current text
@@ -72,8 +81,14 @@ export default function App() {
    */
   const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR)
 
+  const updateAnnotationId = (id: string) => {
+    setAnnotations([]);
+    setSelectedAnnotation(undefined);
+    setAnnotationId(id);
+  }
+  
   useEffect(() => {
-    const getAnnotationListsAsync = async () => {
+    const getAnnotationLists = async () => {
       if (!beginRange) {
         return;
       }
@@ -86,12 +101,18 @@ export default function App() {
       const converted = found
         .map(a => toMicroAnn(a, beginRange, annotatableText));
       const filtered = converted
-        .filter(a => !['line', 'textregion', 'column', 'scanpage'].includes(a.entity_type))
+        .filter(a => !['line', 'column'].includes(a.entity_type))
         .filter(ann => isInRelativeRange(ann.coordinates, endRange - beginRange));
       setAnnotations(filtered);
     }
-    getAnnotationListsAsync()
+    getAnnotationLists()
   }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
+
+  useEffect(() => {
+    if (annotationId) {
+      searchAnnotation(annotationId);
+    }
+  }, [annotationId])
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
     if (!versionId) {
@@ -121,19 +142,16 @@ export default function App() {
     });
   }, [annotatableText, beginRange, currentCreator, versionId]);
 
-  useEffect(() => {
-    if (annotationId) {
-      searchAnnotation(annotationId);
-    }
-  }, [annotationId])
-
   const searchAnnotation = async (bodyId: string) => {
-    let foundAnn = await Elucidate.getByBodyId(bodyId);
+    if(!bodyId) {
+      return;
+    }
+    let foundAnn = await Elucidate.findByBodyId(bodyId);
     if (!foundAnn) {
       setError('No elucidate annotation found');
       return;
     }
-    if (typeof foundAnn.target === 'string') {
+    if (isString(foundAnn.target)) {
       setError(`Could not find img and txt targets in annotation with body id: ${bodyId}`);
       return;
     }
@@ -151,15 +169,14 @@ export default function App() {
 
     const selectorTarget = (foundAnn.target as SelectorTarget[])
       .find((t: SelectorTarget) => [undefined, 'Text'].includes(t.type)) as SelectorTarget;
-    const grid: string[] = await TextRepo.getByVersionIdAndRange(
+    const text: string[] = await TextRepo.getByVersionIdAndRange(
       foundVersionId, selectorTarget.selector.start, selectorTarget.selector.end
     );
     setTargetId(selectorTarget.source)
     setBeginRange(selectorTarget.selector.start)
     setEndRange(selectorTarget.selector.end)
-    setAnnotatableText(grid)
+    setAnnotatableText(text)
     setVersionId(foundVersionId)
-
   }
 
   return (
@@ -170,7 +187,8 @@ export default function App() {
         creator={currentCreator}
       />
       <Search
-        onSearch={setAnnotationId}
+        searchId={annotationId}
+        onSearch={updateAnnotationId}
       />
       <div className='row'>
         <ImageColumn
@@ -185,7 +203,8 @@ export default function App() {
             onUpdateAnnotation={updateAnnotation}
             creator={currentCreator}
             selected={selectedAnnotation}
-            onSelect={setSelectedAnnotation}
+            onSelect={(a: MicroAnnotation | undefined) => setSelectedAnnotation(a)}
+            onSearch={updateAnnotationId}
             annotationType={annotationType}
             onSetAnnotationType={setAnnotationType}
           />
@@ -195,6 +214,3 @@ export default function App() {
   );
 }
 
-function isInRelativeRange(c: number[], endRange: number) {
-  return c[0] >= 0 && c[2] <= endRange;
-}

@@ -1,12 +1,13 @@
 import AnnotationList, {AnnotationListType} from "../annotator/AnnotationList";
-import {Annotation} from "../../model/Annotation";
+import {Annotation, MicroAnnotation} from "../../model/Annotation";
 import {RecogitoDocument} from "./RecogitoDocument";
 
 
 type RecogitoAnnotatorProps = {
-  annotations: Annotation[];
+  annotations: MicroAnnotation[];
   selected: Annotation | undefined;
-  onSelect: (a: Annotation | undefined) => void;
+  onSelect: (a: MicroAnnotation | undefined) => void;
+  onSearch: (id: string) => void;
   onAddAnnotation: (ann: any) => void;
   onUpdateAnnotation: (ann: any) => void;
   text: string;
@@ -14,12 +15,16 @@ type RecogitoAnnotatorProps = {
   annotationType: AnnotationListType;
   onSetAnnotationType: (t: AnnotationListType) => void;
 }
+
+export const browsableAnnotations = ['scanpage'];
+
+
 export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
   const changeToUser = () => props.onSetAnnotationType(AnnotationListType.USER)
   const changeToRange = () => props.onSetAnnotationType(AnnotationListType.RANGE)
 
   const recogitoAnnotations = props.annotationType === AnnotationListType.USER
-    ? props.annotations
+    ? props.annotations.filter(a => !browsableAnnotations.includes(a.entity_type))
     : props.selected !== undefined
       ? [props.selected]
       : [];
@@ -48,13 +53,14 @@ export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
           className={"btn btn-block btn-tab" + (props.annotationType === AnnotationListType.RANGE ? '' : ' btn-tab-unselected')}
           onClick={changeToRange}
         >
-          In range
+          Overlap
         </button>
       </div>
       <AnnotationList
         annotations={props.annotations}
         selected={props.selected}
         onSelect={props.onSelect}
+        onSearch={props.onSearch}
       />
     </div>
   </>

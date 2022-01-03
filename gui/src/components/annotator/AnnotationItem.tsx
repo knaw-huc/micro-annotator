@@ -1,0 +1,55 @@
+import {MicroAnnotation} from "../../model/Annotation";
+import {toRangeStr} from "../../util/convert/toRangeStr";
+import {toRange} from "../../model/AnnRange";
+import AnnotationItemSummery from "./AnnotationItemSummery";
+import {browsableAnnotations} from '../recogito/RecogitoAnnotator';
+import {useEffect, useState} from 'react';
+import {usePrevious} from '../../util/usePrevious';
+import {findBodyId} from '../../util/findBodyId';
+
+type AnnotationSnippetProps = {
+  annot_id: number,
+  annotation: MicroAnnotation,
+  selected: boolean,
+  onSelect: (a: MicroAnnotation | undefined) => void
+  onSearch: (id: string) => void
+}
+
+export default function AnnotationItem(props: AnnotationSnippetProps) {
+  const browsable = browsableAnnotations.includes(props.annotation.entity_type);
+  const [isOpen, setOpen] = useState(false);
+  const previousIsOpen = usePrevious(isOpen);
+  function toggleOpen() {
+    setOpen(!isOpen);
+  }
+
+  useEffect(() => {
+    if (browsable) {
+      // Browsable annotation cannot be shown in current selection
+      return;
+    }
+    if(isOpen === previousIsOpen) {
+      return;
+    }
+    if (props.selected) {
+      props.onSelect(undefined);
+    } else {
+      props.onSelect(props.annotation);
+    }
+  }, [isOpen, previousIsOpen, browsable, props])
+
+  return (
+    <div
+      className={`annotation-snippet`}
+    >
+      <div
+        onClick={toggleOpen}
+        className="clickable"
+      >
+        {props.annotation.entity_type} {toRangeStr(toRange(props.annotation))}
+        {browsable ? <button onClick={() => props.onSearch(findBodyId(props.annotation))}>🔎</button> : null}
+      </div>
+      {isOpen ? <AnnotationItemSummery ann={props.annotation}/> : null}
+    </div>
+  )
+}

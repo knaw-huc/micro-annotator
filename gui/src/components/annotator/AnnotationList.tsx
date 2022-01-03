@@ -1,10 +1,11 @@
-import AnnotationSnippet from './AnnotationSnippet'
-import {Annotation} from "../../model/Annotation";
+import AnnotationItem from './AnnotationItem'
+import {Annotation, MicroAnnotation} from "../../model/Annotation";
 
 type AnnotationListProps = {
-  annotations: Annotation[];
+  annotations: MicroAnnotation[];
   selected: Annotation | undefined;
-  onSelect: (a: Annotation | undefined) => void;
+  onSelect: (a: MicroAnnotation | undefined) => void;
+  onSearch: (id: string) => void;
 }
 
 export enum AnnotationListType {
@@ -16,12 +17,13 @@ export default function AnnotationList(props: AnnotationListProps) {
   return (
     <div>
       {props.annotations.map((annotation, index) => (
-        <AnnotationSnippet
+        <AnnotationItem
           key={index}
           annot_id={index}
           annotation={annotation}
-          selected={props.selected}
+          selected={props.selected?.id === annotation.id}
           onSelect={props.onSelect}
+          onSearch={props.onSearch}
         />
       ))}
     </div>

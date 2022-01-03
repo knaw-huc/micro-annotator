@@ -1,6 +1,7 @@
 import Config from "../Config";
 import {MicroAnnotation} from "../model/Annotation";
 import {ElucidateAnnotation} from "../model/ElucidateAnnotation";
+import {findBodyId} from '../util/findBodyId';
 
 export default class Elucidate {
 
@@ -109,10 +110,10 @@ export default class Elucidate {
   /**
    * Search items by full body id
    */
-  public static async getByBodyId(id: string): Promise<ElucidateAnnotation | undefined> {
+  public static async findByBodyId(id: string): Promise<ElucidateAnnotation | undefined> {
     let queryParam = encodeURIComponent(id);
     const res = await fetch(
-      `${this.host}/annotation/w3c/services/search/body?fields=id&value=${queryParam}`,
+      `${this.host}/annotation/w3c/services/search/body?fields=id&strict=true&value=${queryParam}`,
       {headers: this.headers}
     );
     const annotationPage = await res.json();
@@ -123,7 +124,7 @@ export default class Elucidate {
   /**
    * Search items by partial ID
    */
-  public static async getByBodyIdPrefix(idPrefix: string): Promise<ElucidateAnnotation[]> {
+  public static async getFirstPageByBodyIdPrefix(idPrefix: string): Promise<ElucidateAnnotation[]> {
     idPrefix = encodeURIComponent(idPrefix);
     const response = await fetch(
       `${this.host}/annotation/w3c/services/search/body?fields=id&value=${idPrefix}&page=0&desc=1`,

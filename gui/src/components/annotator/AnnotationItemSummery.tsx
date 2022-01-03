@@ -8,7 +8,7 @@ type AnnotationContentProps = {
   ann: Annotation | undefined
 }
 
-export default function AnnotationContent(props: AnnotationContentProps) {
+export default function AnnotationItemSummery(props: AnnotationContentProps) {
   const ann = props.ann;
   const [showFull, setShowFull] = useState(false);
 
@@ -30,7 +30,7 @@ export default function AnnotationContent(props: AnnotationContentProps) {
           {showFull
             ? <pre className="annotation-preview">
               <ReactLinkify
-                // Set target blank using decorator
+                // Set target=blank using decorator
                 // source: https://github.com/tasti/react-linkify/issues/96
                 componentDecorator={(decoratedHref, decoratedText, key) => (
                   <a target="blank" href={decoratedHref} key={key}>

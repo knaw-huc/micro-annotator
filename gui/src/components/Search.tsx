@@ -1,98 +1,85 @@
 import {useEffect, useState} from 'react'
-import Config from "../Config";
 import Typeahead, {TypeaheadItem} from "./common/Typeahead";
 import Elucidate from "../resources/Elucidate";
-import {ElucidateBodyType} from "../model/ElucidateAnnotation";
 import {useDebounce} from "../util/useDebounce";
 import {usePrevious} from "../util/usePrevious";
-
+import {findBodyId} from '../util/findBodyId';
 
 type SearchProps = {
-  onSearch: (id: string) => void
+  searchId: string;
+  onSearch: (id: string) => void;
 }
 
 export default function Search(props: SearchProps) {
-  const [id, setId] = useState(Config.PLACEHOLDER_SEARCH_ID)
   const [items, setItems] = useState<TypeaheadItem[]>([]);
-  const [input, setInput] = useState<string>(id);
+  const [input, setInput] = useState<string>('');
   const debouncedInput = useDebounce<string>(input, 250)
   const previousInput = usePrevious(debouncedInput);
+  const previousSearchId = usePrevious(props.searchId);
 
-  const onSubmit = (e: any) => {
-    e.preventDefault()
-    if (!id) {
-      return;
+  useEffect(() => {
+    if(previousSearchId !== props.searchId) {
+      setInput(props.searchId);
     }
-    props.onSearch(id);
-  }
+  }, [previousSearchId, props.searchId]);
 
   async function handleTyping(inputValue: string) {
     setInput(inputValue);
   }
 
-  // Get suggestions by debounced input:
+  // Display suggestions:
   useEffect(() => {
-    if (debouncedInput === previousInput) {
+    // Wait until input is debounced:
+    if (!debouncedInput || debouncedInput === previousInput) {
       return;
     }
 
-    if (debouncedInput === id) {
+    // Remove suggestions when input matches picked search id:
+    if (debouncedInput === props.searchId) {
       setItems([]);
       return;
     }
 
-    Elucidate.getByBodyIdPrefix(debouncedInput).then((found) => {
+    Elucidate.getFirstPageByBodyIdPrefix(debouncedInput).then((found) => {
       if (!found) {
         setItems([]);
         return;
       }
 
       let ids = Array.from(new Set(
-        found.map(i => {
-          if (Array.isArray(i.body)) {
-            return (i.body as ElucidateBodyType[]).find(b => b.id)?.id
-          } else {
-            return (i.body as ElucidateBodyType).id
-          }
-        })
+        found.map(findBodyId)
       ));
 
       const items = ids
         .filter(i => i)
-        .slice(0, 10)
         .sort()
+        .slice(0, 10)
         .map(i => {
           return {value: i} as TypeaheadItem
         });
       setItems(items)
     });
 
-  }, [debouncedInput, previousInput, id, setItems])
+  }, [debouncedInput, previousInput, props.searchId, setItems])
 
   function handleSelected(selected: string) {
-    if (selected === id) {
+    if (selected === props.searchId) {
       return;
     }
-    setId(selected);
-    setInput(selected);
+
     setItems([]);
+    props.onSearch(selected);
   }
 
-  return <form className='add-form' onSubmit={onSubmit}>
+  return <form className='add-form'>
     <div className='form-control'>
       <label>Annotation ID</label>
       <Typeahead
         items={items}
         input={input}
-        selected={id}
+        selected={props.searchId}
         onType={handleTyping}
         onSelect={handleSelected}
-      />
-      <input
-        type='submit'
-        value="Search"
-        className={'btn btn-block' + (id !== input ? ' disabled' : '')}
-        disabled={id !== input}
       />
     </div>
   </form>;
