@@ -1,7 +1,6 @@
 import Config from "../Config";
 import {MicroAnnotation} from "../model/Annotation";
 import {ElucidateAnnotation} from "../model/ElucidateAnnotation";
-import {findBodyId} from '../util/findBodyId';
 
 export default class Elucidate {
 

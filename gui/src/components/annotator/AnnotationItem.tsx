@@ -19,6 +19,7 @@ export default function AnnotationItem(props: AnnotationSnippetProps) {
   const browsable = browsableAnnotations.includes(props.annotation.entity_type);
   const [isOpen, setOpen] = useState(false);
   const previousIsOpen = usePrevious(isOpen);
+
   function toggleOpen() {
     setOpen(!isOpen);
   }
@@ -28,7 +29,7 @@ export default function AnnotationItem(props: AnnotationSnippetProps) {
       // Browsable annotation cannot be shown in current selection
       return;
     }
-    if(isOpen === previousIsOpen) {
+    if (isOpen === previousIsOpen) {
       return;
     }
     if (props.selected) {
@@ -47,7 +48,14 @@ export default function AnnotationItem(props: AnnotationSnippetProps) {
         className="clickable"
       >
         {props.annotation.entity_type} {toRangeStr(toRange(props.annotation))}
-        {browsable ? <button onClick={() => props.onSearch(findBodyId(props.annotation))}>🔎</button> : null}
+        {browsable
+          ? <button
+            className="btn btn-open-ann"
+            onClick={() => props.onSearch(findBodyId(props.annotation))}
+          >
+            🔎
+          </button>
+          : null}
       </div>
       {isOpen ? <AnnotationItemSummery ann={props.annotation}/> : null}
     </div>

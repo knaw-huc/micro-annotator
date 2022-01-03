@@ -18,7 +18,6 @@ type RecogitoAnnotatorProps = {
 
 export const browsableAnnotations = ['scanpage'];
 
-
 export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
   const changeToUser = () => props.onSetAnnotationType(AnnotationListType.USER)
   const changeToRange = () => props.onSetAnnotationType(AnnotationListType.RANGE)

@@ -79,6 +79,18 @@ body, #root, .container {
     transform: scale(0.98);
 }
 
+.btn-open-ann {
+    background: white;
+    border: 1px solid black;
+    padding: 0 5px 0 10px;
+    margin: -4px -4px 0 0;
+    float: right;
+}
+.btn-open-ann:focus {
+    outline: 1px solid grey;
+}
+
+
 .anchor {
     background: lightgrey;
 }

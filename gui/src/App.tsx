@@ -152,7 +152,7 @@ export default function App() {
       return;
     }
     if (isString(foundAnn.target)) {
-      setError(`Could not find img and txt targets in annotation with body id: ${bodyId}`);
+      setError(`Could not find img and txt targets in annotation: ${JSON.stringify(foundAnn)}`);
       return;
     }
     const target = foundAnn.target as ElucidateTargetType[];
@@ -181,7 +181,7 @@ export default function App() {
 
   return (
     <div className="container">
-      {error ? <p style={{color: "red"}}>ERROR: {error}</p> : null}
+      {error ? <p style={{color: "red"}}>Error: {error}</p> : null}
       <CreatorField
         onChange={setCurrentCreator}
         creator={currentCreator}
