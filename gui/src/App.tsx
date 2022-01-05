@@ -16,6 +16,8 @@ import {toMicroAnn} from './util/convert/toMicroAnn';
 import {toNewElucidateAnn} from './util/convert/toNewElucidateAnn';
 import {toUpdatableElucidateAnn} from './util/convert/toUpdatableElucidateAnn';
 import toVersionId from './util/convert/toVersionId';
+import findSelectorTarget from './util/findSelectorTarget';
+import findImageRegions from './util/findImageRegions';
 
 export default function App() {
 
@@ -71,12 +73,12 @@ export default function App() {
   const [versionId, setVersionId] = useState<string>('');
 
   /**
-   * Name used in creating new annotations or searching for existing user annotations
+   * User name when searching user annotations or creating new annotations
    */
   const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR);
 
   useEffect(() => {
-    const getAnnotationLists = async () => {
+    const getAnnotations = async () => {
       if (!(beginRange && targetId && currentCreator && beginRange && endRange && annotatableText.length)) {
         return;
       }
@@ -89,15 +91,16 @@ export default function App() {
         .filter(ann => isInRelativeRange(ann.coordinates, endRange - beginRange));
       setAnnotations(converted);
     };
-    getAnnotationLists()
+    getAnnotations()
       .catch(e => setError(e.message));
   }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
 
   useEffect(() => {
-    if (annotationId) {
-      searchAnnotation(annotationId)
-        .catch(e => setError(e.message));
+    if (!annotationId) {
+      return;
     }
+    searchAnnotation(annotationId)
+      .catch(e => setError(e.message));
   }, [annotationId]);
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
@@ -125,26 +128,18 @@ export default function App() {
       return;
     }
     let foundAnn = await Elucidate.findByBodyId(bodyId);
-    if (isString(foundAnn.target)) {
+    if (!foundAnn.target || isString(foundAnn.target)) {
       throw Error(`Could not find targets in annotation: ${JSON.stringify(foundAnn)}`);
     }
     const target = foundAnn.target as ElucidateTargetType[];
-
-    let foundImageRegions = target
-      .filter(t => !t.selector && t.type === 'Image')
-      .map(t => t.source);
-
+    const foundImageRegions = findImageRegions(target);
     const foundVersionId = toVersionId(foundAnn.id);
-
-    const selectorTarget = (foundAnn.target as SelectorTarget[])
-      .find((t: SelectorTarget) => [undefined, 'Text'].includes(t.type)) as SelectorTarget;
-
+    const selectorTarget = findSelectorTarget(foundAnn);
     const foundText = await TextRepo.getByVersionIdAndRange(
       foundVersionId,
       selectorTarget.selector.start,
       selectorTarget.selector.end
     );
-
     setVersionId(foundVersionId);
     setAnnotatableText(foundText);
     setImageRegions(foundImageRegions);
