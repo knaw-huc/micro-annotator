@@ -26,6 +26,7 @@
     ],
     "rules": {
       "no-multiple-empty-lines": [2, {"max": 2}],
+      "prefer-const": "error",
       "quotes": ["error", "single"],
       "semi": ["error", "always"],
       "sort-imports": ["error", {"ignoreCase":  true}]

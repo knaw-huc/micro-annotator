@@ -14,9 +14,9 @@ export default class Config {
 
   private static setEnvVar(env: any, key: string): string {
     // See: https://create-react-app.dev/docs/adding-custom-environment-variables/
-    let fullEnvVar = 'REACT_APP_' + key;
+    const fullEnvVar = 'REACT_APP_' + key;
 
-    let value: string | undefined = env[fullEnvVar];
+    const value: string | undefined = env[fullEnvVar];
     if (!value) {
       throw Error(`environment variable ${fullEnvVar} is not set`);
     }

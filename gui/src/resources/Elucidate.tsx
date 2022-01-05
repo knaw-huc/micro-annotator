@@ -34,7 +34,7 @@ export default class Elucidate {
     if (!a.id) {
       throw Error('Cannot update annotation without ID: ' + JSON.stringify(a));
     }
-    let headers = await this.withETagHeader(a, this.headers);
+    const headers = await this.withETagHeader(a, this.headers);
     const response = await fetch(a.id, {
       method: 'PUT',
       headers: headers,
@@ -46,7 +46,7 @@ export default class Elucidate {
 
   private static async withETagHeader(a: MicroAnnotation, headers: {}) {
     const eTag = a.ETag ? a.ETag : await this.requestEtag(a.id);
-    let ifMatch = eTag.match(/W\/"([a-z0-9]*)"/)?.[1];
+    const ifMatch = eTag.match(/W\/"([a-z0-9]*)"/)?.[1];
     if (!ifMatch) {
       throw new Error('Could not create If-Match header from ' + eTag);
     }
@@ -55,7 +55,7 @@ export default class Elucidate {
 
   private static async withEtag(response: Response) {
     const result = await response.json() as ElucidateAnnotation;
-    let eTag = response.headers.get('ETag');
+    const eTag = response.headers.get('ETag');
     if (eTag) {
       result.ETag = eTag;
     } else {
@@ -68,7 +68,7 @@ export default class Elucidate {
    * Get all by creator
    */
   public static async getByCreator(creator: string) {
-    let url = `${this.host}/annotation/w3c/services/search/creator`;
+    const url = `${this.host}/annotation/w3c/services/search/creator`;
     const params = new URLSearchParams({value: creator, levels: 'annotation', type: 'id'});
     return this.getAllPages(url, params);
   }
@@ -77,7 +77,7 @@ export default class Elucidate {
    * Get all by range
    */
   public static async getByRange(targetId: string, rangeStart: number, rangeEnd: number): Promise<ElucidateAnnotation[]> {
-    let url = `${this.host}/annotation/w3c/services/search/range`;
+    const url = `${this.host}/annotation/w3c/services/search/range`;
     return this.getWithRangePrams(targetId, rangeStart, rangeEnd, url);
   }
 
@@ -85,7 +85,7 @@ export default class Elucidate {
    * Get all by overlap
    */
   public static async getByOverlap(targetId: string, rangeStart: number, rangeEnd: number): Promise<ElucidateAnnotation[]> {
-    let url = `${this.host}/annotation/w3c/services/search/overlap`;
+    const url = `${this.host}/annotation/w3c/services/search/overlap`;
     return this.getWithRangePrams(targetId, rangeStart, rangeEnd, url);
   }
 
@@ -99,7 +99,7 @@ export default class Elucidate {
       elucidateId,
       {headers: this.headers}
     );
-    let eTag = response.headers.get('ETag');
+    const eTag = response.headers.get('ETag');
     if (!eTag) {
       throw new Error('No ETag header could be found in response of ' + elucidateId);
     }
@@ -110,14 +110,14 @@ export default class Elucidate {
    * Search items by full body id
    */
   public static async findByBodyId(id: string): Promise<ElucidateAnnotation> {
-    let queryParam = encodeURIComponent(id);
+    const queryParam = encodeURIComponent(id);
     const res = await fetch(
       `${this.host}/annotation/w3c/services/search/body?fields=id&strict=true&value=${queryParam}`,
       {headers: this.headers}
     );
     const annotationPage = await res.json();
     const items = annotationPage?.first?.items;
-    let result = items ? items[0] as ElucidateAnnotation : undefined;
+    const result = items ? items[0] as ElucidateAnnotation : undefined;
     if (!result) {
       throw Error('No elucidate annotation found');
     }
@@ -138,7 +138,7 @@ export default class Elucidate {
   }
 
   private static async getAllPages(url: string, params: URLSearchParams) {
-    let result: ElucidateAnnotation[] = [];
+    const result: ElucidateAnnotation[] = [];
     let annotationPage;
     let page = 0;
     do {

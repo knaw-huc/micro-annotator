@@ -22,7 +22,7 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
   const rootName = 'recogito-root';
 
   useEffect(() => {
-    let elementById = document.getElementById(rootName);
+    const elementById = document.getElementById(rootName);
     if (elementById) {
       elementById.textContent = props.text;
     }

@@ -5,6 +5,8 @@ import {Creator} from './components/Creator';
 import Elucidate from './resources/Elucidate';
 import {ElucidateTarget} from './model/ElucidateAnnotation';
 import ErrorMsg from './components/common/ErrorMsg';
+import findImageRegions from './util/findImageRegions';
+import findSelectorTarget from './util/findSelectorTarget';
 import ImageColumn from './components/image/ImageColumn';
 import {isInRelativeRange} from './util/isInRelativeRange';
 import isString from './util/isString';
@@ -16,8 +18,6 @@ import {toMicroAnn} from './util/convert/toMicroAnn';
 import {toNewElucidateAnn} from './util/convert/toNewElucidateAnn';
 import {toUpdatableElucidateAnn} from './util/convert/toUpdatableElucidateAnn';
 import toVersionId from './util/convert/toVersionId';
-import findSelectorTarget from './util/findSelectorTarget';
-import findImageRegions from './util/findImageRegions';
 
 export default function App() {
 
@@ -123,22 +123,22 @@ export default function App() {
     if (!bodyId) {
       return;
     }
-    let foundAnn = await Elucidate.findByBodyId(bodyId);
+    const foundAnn = await Elucidate.findByBodyId(bodyId);
     if (!foundAnn.target || isString(foundAnn.target)) {
       throw Error(`Could not find targets in annotation: ${JSON.stringify(foundAnn)}`);
     }
     const target = foundAnn.target as ElucidateTarget[];
-    const foundImageRegions = findImageRegions(target);
-    const foundVersionId = toVersionId(foundAnn.id);
+    const imageRegions = findImageRegions(target);
+    const versionId = toVersionId(foundAnn.id);
     const selectorTarget = findSelectorTarget(foundAnn);
-    const foundText = await TextRepo.getByVersionIdAndRange(
-      foundVersionId,
+    const annotatableText = await TextRepo.getByVersionIdAndRange(
+      versionId,
       selectorTarget.selector.start,
       selectorTarget.selector.end
     );
-    setVersionId(foundVersionId);
-    setAnnotatableText(foundText);
-    setImageRegions(foundImageRegions);
+    setVersionId(versionId);
+    setAnnotatableText(annotatableText);
+    setImageRegions(imageRegions);
     setTargetId(selectorTarget.source);
     setBeginRange(selectorTarget.selector.start);
     setEndRange(selectorTarget.selector.end);
@@ -163,7 +163,7 @@ export default function App() {
         searchId={annotationId}
         onSearch={updateAnnotationId}
       />
-      <div className='row'>
+      <div className="row">
         <ImageColumn
           images={imageRegions}
         />

@@ -55,7 +55,7 @@ function getEntityType(ea: ElucidateAnnotation): string {
     return ['classifying', 'tagging'].includes(body.purpose);
   };
 
-  let entityType = Array.isArray(b)
+  const entityType = Array.isArray(b)
     ? b.find(isClassifying)?.value
     : isClassifying(b) ? b.value : undefined;
 
@@ -75,7 +75,7 @@ function fromTrUrlToCoordinates(textrepoTarget: string): number[] {
 }
 
 function fromTrSelectorToCoordinates(targets: Target[]): number[] {
-  let trSelectorTarget = targets.find((t: any) => t.selector?.start) as SelectorTarget;
+  const trSelectorTarget = targets.find((t: any) => t.selector?.start) as SelectorTarget;
   if(!trSelectorTarget) {
     throw new Error('No tr selector found in ' + JSON.stringify(targets));
   }

@@ -46,7 +46,7 @@ export default function Search(props: SearchProps) {
         return;
       }
 
-      let ids = Array.from(new Set(
+      const ids = Array.from(new Set(
         found.map(findBodyId)
       ));
 
@@ -54,9 +54,7 @@ export default function Search(props: SearchProps) {
         .filter(i => i)
         .sort()
         .slice(0, 10)
-        .map(i => {
-          return {value: i} as TypeaheadItem;
-        });
+        .map(i => ({value: i} as TypeaheadItem));
       setItems(items);
     });
 
