@@ -109,7 +109,7 @@ export default class Elucidate {
   /**
    * Search items by full body id
    */
-  public static async findByBodyId(id: string): Promise<ElucidateAnnotation | undefined> {
+  public static async findByBodyId(id: string): Promise<ElucidateAnnotation> {
     let queryParam = encodeURIComponent(id);
     const res = await fetch(
       `${this.host}/annotation/w3c/services/search/body?fields=id&strict=true&value=${queryParam}`,
@@ -117,7 +117,11 @@ export default class Elucidate {
     );
     const annotationPage = await res.json();
     const items = annotationPage?.first?.items;
-    return items ? items[0] as ElucidateAnnotation : undefined;
+    let result = items ? items[0] as ElucidateAnnotation : undefined;
+    if (!result) {
+      throw Error('No elucidate annotation found');
+    }
+    return result;
   }
 
   /**

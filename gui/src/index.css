@@ -14,6 +14,14 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+html {
+    height: 90%;
+}
+
+body, #root, .container {
+    height: 100%;
+}
+
 h4 {
     margin-top: 1em;
 }
@@ -30,14 +38,6 @@ h4 {
 .row {
     display: flex;
     flex-direction: row;
-}
-
-html {
-    height: 90%;
-}
-
-body, #root, .container {
-    height: 100%;
 }
 
 .container {
@@ -86,10 +86,10 @@ body, #root, .container {
     margin: -4px -4px 0 0;
     float: right;
 }
+
 .btn-open-ann:focus {
     outline: 1px solid grey;
 }
-
 
 .anchor {
     background: lightgrey;
@@ -139,7 +139,6 @@ body, #root, .container {
     overflow: auto;
     user-select: text;
 }
-
 
 .show-full {
     margin-top: 5px;
@@ -194,6 +193,11 @@ body, #root, .container {
 footer {
     margin-top: 30px;
     text-align: center;
+}
+
+/* Error msg */
+.error-msg {
+    color: red;
 }
 
 /* Combobox and Typeahead */
@@ -264,7 +268,7 @@ footer {
     background-color: white;
 }
 
-/* Tabs */
+/* Annotation tabs */
 .btn-block {
     display: block;
     width: 100%;
@@ -290,6 +294,6 @@ footer {
 }
 
 .annotator-column {
- min-width: 150px;
- width: 280px;
+    min-width: 150px;
+    width: 280px;
 }
