@@ -1,4 +1,4 @@
-import Image from './Image'
+import Image from './Image';
 
 type ImagePartsProps = {
   images: string[]
@@ -11,5 +11,5 @@ export default function ImageColumn(props: ImagePartsProps) {
         <Image key={index} url={img} width={220}/>
       ))}
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react'
+import {useEffect, useRef} from 'react';
 import TextLine from "./TextLine";
 import {AnnRange, toRange} from "../../model/AnnRange";
 import HighlightLine from "./HighlightLine";
@@ -12,7 +12,7 @@ type AnnotatableTextProps = {
 
 export default function AnnotatableText(props: AnnotatableTextProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const onReadSelection = props.onReadSelection
+  const onReadSelection = props.onReadSelection;
 
   useEffect(() => {
     function handleChange() {
@@ -82,7 +82,7 @@ export default function AnnotatableText(props: AnnotatableTextProps) {
         })}
       </div>
     </div>
-  )
+  );
 }
 
 function toLineRange(annRange: AnnRange, index: number, line: string): number[] {

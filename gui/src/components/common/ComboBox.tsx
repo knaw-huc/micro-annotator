@@ -37,7 +37,7 @@ export default function ComboBox(props: ComboBoxProps) {
         items.filter(item =>
           item.toLowerCase().startsWith(inputValue ? inputValue.toLowerCase() : ''),
         ),
-      )
+      );
     },
   });
 
@@ -75,7 +75,7 @@ export default function ComboBox(props: ComboBoxProps) {
         ))}
       </ul>
     </>
-  )
+  );
 
 }
 

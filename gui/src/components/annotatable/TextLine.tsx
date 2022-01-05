@@ -17,5 +17,5 @@ export default function TextLine(props: TextLineProps) {
             className={anchorIsShown ? 'anchor' : ''}>
             {props.text}
         </div>
-    )
+    );
 }

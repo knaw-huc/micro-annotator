@@ -6,5 +6,5 @@ export default function ErrorMsg(props: ErrorProps) {
     className="error-msg"
   >
     Error: {props.msg}
-  </p>
+  </p>;
 }

@@ -12,5 +12,5 @@ export default function Image(props: ImageProps) {
         alt=""
       />
     </div>
-  )
+  );
 }

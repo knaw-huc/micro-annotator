@@ -1,7 +1,7 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react';
 
-import Search from './components/Search'
-import ImageColumn from './components/image/ImageColumn'
+import Search from './components/Search';
+import ImageColumn from './components/image/ImageColumn';
 import {MicroAnnotation,} from "./model/Annotation";
 import Elucidate from "./resources/Elucidate";
 import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
@@ -23,32 +23,32 @@ export default function App() {
   /**
    * Error message
    */
-  const [error, setError] = useState<string>()
+  const [error, setError] = useState<string>();
 
   /**
    * Scan urls including image regions
    */
-  const [imageRegions, setImageRegions] = useState([] as string[])
+  const [imageRegions, setImageRegions] = useState([] as string[]);
 
   /**
    * Array of lines: text that can be annotated
    */
-  const [annotatableText, setAnnotatableText] = useState([] as string[])
+  const [annotatableText, setAnnotatableText] = useState([] as string[]);
 
   /**
    * Annotations on display
    */
-  const [annotations, setAnnotations] = useState<MicroAnnotation[]>([])
+  const [annotations, setAnnotations] = useState<MicroAnnotation[]>([]);
 
   /**
    * Selected annotation in annotation list
    */
-  const [selectedAnnotation, setSelectedAnnotation] = useState<MicroAnnotation>()
+  const [selectedAnnotation, setSelectedAnnotation] = useState<MicroAnnotation>();
 
   /**
    * Type of annotations shown
    */
-  const [annotationType, setAnnotationType] = useState(AnnotationListType.USER)
+  const [annotationType, setAnnotationType] = useState(AnnotationListType.USER);
 
   /**
    * Body ID of annotation linking to current text
@@ -58,23 +58,23 @@ export default function App() {
   /**
    * Target ID of annotation linking to current text
    */
-  const [targetId, setTargetId] = useState('')
+  const [targetId, setTargetId] = useState('');
 
   /**
    * Line range of current text
    */
-  const [beginRange, setBeginRange] = useState(0)
-  const [endRange, setEndRange] = useState(0)
+  const [beginRange, setBeginRange] = useState(0);
+  const [endRange, setEndRange] = useState(0);
 
   /**
    * Version ID, also used as elucidate collection ID
    */
-  const [versionId, setVersionId] = useState<string>('')
+  const [versionId, setVersionId] = useState<string>('');
 
   /**
    * Name used in creating new annotations or searching for existing user annotations
    */
-  const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR)
+  const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR);
 
   useEffect(() => {
     const getAnnotationLists = async () => {
@@ -89,7 +89,7 @@ export default function App() {
         .filter(a => !['line', 'column'].includes(a.entity_type))
         .filter(ann => isInRelativeRange(ann.coordinates, endRange - beginRange));
       setAnnotations(converted);
-    }
+    };
     getAnnotationLists()
       .catch(e => setError(e.message));
   }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
@@ -99,7 +99,7 @@ export default function App() {
       searchAnnotation(annotationId)
         .catch(e => setError(e.message));
     }
-  }, [annotationId])
+  }, [annotationId]);
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
     const toCreate = toNewElucidateAnn(a, currentCreator, annotatableText, beginRange, versionId);
@@ -146,19 +146,19 @@ export default function App() {
       selectorTarget.selector.end
     );
 
-    setVersionId(foundVersionId)
-    setAnnotatableText(foundText)
+    setVersionId(foundVersionId);
+    setAnnotatableText(foundText);
     setImageRegions(foundImageRegions);
-    setTargetId(selectorTarget.source)
-    setBeginRange(selectorTarget.selector.start)
-    setEndRange(selectorTarget.selector.end)
-  }
+    setTargetId(selectorTarget.source);
+    setBeginRange(selectorTarget.selector.start);
+    setEndRange(selectorTarget.selector.end);
+  };
 
   const updateAnnotationId = (id: string) => {
     setAnnotations([]);
     setSelectedAnnotation(undefined);
     setAnnotationId(id);
-  }
+  };
 
   return (
     <div className="container">

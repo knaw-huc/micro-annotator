@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react';
 import Typeahead, {TypeaheadItem} from "./common/Typeahead";
 import Elucidate from "../resources/Elucidate";
 import {useDebounce} from "../util/useDebounce";
@@ -13,7 +13,7 @@ type SearchProps = {
 export default function Search(props: SearchProps) {
   const [items, setItems] = useState<TypeaheadItem[]>([]);
   const [input, setInput] = useState<string>('');
-  const debouncedInput = useDebounce<string>(input, 250)
+  const debouncedInput = useDebounce<string>(input, 250);
   const previousInput = usePrevious(debouncedInput);
   const previousSearchId = usePrevious(props.searchId);
 
@@ -55,12 +55,12 @@ export default function Search(props: SearchProps) {
         .sort()
         .slice(0, 10)
         .map(i => {
-          return {value: i} as TypeaheadItem
+          return {value: i} as TypeaheadItem;
         });
-      setItems(items)
+      setItems(items);
     });
 
-  }, [debouncedInput, previousInput, props.searchId, setItems])
+  }, [debouncedInput, previousInput, props.searchId, setItems]);
 
   function handleSelected(selected: string) {
     if (selected === props.searchId) {

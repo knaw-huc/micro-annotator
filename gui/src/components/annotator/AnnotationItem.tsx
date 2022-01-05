@@ -37,7 +37,7 @@ export default function AnnotationItem(props: AnnotationSnippetProps) {
     } else {
       props.onSelect(props.annotation);
     }
-  }, [isOpen, previousIsOpen, browsable, props])
+  }, [isOpen, previousIsOpen, browsable, props]);
 
   return (
     <div
@@ -59,5 +59,5 @@ export default function AnnotationItem(props: AnnotationSnippetProps) {
       </div>
       {isOpen ? <AnnotationItemSummery ann={props.annotation}/> : null}
     </div>
-  )
+  );
 }

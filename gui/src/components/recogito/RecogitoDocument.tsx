@@ -60,7 +60,7 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
     });
 
     for (const annotation of props.annotations) {
-      r.addAnnotation(annotation)
+      r.addAnnotation(annotation);
     }
 
     r.on("createAnnotation", (a: any) => {
@@ -73,11 +73,11 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
     });
 
     return () => {
-      r.destroy()
-    }
+      r.destroy();
+    };
 
-  }, [props])
+  }, [props]);
 
-  return <RecogitoRoot id={rootName} className="recogito-doc"/>
-}
+  return <RecogitoRoot id={rootName} className="recogito-doc"/>;
+};
 

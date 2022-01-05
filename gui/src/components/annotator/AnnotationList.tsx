@@ -1,4 +1,4 @@
-import AnnotationItem from './AnnotationItem'
+import AnnotationItem from './AnnotationItem';
 import {Annotation, MicroAnnotation} from "../../model/Annotation";
 
 type AnnotationListProps = {
@@ -27,5 +27,5 @@ export default function AnnotationList(props: AnnotationListProps) {
         />
       ))}
     </div>
-  )
+  );
 }

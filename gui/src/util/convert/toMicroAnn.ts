@@ -26,7 +26,7 @@ export function toMicroAnn(a: ElucidateAnnotation, beginRange: number, text: str
   if(trUrl) {
     result.coordinates = fromTrUrlToCoordinates(trUrl);
   }else {
-    result.coordinates = fromTrSelectorToCoordinates(a.target as TargetType[])
+    result.coordinates = fromTrSelectorToCoordinates(a.target as TargetType[]);
   }
   result.coordinates = toRelativeOffsets(result.coordinates, beginRange);
   result.entity_type = getEntityType(a);
@@ -53,7 +53,7 @@ function getEntityType(ea: ElucidateAnnotation): string {
 
   const isClassifying = (body: any) => {
     return ["classifying", "tagging"].includes(body.purpose);
-  }
+  };
 
   let entityType = Array.isArray(b)
     ? b.find(isClassifying)?.value
@@ -136,5 +136,5 @@ function toRecogitoSelector(c: number[], lines: string[]): RecogitoPositionSelec
     type: "TextPositionSelector",
     start,
     end
-  }
+  };
 }

@@ -2,7 +2,7 @@ import {AnnRange} from "../../model/AnnRange";
 
 export function toRangeStr(range: AnnRange | undefined) {
   if (range === undefined) {
-    return ''
+    return '';
   }
   return '('
     + range.beginAnchor + ','

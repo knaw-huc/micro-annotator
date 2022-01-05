@@ -43,7 +43,7 @@ function toUntanngleCoordinates(a: any, text: string) {
     ? end - lineCount[endAnchor - 1] - 1
     : end - 1;
   if (endAnchor === startAnchor) {
-    endChar = endChar - startChar
+    endChar = endChar - startChar;
   }
   return [startAnchor, startChar, endAnchor, endChar];
 }

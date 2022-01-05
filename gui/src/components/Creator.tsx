@@ -14,5 +14,5 @@ export function Creator(props: CreatorFieldType) {
               onChange={(e: ChangeEvent<HTMLInputElement>) => props.onChange(e.target.value)}
             />
         </div>
-    )
+    );
 }

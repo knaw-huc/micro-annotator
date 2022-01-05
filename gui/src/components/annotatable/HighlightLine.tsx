@@ -17,7 +17,7 @@ export default function HighlightLine(props: TextLineProps) {
       {start}
       <span className="selected-text">{selection}</span>
       {end}
-    </>
+    </>;
   }
   return (
     <>
@@ -27,5 +27,5 @@ export default function HighlightLine(props: TextLineProps) {
         {text}
       </div>
     </>
-  )
+  );
 }

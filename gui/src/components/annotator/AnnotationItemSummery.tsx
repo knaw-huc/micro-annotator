@@ -23,7 +23,7 @@ export default function AnnotationItemSummery(props: AnnotationContentProps) {
         <li>
           <button className="show-full" onClick={(e) => {
             e.stopPropagation();
-            setShowFull(!showFull)
+            setShowFull(!showFull);
           }}>full annotation {String.fromCharCode(showFull ? 9663 : 9657)}
           </button>
           <br/>

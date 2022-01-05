@@ -70,7 +70,7 @@ export default class Elucidate {
   public static async getByCreator(creator: string) {
     let url = `${this.host}/annotation/w3c/services/search/creator`;
     const params = new URLSearchParams({value: creator, levels: 'annotation', type: 'id'});
-    return this.getAllPages(url, params)
+    return this.getAllPages(url, params);
   }
 
   /**
@@ -91,7 +91,7 @@ export default class Elucidate {
 
   private static getWithRangePrams(targetId: string, rangeStart: number, rangeEnd: number, url: string) {
     const params = new URLSearchParams({target_id: targetId, range_start: '' + rangeStart, range_end: '' + rangeEnd});
-    return this.getAllPages(url, params)
+    return this.getAllPages(url, params);
   }
 
   public static async requestEtag(elucidateId: string) {
@@ -101,9 +101,9 @@ export default class Elucidate {
     );
     let eTag = response.headers.get('ETag');
     if (!eTag) {
-      throw new Error('No ETag header could be found in response of ' + elucidateId)
+      throw new Error('No ETag header could be found in response of ' + elucidateId);
     }
-    return eTag
+    return eTag;
   }
 
   /**
@@ -142,7 +142,7 @@ export default class Elucidate {
     let annotationPage;
     let page = 0;
     do {
-      params.set('page', '' + page)
+      params.set('page', '' + page);
       const response = await fetch(
         url + '?' + params.toString(),
         {headers: this.headers}

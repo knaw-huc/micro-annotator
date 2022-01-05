@@ -19,8 +19,8 @@ type RecogitoAnnotatorProps = {
 export const browsableAnnotations = ['scanpage'];
 
 export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
-  const changeToUser = () => props.onSetAnnotationType(AnnotationListType.USER)
-  const changeToRange = () => props.onSetAnnotationType(AnnotationListType.RANGE)
+  const changeToUser = () => props.onSetAnnotationType(AnnotationListType.USER);
+  const changeToRange = () => props.onSetAnnotationType(AnnotationListType.RANGE);
 
   const recogitoAnnotations = props.annotationType === AnnotationListType.USER
     ? props.annotations.filter(a => !browsableAnnotations.includes(a.entity_type))
@@ -62,5 +62,5 @@ export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
         onSearch={props.onSearch}
       />
     </div>
-  </>
+  </>;
 }
