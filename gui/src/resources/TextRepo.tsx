@@ -1,4 +1,4 @@
-import Config from "../Config";
+import Config from '../Config';
 
 export default class TextRepo {
   static readonly host = Config.TEXTREPO_HOST;

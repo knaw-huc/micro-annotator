@@ -1,5 +1,5 @@
+import {Annotation, MicroAnnotation} from '../../model/Annotation';
 import AnnotationItem from './AnnotationItem';
-import {Annotation, MicroAnnotation} from "../../model/Annotation";
 
 type AnnotationListProps = {
   annotations: MicroAnnotation[];

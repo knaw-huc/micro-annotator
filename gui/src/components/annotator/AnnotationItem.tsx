@@ -1,11 +1,11 @@
-import {MicroAnnotation} from "../../model/Annotation";
-import {toRangeStr} from "../../util/convert/toRangeStr";
-import {toRange} from "../../model/AnnRange";
-import AnnotationItemSummery from "./AnnotationItemSummery";
-import {browsableAnnotations} from '../recogito/RecogitoAnnotator';
 import {useEffect, useState} from 'react';
-import {usePrevious} from '../../util/usePrevious';
+import AnnotationItemSummery from './AnnotationItemSummery';
+import {browsableAnnotations} from '../recogito/RecogitoAnnotator';
 import {findBodyId} from '../../util/findBodyId';
+import {MicroAnnotation} from '../../model/Annotation';
+import {toRange} from '../../model/AnnRange';
+import {toRangeStr} from '../../util/convert/toRangeStr';
+import {usePrevious} from '../../util/usePrevious';
 
 type AnnotationSnippetProps = {
   annot_id: number,
@@ -41,7 +41,7 @@ export default function AnnotationItem(props: AnnotationSnippetProps) {
 
   return (
     <div
-      className={`annotation-snippet`}
+      className={'annotation-snippet'}
     >
       <div
         onClick={toggleOpen}

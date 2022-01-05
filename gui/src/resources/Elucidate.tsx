@@ -1,6 +1,6 @@
-import Config from "../Config";
-import {MicroAnnotation} from "../model/Annotation";
-import {ElucidateAnnotation} from "../model/ElucidateAnnotation";
+import Config from '../Config';
+import {ElucidateAnnotation} from '../model/ElucidateAnnotation';
+import {MicroAnnotation} from '../model/Annotation';
 
 export default class Elucidate {
 
@@ -8,8 +8,8 @@ export default class Elucidate {
   static readonly tr = Config.TEXTREPO_HOST;
 
   static readonly headers = {
-    "Accept": "application/ld+json; profile=\"http://www.w3.org/ns/anno.jsonld\"",
-    "Content-Type": "application/ld+json; profile=\"http://www.w3.org/ns/anno.jsonld\""
+    'Accept': 'application/ld+json; profile="http://www.w3.org/ns/anno.jsonld"',
+    'Content-Type': 'application/ld+json; profile="http://www.w3.org/ns/anno.jsonld"'
   };
 
   /**
@@ -23,7 +23,7 @@ export default class Elucidate {
       throw Error('Cannot recreate an annotation that already has an ID: ' + a.id);
     }
     const response = await fetch(`${this.host}/annotation/w3c/${versionId}/`, {
-      method: "POST",
+      method: 'POST',
       headers: this.headers,
       body: JSON.stringify(a)
     });
@@ -36,7 +36,7 @@ export default class Elucidate {
     }
     let headers = await this.withETagHeader(a, this.headers);
     const response = await fetch(a.id, {
-      method: "PUT",
+      method: 'PUT',
       headers: headers,
       body: JSON.stringify(a)
     });
@@ -50,7 +50,7 @@ export default class Elucidate {
     if (!ifMatch) {
       throw new Error('Could not create If-Match header from ' + eTag);
     }
-    return Object.assign({"If-Match": ifMatch}, headers);
+    return Object.assign({'If-Match': ifMatch}, headers);
   }
 
   private static async withEtag(response: Response) {

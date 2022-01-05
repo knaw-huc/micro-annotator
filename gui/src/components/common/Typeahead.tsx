@@ -1,4 +1,4 @@
-import Downshift from "downshift";
+import Downshift from 'downshift';
 
 export type TypeaheadItem = {
   value: string
@@ -37,7 +37,7 @@ export default function Typeahead(props: TypeaheadProps) {
             onChange={(e: React.FormEvent<HTMLInputElement>) => props.onType(e.currentTarget.value)}
           />
           <div className="typeahead-status">
-            {props.selected === props.input ? "✅" : "✏️"}️
+            {props.selected === props.input ? '✅' : '✏️'}️
           </div>
         </div>
         <div className="typeahead-menu-item-container">

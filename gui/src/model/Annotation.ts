@@ -1,4 +1,4 @@
-import {ElucidateAnnotation} from "./ElucidateAnnotation";
+import {ElucidateAnnotation} from './ElucidateAnnotation';
 
 export type Annotation = {
   id: string;
@@ -18,7 +18,7 @@ export type Annotation = {
 
 export type MicroAnnotation = ElucidateAnnotation & Annotation;
 
-export const CUSTOM_NS = "http://example.org/customwebannotationfield";
-export const ENTITY = "Entity";
-export const ENTITY_CONTEXT = ["http://www.w3.org/ns/anno.jsonld", {"Entity": CUSTOM_NS + '#' + ENTITY}];
+export const CUSTOM_NS = 'http://example.org/customwebannotationfield';
+export const ENTITY = 'Entity';
+export const ENTITY_CONTEXT = ['http://www.w3.org/ns/anno.jsonld', {'Entity': CUSTOM_NS + '#' + ENTITY}];
 

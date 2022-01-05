@@ -1,5 +1,5 @@
-import {useCombobox} from "downshift";
-import {useEffect, useState} from "react";
+import {useEffect, useState} from 'react';
+import {useCombobox} from 'downshift';
 
 type ComboBoxProps = {
   items: ComboBoxItem[],

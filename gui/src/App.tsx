@@ -1,22 +1,21 @@
+import {ElucidateTargetType, SelectorTarget} from './model/ElucidateAnnotation';
 import {useCallback, useEffect, useState} from 'react';
-
-import Search from './components/Search';
-import ImageColumn from './components/image/ImageColumn';
-import {MicroAnnotation,} from "./model/Annotation";
-import Elucidate from "./resources/Elucidate";
-import {ElucidateTargetType, SelectorTarget} from "./model/ElucidateAnnotation";
-import TextRepo from "./resources/TextRepo";
-import Config from "./Config";
-import {Creator} from "./components/Creator";
-import {AnnotationListType} from "./components/annotator/AnnotationList";
-import RecogitoAnnotator from "./components/recogito/RecogitoAnnotator";
-import {toMicroAnn} from "./util/convert/toMicroAnn";
-import {toNewElucidateAnn} from "./util/convert/toNewElucidateAnn";
-import {toUpdatableElucidateAnn} from "./util/convert/toUpdatableElucidateAnn";
-import isString from './util/isString';
-import {isInRelativeRange} from './util/isInRelativeRange';
-import toVersionId from './util/convert/toVersionId';
+import {AnnotationListType} from './components/annotator/AnnotationList';
+import Config from './Config';
+import {Creator} from './components/Creator';
+import Elucidate from './resources/Elucidate';
 import ErrorMsg from './components/common/ErrorMsg';
+import ImageColumn from './components/image/ImageColumn';
+import {isInRelativeRange} from './util/isInRelativeRange';
+import isString from './util/isString';
+import {MicroAnnotation} from './model/Annotation';
+import RecogitoAnnotator from './components/recogito/RecogitoAnnotator';
+import Search from './components/Search';
+import TextRepo from './resources/TextRepo';
+import {toMicroAnn} from './util/convert/toMicroAnn';
+import {toNewElucidateAnn} from './util/convert/toNewElucidateAnn';
+import {toUpdatableElucidateAnn} from './util/convert/toUpdatableElucidateAnn';
+import toVersionId from './util/convert/toVersionId';
 
 export default function App() {
 
@@ -178,7 +177,7 @@ export default function App() {
           images={imageRegions}
         />
         {versionId && <RecogitoAnnotator
-            text={annotatableText.join("\n")}
+            text={annotatableText.join('\n')}
             annotations={annotations}
             onAddAnnotation={addAnnotation}
             onUpdateAnnotation={updateAnnotation}

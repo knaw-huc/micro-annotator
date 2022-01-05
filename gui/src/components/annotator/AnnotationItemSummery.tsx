@@ -1,8 +1,8 @@
-import {Annotation} from "../../model/Annotation";
-import {toRangeStr} from "../../util/convert/toRangeStr";
-import {toRange} from "../../model/AnnRange";
-import {useState} from "react";
-import ReactLinkify from "react-linkify";
+import {Annotation} from '../../model/Annotation';
+import ReactLinkify from 'react-linkify';
+import {toRange} from '../../model/AnnRange';
+import {toRangeStr} from '../../util/convert/toRangeStr';
+import {useState} from 'react';
 
 type AnnotationContentProps = {
   ann: Annotation | undefined

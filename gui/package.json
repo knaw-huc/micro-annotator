@@ -25,10 +25,10 @@
       "react-app"
     ],
     "rules": {
-      "semi": [
-        2,
-        "always"
-      ]
+      "no-multiple-empty-lines": [2, {"max": 2}],
+      "quotes": ["error", "single"],
+      "semi": ["error", "always"],
+      "sort-imports": ["error", {"ignoreCase":  true}]
     }
   },
   "browserslist": {

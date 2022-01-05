@@ -1,7 +1,6 @@
-import AnnotationList, {AnnotationListType} from "../annotator/AnnotationList";
-import {Annotation, MicroAnnotation} from "../../model/Annotation";
-import {RecogitoDocument} from "./RecogitoDocument";
-
+import {Annotation, MicroAnnotation} from '../../model/Annotation';
+import AnnotationList, {AnnotationListType} from '../annotator/AnnotationList';
+import {RecogitoDocument} from './RecogitoDocument';
 
 type RecogitoAnnotatorProps = {
   annotations: MicroAnnotation[];
@@ -43,13 +42,13 @@ export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
       <h4>Annotations</h4>
       <div className="tabs clearfix">
         <button
-          className={"btn btn-block btn-tab" + (props.annotationType === AnnotationListType.USER ? '' : ' btn-tab-unselected')}
+          className={'btn btn-block btn-tab' + (props.annotationType === AnnotationListType.USER ? '' : ' btn-tab-unselected')}
           onClick={changeToUser}
         >
           By user
         </button>
         <button
-          className={"btn btn-block btn-tab" + (props.annotationType === AnnotationListType.RANGE ? '' : ' btn-tab-unselected')}
+          className={'btn btn-block btn-tab' + (props.annotationType === AnnotationListType.RANGE ? '' : ' btn-tab-unselected')}
           onClick={changeToRange}
         >
           Overlap

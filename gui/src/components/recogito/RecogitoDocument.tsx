@@ -1,12 +1,12 @@
-import {useEffect} from "react";
-import {Recogito} from "@recogito/recogito-js";
-import "@recogito/recogito-js/dist/recogito.min.css";
-import {RecogitoRoot} from "./RecogitoRoot";
+import '@recogito/recogito-js/dist/recogito.min.css';
+import {Recogito} from '@recogito/recogito-js';
+import {RecogitoRoot} from './RecogitoRoot';
+import {useEffect} from 'react';
 
 const VOCABULARY = [
-  {label: "place", uri: "https://dbpedia.org/property/place"},
-  {label: "organisation", uri: "https://dbpedia.org/property/organisation"},
-  {label: "person", uri: "https://dbpedia.org/property/person"},
+  {label: 'place', uri: 'https://dbpedia.org/property/place'},
+  {label: 'organisation', uri: 'https://dbpedia.org/property/organisation'},
+  {label: 'person', uri: 'https://dbpedia.org/property/person'},
 ];
 
 interface RecogitoDocumentProps {
@@ -28,34 +28,34 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
     }
     const r = new Recogito({
       content: rootName,
-      locale: "auto",
-      mode: "pre",
+      locale: 'auto',
+      mode: 'pre',
       widgets: [
-        {widget: "COMMENT"},
+        {widget: 'COMMENT'},
         {
-          widget: "TAG",
+          widget: 'TAG',
           vocabulary: VOCABULARY,
         },
       ],
-      relationVocabulary: ["isRelated", "isPartOf", "isSameAs "],
+      relationVocabulary: ['isRelated', 'isPartOf', 'isSameAs '],
       readOnly: props.readOnly,
       formatter: (annotation: any) => {
         const tags = annotation.bodies.flatMap((body: any) =>
-          body && body.purpose === "tagging" ? body.value : []
+          body && body.purpose === 'tagging' ? body.value : []
         );
 
         const tagClasses: string[] = [];
 
         for (const tag of tags) {
-          if (tag === "material") {
-            tagClasses.push("tag-material");
-          } else if (tag === "object") {
-            tagClasses.push("tag-object");
-          } else if (tag === "person") {
-            tagClasses.push("tag-person");
+          if (tag === 'material') {
+            tagClasses.push('tag-material');
+          } else if (tag === 'object') {
+            tagClasses.push('tag-object');
+          } else if (tag === 'person') {
+            tagClasses.push('tag-person');
           }
         }
-        return tagClasses.join(" ");
+        return tagClasses.join(' ');
       },
     });
 
@@ -63,12 +63,12 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
       r.addAnnotation(annotation);
     }
 
-    r.on("createAnnotation", (a: any) => {
+    r.on('createAnnotation', (a: any) => {
       delete a.id;
       props.onAddAnnotation(a);
     });
 
-    r.on("updateAnnotation", (a: any) => {
+    r.on('updateAnnotation', (a: any) => {
       props.onUpdateAnnotation(a);
     });
 

@@ -1,7 +1,7 @@
-import {ENTITY_CONTEXT, MicroAnnotation} from "../../model/Annotation";
-import {RecogitoTargetType} from "../../model/ElucidateAnnotation";
-import Config from "../../Config";
-import {toLineCount} from "./toLineCount";
+import {ENTITY_CONTEXT, MicroAnnotation} from '../../model/Annotation';
+import Config from '../../Config';
+import {RecogitoTargetType} from '../../model/ElucidateAnnotation';
+import {toLineCount} from './toLineCount';
 
 export function toNewElucidateAnn(
   a: MicroAnnotation,
@@ -11,19 +11,19 @@ export function toNewElucidateAnn(
   versionId: string
 ) {
   a['@context'] = ENTITY_CONTEXT;
-  a.type = ["Annotation", "Entity"];
+  a.type = ['Annotation', 'Entity'];
   a.creator = creator;
 
-  let c = toUntanngleCoordinates(a, text.join("\n"));
+  let c = toUntanngleCoordinates(a, text.join('\n'));
   c = toAbsoluteOffsets(c, begin);
   const target = a.target as RecogitoTargetType;
   a.target = [];
   a.target.push(target);
   a.target.push(`${Config.TEXTREPO_HOST}/view/versions/${versionId}/segments/index/${c[0]}/${c[1]}/${c[2]}/${c[3]}`);
   a.target.push({
-    type: "urn:example:republic:TextAnchorSelector",
-    "start": c[0],
-    "end": c[2]
+    type: 'urn:example:republic:TextAnchorSelector',
+    'start': c[0],
+    'end': c[2]
   } as any);
   return a;
 }

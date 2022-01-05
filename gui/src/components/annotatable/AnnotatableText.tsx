@@ -1,8 +1,8 @@
+import {AnnRange, toRange} from '../../model/AnnRange';
 import {useEffect, useRef} from 'react';
-import TextLine from "./TextLine";
-import {AnnRange, toRange} from "../../model/AnnRange";
-import HighlightLine from "./HighlightLine";
-import {Annotation} from "../../model/Annotation";
+import {Annotation} from '../../model/Annotation';
+import HighlightLine from './HighlightLine';
+import TextLine from './TextLine';
 
 type AnnotatableTextProps = {
   text: string[],
@@ -56,8 +56,8 @@ export default function AnnotatableText(props: AnnotatableTextProps) {
       onReadSelection(result);
     }
 
-    document.addEventListener("selectionchange", handleChange);
-    return () => document.removeEventListener("selectionchange", handleChange);
+    document.addEventListener('selectionchange', handleChange);
+    return () => document.removeEventListener('selectionchange', handleChange);
   });
 
   return (

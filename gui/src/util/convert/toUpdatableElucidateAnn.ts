@@ -1,7 +1,7 @@
-import {ElucidateAnnotation} from "../../model/ElucidateAnnotation";
-import Config from "../../Config";
-import {Annotation, ENTITY_CONTEXT} from "../../model/Annotation";
-import {toElucidateId} from "./toElucidateId";
+import {Annotation, ENTITY_CONTEXT} from '../../model/Annotation';
+import Config from '../../Config';
+import {ElucidateAnnotation} from '../../model/ElucidateAnnotation';
+import {toElucidateId} from './toElucidateId';
 
 export function toUpdatableElucidateAnn(a: ElucidateAnnotation & Annotation, versionId: string, currentCreator: string) {
   const toUpdate = a.webAnn;

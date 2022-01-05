@@ -1,9 +1,9 @@
+import Typeahead, {TypeaheadItem} from './common/Typeahead';
 import {useEffect, useState} from 'react';
-import Typeahead, {TypeaheadItem} from "./common/Typeahead";
-import Elucidate from "../resources/Elucidate";
-import {useDebounce} from "../util/useDebounce";
-import {usePrevious} from "../util/usePrevious";
+import Elucidate from '../resources/Elucidate';
 import {findBodyId} from '../util/findBodyId';
+import {useDebounce} from '../util/useDebounce';
+import {usePrevious} from '../util/usePrevious';
 
 type SearchProps = {
   searchId: string;

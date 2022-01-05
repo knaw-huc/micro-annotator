@@ -5,10 +5,10 @@ import {
   RecogitoTargetType,
   SelectorTarget,
   TargetType
-} from "../../model/ElucidateAnnotation";
-import {MicroAnnotation} from "../../model/Annotation";
-import isString from "../isString";
-import {toLineCount} from "./toLineCount";
+} from '../../model/ElucidateAnnotation';
+import isString from '../isString';
+import {MicroAnnotation} from '../../model/Annotation';
+import {toLineCount} from './toLineCount';
 
 /**
  * Add micro-annotator specific fields to Elucidate annotation
@@ -52,7 +52,7 @@ function getEntityType(ea: ElucidateAnnotation): string {
   const b = ea.body as EntityBodyType;
 
   const isClassifying = (body: any) => {
-    return ["classifying", "tagging"].includes(body.purpose);
+    return ['classifying', 'tagging'].includes(body.purpose);
   };
 
   let entityType = Array.isArray(b)
@@ -61,7 +61,7 @@ function getEntityType(ea: ElucidateAnnotation): string {
 
   if (!entityType) {
     console.warn('No classifying TextualBody found in ' + JSON.stringify(b));
-    return "recogito_entity_type";
+    return 'recogito_entity_type';
   }
   return entityType;
 }
@@ -115,7 +115,6 @@ function createRecogitoTargetSelector(a: MicroAnnotation, text: string[]) {
   target.selector = recogitoTarget.selector;
 }
 
-
 function toRecogitoSelector(c: number[], lines: string[]): RecogitoPositionSelectorType {
   const lineCount = toLineCount(lines);
 
@@ -133,7 +132,7 @@ function toRecogitoSelector(c: number[], lines: string[]): RecogitoPositionSelec
   }
 
   return {
-    type: "TextPositionSelector",
+    type: 'TextPositionSelector',
     start,
     end
   };

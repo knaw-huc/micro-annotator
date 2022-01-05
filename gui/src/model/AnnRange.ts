@@ -1,4 +1,4 @@
-import {Annotation} from "./Annotation";
+import {Annotation} from './Annotation';
 
 export type AnnRange = {
   beginAnchor: number;
