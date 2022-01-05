@@ -1,6 +1,7 @@
 import {Annotation, MicroAnnotation} from '../../model/Annotation';
-import AnnotationList, {AnnotationListType} from '../annotator/AnnotationList';
-import {RecogitoDocument} from './RecogitoDocument';
+import AnnotationList, {AnnotationListType} from '../list/AnnotationList';
+import {AnnotatorDocument} from './AnnotatorDocument';
+import {browsableAnnotations} from '../list/AnnotationItem';
 
 type RecogitoAnnotatorProps = {
   annotations: MicroAnnotation[];
@@ -15,9 +16,7 @@ type RecogitoAnnotatorProps = {
   onSetAnnotationType: (t: AnnotationListType) => void;
 }
 
-export const browsableAnnotations = ['scanpage'];
-
-export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
+export default function Annotator(props: RecogitoAnnotatorProps) {
   const changeToUser = () => props.onSetAnnotationType(AnnotationListType.USER);
   const changeToRange = () => props.onSetAnnotationType(AnnotationListType.RANGE);
 
@@ -29,7 +28,7 @@ export default function RecogitoAnnotator(props: RecogitoAnnotatorProps) {
 
   return <>
     <div className="annotator-column">
-      <RecogitoDocument
+      <AnnotatorDocument
         text={props.text}
         annotations={recogitoAnnotations}
         onAddAnnotation={props.onAddAnnotation}

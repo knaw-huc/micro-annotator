@@ -1,6 +1,6 @@
 import '@recogito/recogito-js/dist/recogito.min.css';
+import {AnnotatorRoot} from './AnnotatorRoot';
 import {Recogito} from '@recogito/recogito-js';
-import {RecogitoRoot} from './RecogitoRoot';
 import {useEffect} from 'react';
 
 const VOCABULARY = [
@@ -18,7 +18,7 @@ interface RecogitoDocumentProps {
   readOnly: boolean;
 }
 
-export const RecogitoDocument = (props: RecogitoDocumentProps) => {
+export const AnnotatorDocument = (props: RecogitoDocumentProps) => {
   const rootName = 'recogito-root';
 
   useEffect(() => {
@@ -78,6 +78,6 @@ export const RecogitoDocument = (props: RecogitoDocumentProps) => {
 
   }, [props]);
 
-  return <RecogitoRoot id={rootName} className="recogito-doc"/>;
+  return <AnnotatorRoot id={rootName} className="recogito-doc"/>;
 };
 

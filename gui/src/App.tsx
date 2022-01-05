@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
-import {AnnotationListType} from './components/annotator/AnnotationList';
+import {AnnotationListType} from './components/list/AnnotationList';
+import Annotator from './components/annotator/Annotator';
 import Config from './Config';
 import {Creator} from './components/Creator';
 import Elucidate from './resources/Elucidate';
@@ -11,7 +12,6 @@ import ImageColumn from './components/image/ImageColumn';
 import {isInRelativeRange} from './util/isInRelativeRange';
 import isString from './util/isString';
 import {MicroAnnotation} from './model/Annotation';
-import RecogitoAnnotator from './components/recogito/RecogitoAnnotator';
 import Search from './components/Search';
 import TextRepo from './resources/TextRepo';
 import {toMicroAnn} from './util/convert/toMicroAnn';
@@ -167,7 +167,7 @@ export default function App() {
         <ImageColumn
           images={imageRegions}
         />
-        {versionId && <RecogitoAnnotator
+        {versionId && <Annotator
             text={annotatableText.join('\n')}
             annotations={annotations}
             onAddAnnotation={addAnnotation}

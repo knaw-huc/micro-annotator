@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react';
 import AnnotationItemSummery from './AnnotationItemSummery';
-import {browsableAnnotations} from '../recogito/RecogitoAnnotator';
 import {findBodyId} from '../../util/findBodyId';
 import {MicroAnnotation} from '../../model/Annotation';
 import toRange from '../../util/convert/toRange';
@@ -14,6 +13,8 @@ type AnnotationSnippetProps = {
   onSelect: (a: MicroAnnotation | undefined) => void
   onSearch: (id: string) => void
 }
+
+export const browsableAnnotations = ['scanpage'];
 
 export default function AnnotationItem(props: AnnotationSnippetProps) {
   const browsable = browsableAnnotations.includes(props.annotation.entity_type);
@@ -48,16 +49,14 @@ export default function AnnotationItem(props: AnnotationSnippetProps) {
         className="clickable"
       >
         {props.annotation.entity_type} {toRangeStr(toRange(props.annotation))}
-        {browsable
-          ? <button
+        {browsable && <button
             className="btn btn-open-ann"
             onClick={() => props.onSearch(findBodyId(props.annotation))}
-          >
+        >
             🔎
-          </button>
-          : null}
+        </button>}
       </div>
-      {isOpen ? <AnnotationItemSummery ann={props.annotation}/> : null}
+      {isOpen && <AnnotationItemSummery ann={props.annotation}/>}
     </div>
   );
 }
