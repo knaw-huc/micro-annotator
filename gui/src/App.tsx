@@ -1,9 +1,9 @@
-import {ElucidateTargetType, SelectorTarget} from './model/ElucidateAnnotation';
 import {useCallback, useEffect, useState} from 'react';
 import {AnnotationListType} from './components/annotator/AnnotationList';
 import Config from './Config';
 import {Creator} from './components/Creator';
 import Elucidate from './resources/Elucidate';
+import {ElucidateTarget} from './model/ElucidateAnnotation';
 import ErrorMsg from './components/common/ErrorMsg';
 import ImageColumn from './components/image/ImageColumn';
 import {isInRelativeRange} from './util/isInRelativeRange';
@@ -22,7 +22,7 @@ import findImageRegions from './util/findImageRegions';
 export default function App() {
 
   /**
-   * Error message
+   * Error message, or falsy when no error
    */
   const [error, setError] = useState<string>();
 
@@ -42,7 +42,7 @@ export default function App() {
   const [annotations, setAnnotations] = useState<MicroAnnotation[]>([]);
 
   /**
-   * Selected annotation in annotation list
+   * Selected annotation in annotation list, or falsy when no annotation
    */
   const [selectedAnnotation, setSelectedAnnotation] = useState<MicroAnnotation>();
 
@@ -106,22 +106,18 @@ export default function App() {
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
     const toCreate = toNewElucidateAnn(a, currentCreator, annotatableText, beginRange, versionId);
     const created = await Elucidate.create(versionId, toCreate);
-    setAnnotations(annotations => {
-      const createdRecogitoAnn = toMicroAnn(created, beginRange, annotatableText);
-      return [createdRecogitoAnn, ...annotations];
-    });
-  }, [setAnnotations, annotatableText, beginRange, currentCreator, versionId]);
+    const createdRecogitoAnn = toMicroAnn(created, beginRange, annotatableText);
+    setAnnotations([createdRecogitoAnn, ...annotations]);
+  }, [annotations, annotatableText, beginRange, currentCreator, versionId]);
 
   const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
     const toUpdate = toUpdatableElucidateAnn(a, versionId, currentCreator);
     const updated = await Elucidate.update(toUpdate);
-    const updatedRecogitoAnn = toMicroAnn(updated, beginRange, annotatableText);
-    setAnnotations(annotations => {
-      const i = annotations.findIndex(a => a.id === updatedRecogitoAnn.id);
-      annotations[i] = updatedRecogitoAnn;
-      return [...annotations];
-    });
-  }, [annotatableText, beginRange, currentCreator, versionId]);
+    const converted = toMicroAnn(updated, beginRange, annotatableText);
+    const i = annotations.findIndex(a => a.id === converted.id);
+    annotations[i] = converted;
+    setAnnotations([...annotations]);
+  }, [annotations, annotatableText, beginRange, currentCreator, versionId]);
 
   const searchAnnotation = async (bodyId: string) => {
     if (!bodyId) {
@@ -131,7 +127,7 @@ export default function App() {
     if (!foundAnn.target || isString(foundAnn.target)) {
       throw Error(`Could not find targets in annotation: ${JSON.stringify(foundAnn)}`);
     }
-    const target = foundAnn.target as ElucidateTargetType[];
+    const target = foundAnn.target as ElucidateTarget[];
     const foundImageRegions = findImageRegions(target);
     const foundVersionId = toVersionId(foundAnn.id);
     const selectorTarget = findSelectorTarget(foundAnn);

@@ -3,9 +3,9 @@ import AnnotationItemSummery from './AnnotationItemSummery';
 import {browsableAnnotations} from '../recogito/RecogitoAnnotator';
 import {findBodyId} from '../../util/findBodyId';
 import {MicroAnnotation} from '../../model/Annotation';
-import {toRange} from '../../model/AnnRange';
 import {toRangeStr} from '../../util/convert/toRangeStr';
 import {usePrevious} from '../../util/usePrevious';
+import toRange from '../../util/convert/toRange';
 
 type AnnotationSnippetProps = {
   annot_id: number,
@@ -38,7 +38,7 @@ export default function AnnotationItem(props: AnnotationSnippetProps) {
       props.onSelect(props.annotation);
     }
   }, [isOpen, previousIsOpen, browsable, props]);
-
+  
   return (
     <div
       className={'annotation-snippet'}

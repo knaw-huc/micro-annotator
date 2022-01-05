@@ -1,10 +1,10 @@
 import {
   ElucidateAnnotation,
-  EntityBodyType,
-  RecogitoPositionSelectorType,
-  RecogitoTargetType,
+  EntityBody,
+  RecogitoPositionSelector,
+  RecogitoTarget,
   SelectorTarget,
-  TargetType
+  Target
 } from '../../model/ElucidateAnnotation';
 import isString from '../isString';
 import {MicroAnnotation} from '../../model/Annotation';
@@ -26,7 +26,7 @@ export function toMicroAnn(a: ElucidateAnnotation, beginRange: number, text: str
   if(trUrl) {
     result.coordinates = fromTrUrlToCoordinates(trUrl);
   }else {
-    result.coordinates = fromTrSelectorToCoordinates(a.target as TargetType[]);
+    result.coordinates = fromTrSelectorToCoordinates(a.target as Target[]);
   }
   result.coordinates = toRelativeOffsets(result.coordinates, beginRange);
   result.entity_type = getEntityType(a);
@@ -40,7 +40,7 @@ export function toMicroAnn(a: ElucidateAnnotation, beginRange: number, text: str
 
 function findTextRepoUrl(ea: ElucidateAnnotation) {
   if (Array.isArray(ea.target)) {
-    return (ea.target as TargetType[]).find(t => isString(t)) as string;
+    return (ea.target as Target[]).find(t => isString(t)) as string;
   } else if (isString(ea.target)) {
     return ea.target as string;
   } else {
@@ -49,7 +49,7 @@ function findTextRepoUrl(ea: ElucidateAnnotation) {
 }
 
 function getEntityType(ea: ElucidateAnnotation): string {
-  const b = ea.body as EntityBodyType;
+  const b = ea.body as EntityBody;
 
   const isClassifying = (body: any) => {
     return ['classifying', 'tagging'].includes(body.purpose);
@@ -74,7 +74,7 @@ function fromTrUrlToCoordinates(textrepoTarget: string): number[] {
   return [parseInt(groups[1]), parseInt(groups[2]), parseInt(groups[3]), parseInt(groups[4])];
 }
 
-function fromTrSelectorToCoordinates(targets: TargetType[]): number[] {
+function fromTrSelectorToCoordinates(targets: Target[]): number[] {
   let trSelectorTarget = targets.find((t: any) => t.selector?.start) as SelectorTarget;
   if(!trSelectorTarget) {
     throw new Error('No tr selector found in ' + JSON.stringify(targets));
@@ -102,12 +102,12 @@ function toRelativeOffsets(c: number[], offset: number): number[] {
  * Recogito expects a.target.selector instead of a.target[*].selector:
  */
 function createRecogitoTargetSelector(a: MicroAnnotation, text: string[]) {
-  const target = a.target as any as RecogitoTargetType;
-  let recogitoTarget = (a.target as RecogitoTargetType[]).find(t => t.selector && Array.isArray(t.selector));
+  const target = a.target as any as RecogitoTarget;
+  let recogitoTarget = (a.target as RecogitoTarget[]).find(t => t.selector && Array.isArray(t.selector));
 
   if (!recogitoTarget) {
-    recogitoTarget = {selector:[]} as RecogitoTargetType;
-    (a.target as TargetType[]).push(recogitoTarget);
+    recogitoTarget = {selector:[]} as RecogitoTarget;
+    (a.target as Target[]).push(recogitoTarget);
     const newSelector = toRecogitoSelector(a.coordinates, text);
     recogitoTarget.selector.push(newSelector);
   }
@@ -115,7 +115,7 @@ function createRecogitoTargetSelector(a: MicroAnnotation, text: string[]) {
   target.selector = recogitoTarget.selector;
 }
 
-function toRecogitoSelector(c: number[], lines: string[]): RecogitoPositionSelectorType {
+function toRecogitoSelector(c: number[], lines: string[]): RecogitoPositionSelector {
   const lineCount = toLineCount(lines);
 
   const start = c[0] !== 0

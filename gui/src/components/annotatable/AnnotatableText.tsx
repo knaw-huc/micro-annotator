@@ -1,8 +1,9 @@
-import {AnnRange, toRange} from '../../model/AnnRange';
+import {AnnRange} from '../../model/AnnRange';
 import {useEffect, useRef} from 'react';
 import {Annotation} from '../../model/Annotation';
 import HighlightLine from './HighlightLine';
 import TextLine from './TextLine';
+import toRange from '../../util/convert/toRange';
 
 type AnnotatableTextProps = {
   text: string[],
@@ -69,8 +70,7 @@ export default function AnnotatableText(props: AnnotatableTextProps) {
       </div>
       <div className="text-box text-underlay">
         {props.text.map((line, index) => {
-          let lineRange = props.selected ? toLineRange(toRange(props.selected), index, line) : [0, 0];
-
+          const lineRange = props.selected ? toLineRange(toRange(props.selected), index, line) : [0, 0];
           return (
             <HighlightLine
               key={index}

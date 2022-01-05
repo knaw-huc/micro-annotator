@@ -1,34 +1,34 @@
-type AnnotatorBodyType = {
+type AnnotatorBody = {
   'type': string | (string[]),
   'value': string,
 };
 
-export type ElucidateBodyType = AnnotatorBodyType & {
+export type ElucidateBody = AnnotatorBody & {
   'id': string,
   'purpose': string
 };
 
 export type RecogitoCreator = { name: string; id: string };
 
-export type BodyType = {
+export type Body = {
   purpose: string;
   'type': 'TextualBody';
   'value': string
 }
 
-export type CommentingBodyType = BodyType & {
+export type CommentingBody = Body & {
   'purpose': 'commenting',
   'creator': RecogitoCreator
 };
 
-type ClassifyingBodyType = BodyType & {
-  // Recogito calls it "tagging"
+type ClassifyingBody = Body & {
+  // Recogito calls it 'tagging'
   'purpose': 'classifying',
 };
 
-export type ClassifyingEntityBodyType = [ClassifyingBodyType, CommentingBodyType];
+export type ClassifyingEntityBody = [ClassifyingBody, CommentingBody];
 
-export type EntityBodyType = ClassifyingBodyType | ClassifyingEntityBodyType;
+export type EntityBody = ClassifyingBody | ClassifyingEntityBody;
 
 export type Selector = {
   'type': string,
@@ -52,24 +52,24 @@ export type ImageTarget = {
   'source': string
 };
 
-export type ElucidateTargetType = SelectorTarget | ImageTarget;
+export type ElucidateTarget = SelectorTarget | ImageTarget;
 
-export type TargetType = string | RecogitoTargetType | TextAnchorTargetType | ElucidateTargetType;
+export type Target = string | RecogitoTarget | TextAnchorTarget | ElucidateTarget;
 
-type RecogitoQuoteSelectorType = {
+type RecogitoQuoteSelector = {
   type: 'TextQuoteSelector';
   exact: string
 }
 
-export type RecogitoPositionSelectorType = {
+export type RecogitoPositionSelector = {
   type: 'TextPositionSelector';
   start: number;
   end: number;
 }
 
-type RecogitoSelectorType = RecogitoQuoteSelectorType | RecogitoPositionSelectorType;
+type RecogitoSelectorType = RecogitoQuoteSelector | RecogitoPositionSelector;
 
-export type TextAnchorTargetType = {
+export type TextAnchorTarget = {
   'type': 'Text',
   'selector': {
     'type': 'urn:example:republic:TextAnchorSelector',
@@ -80,7 +80,7 @@ export type TextAnchorTargetType = {
 };
 
 
-export type RecogitoTargetType = {
+export type RecogitoTarget = {
   selector: RecogitoSelectorType[]
 }
 
@@ -95,8 +95,8 @@ export type ElucidateAnnotation = {
     'type': string,
     'name': string
   } | undefined,
-  'body': BodyType | EntityBodyType | ElucidateBodyType | (ElucidateBodyType[]),
-  'target': TargetType | TargetType[],
+  'body': Body | EntityBody | ElucidateBody | (ElucidateBody[]),
+  'target': Target | Target[],
   'motivation': string,
   'ETag': string
 };

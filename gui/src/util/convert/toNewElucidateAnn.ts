@@ -1,6 +1,6 @@
 import {ENTITY_CONTEXT, MicroAnnotation} from '../../model/Annotation';
 import Config from '../../Config';
-import {RecogitoTargetType} from '../../model/ElucidateAnnotation';
+import {RecogitoTarget} from '../../model/ElucidateAnnotation';
 import {toLineCount} from './toLineCount';
 
 export function toNewElucidateAnn(
@@ -16,7 +16,7 @@ export function toNewElucidateAnn(
 
   let c = toUntanngleCoordinates(a, text.join('\n'));
   c = toAbsoluteOffsets(c, begin);
-  const target = a.target as RecogitoTargetType;
+  const target = a.target as RecogitoTarget;
   a.target = [];
   a.target.push(target);
   a.target.push(`${Config.TEXTREPO_HOST}/view/versions/${versionId}/segments/index/${c[0]}/${c[1]}/${c[2]}/${c[3]}`);
