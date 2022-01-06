@@ -8,7 +8,7 @@ type AnnotationContentProps = {
   ann: Annotation | undefined
 }
 
-export default function AnnotationItemSummery(props: AnnotationContentProps) {
+export default function AnnotationItemSummery(props: AnnotationContentProps): JSX.Element {
   const ann = props.ann;
   const [showFull, setShowFull] = useState(false);
 
