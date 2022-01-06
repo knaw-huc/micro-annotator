@@ -4,8 +4,10 @@ import Config from '../../Config';
 import {baseReducer} from '../../util/baseReducer';
 
 /**
- * User name when searching user annotations or creating new annotations
+ * Username when searching user annotations or creating new annotations
  */
+export const useCreatorContext = () => useContext(CreatorContext);
+
 export type CreatorStateType = {
   creator: string;
 }
@@ -23,8 +25,6 @@ export const defaultCreatorContext = {
 } as CreatorContextType;
 
 export const CreatorContext = createContext<CreatorContextType>(defaultCreatorContext);
-
-export const useCreatorContext = () => useContext(CreatorContext);
 
 export const creatorReducer : (<T extends CreatorStateType>(s: T, a: T) => T) = baseReducer
 

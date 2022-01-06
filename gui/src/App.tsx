@@ -72,9 +72,16 @@ export default function App() {
   const [versionId, setVersionId] = useState<string>('');
 
   const {creatorState} = useCreatorContext();
+  /**
+   * Searching annotation
+   */
+  const [searching, setSearching] = useState<boolean>(true);
 
   useEffect(() => {
     const getAnnotations = async () => {
+      if(searching) {
+        return;
+      }
       if (!(beginRange && targetId && creatorState && beginRange && endRange && annotatableText.length)) {
         return;
       }
@@ -89,7 +96,10 @@ export default function App() {
     };
     getAnnotations()
       .catch(e => setErrorState({message: e.message}));
-  }, [targetId, creatorState, beginRange, endRange, annotationType, annotatableText, setErrorState]);
+  }, [
+    searching, setAnnotations, targetId, creatorState, beginRange,
+    endRange, annotationType, annotatableText, setErrorState
+  ]);
 
   useEffect(() => {
     if (!annotationId) {
@@ -97,7 +107,7 @@ export default function App() {
     }
     searchAnnotation(annotationId)
       .catch(e => setErrorState({message: e.message}));
-  }, [annotationId, setErrorState]);
+  }, [searching, annotationId, setErrorState]);
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
     const toCreate = toNewElucidateAnn(a, creatorState.creator, annotatableText, beginRange, versionId);
@@ -132,18 +142,21 @@ export default function App() {
       selectorTarget.selector.start,
       selectorTarget.selector.end
     );
+    setAnnotations([]);
     setVersionId(versionId);
     setAnnotatableText(annotatableText);
     setImageRegions(imageRegions);
     setTargetId(selectorTarget.source);
     setBeginRange(selectorTarget.selector.start);
     setEndRange(selectorTarget.selector.end);
+    setSearching(false);
   };
 
   const updateAnnotationId = (id: string) => {
     setAnnotations([]);
     setSelectedAnnotation(undefined);
     setAnnotationId(id);
+    setSearching(true);
   };
 
   return (
