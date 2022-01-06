@@ -17,7 +17,7 @@ type RecogitoAnnotatorProps = {
 }
 
 export default function Annotator(props: RecogitoAnnotatorProps) {
-  const {creatorState} = useCreatorContext();
+  const {state} = useCreatorContext();
 
   const changeToUser = () => props.onSetAnnotationType(AnnotationListType.USER);
   const changeToRange = () => props.onSetAnnotationType(AnnotationListType.RANGE);
@@ -35,7 +35,7 @@ export default function Annotator(props: RecogitoAnnotatorProps) {
         annotations={recogitoAnnotations}
         onAddAnnotation={props.onAddAnnotation}
         onUpdateAnnotation={props.onUpdateAnnotation}
-        creator={creatorState.creator}
+        creator={state.creator}
         readOnly={props.annotationType === AnnotationListType.RANGE}
       />
     </div>

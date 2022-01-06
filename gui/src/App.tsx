@@ -12,7 +12,7 @@ import ImageColumn from './components/image/ImageColumn';
 import {isInRelativeRange} from './util/isInRelativeRange';
 import isString from './util/isString';
 import {MicroAnnotation} from './model/Annotation';
-import Search from './components/Search';
+import Search from './components/search/Search';
 import TextRepo from './resources/TextRepo';
 import {toMicroAnn} from './util/convert/toMicroAnn';
 import {toNewElucidateAnn} from './util/convert/toNewElucidateAnn';
@@ -23,7 +23,7 @@ import {useErrorContext} from './components/error/ErrorContext';
 
 export default function App() {
 
-  const {setErrorState} = useErrorContext();
+  const setErrorState = useErrorContext().setState;
 
   /**
    * Scan urls including image regions
@@ -71,7 +71,8 @@ export default function App() {
    */
   const [versionId, setVersionId] = useState<string>('');
 
-  const {creatorState} = useCreatorContext();
+  const {state} = useCreatorContext();
+
   /**
    * Searching annotation
    */
@@ -82,11 +83,11 @@ export default function App() {
       if(searching) {
         return;
       }
-      if (!(beginRange && targetId && creatorState && beginRange && endRange && annotatableText.length)) {
+      if (!(beginRange && targetId && state && beginRange && endRange && annotatableText.length)) {
         return;
       }
       const found = annotationType === AnnotationListType.USER
-        ? await Elucidate.getByCreator(creatorState.creator)
+        ? await Elucidate.getByCreator(state.creator)
         : await Elucidate.getByOverlap(targetId, beginRange, endRange);
       const converted = found
         .map(a => toMicroAnn(a, beginRange, annotatableText))
@@ -97,7 +98,7 @@ export default function App() {
     getAnnotations()
       .catch(e => setErrorState({message: e.message}));
   }, [
-    searching, setAnnotations, targetId, creatorState, beginRange,
+    searching, setAnnotations, targetId, state, beginRange,
     endRange, annotationType, annotatableText, setErrorState
   ]);
 
@@ -110,20 +111,20 @@ export default function App() {
   }, [searching, annotationId, setErrorState]);
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
-    const toCreate = toNewElucidateAnn(a, creatorState.creator, annotatableText, beginRange, versionId);
+    const toCreate = toNewElucidateAnn(a, state.creator, annotatableText, beginRange, versionId);
     const created = await Elucidate.create(versionId, toCreate);
     const createdRecogitoAnn = toMicroAnn(created, beginRange, annotatableText);
     setAnnotations([createdRecogitoAnn, ...annotations]);
-  }, [annotations, annotatableText, beginRange, creatorState, versionId]);
+  }, [annotations, annotatableText, beginRange, state, versionId]);
 
   const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
-    const toUpdate = toUpdatableElucidateAnn(a, versionId, creatorState.creator);
+    const toUpdate = toUpdatableElucidateAnn(a, versionId, state.creator);
     const updated = await Elucidate.update(toUpdate);
     const converted = toMicroAnn(updated, beginRange, annotatableText);
     const i = annotations.findIndex(a => a.id === converted.id);
     annotations[i] = converted;
     setAnnotations([...annotations]);
-  }, [annotations, annotatableText, beginRange, creatorState, versionId]);
+  }, [annotations, annotatableText, beginRange, state, versionId]);
 
   const searchAnnotation = async (bodyId: string) => {
     if (!bodyId) {

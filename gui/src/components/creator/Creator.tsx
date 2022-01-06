@@ -3,14 +3,14 @@ import {useCreatorContext} from './CreatorContext';
 
 export function Creator() {
 
-  const {creatorState, setCreatorState} = useCreatorContext();
+  const {state, setState} = useCreatorContext();
 
   return (
     <div className='form-control'>
       <label>Creator</label>
       <input
-        value={creatorState.creator}
-        onChange={(e: ChangeEvent<HTMLInputElement>) => setCreatorState({creator: e.target.value})}
+        value={state.creator}
+        onChange={(e: ChangeEvent<HTMLInputElement>) => setState({creator: e.target.value})}
       />
     </div>
   );

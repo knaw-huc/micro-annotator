@@ -1,6 +1,7 @@
 import {createContext, useContext} from 'react';
 import {dummyProvider} from '../../util/dummyProvider';
 import {baseReducer} from '../../util/baseReducer';
+import {ContextType} from '../common/ContextType';
 
 /**
  * Error message, or falsy when no error
@@ -11,18 +12,13 @@ export type ErrorStateType = {
   message: string;
 }
 
-export type ErrorContextType = {
-  errorState: ErrorStateType;
-  setErrorState: (a: ErrorStateType) => void
-}
-
 export const defaultErrorContext = {
-  errorState: {
+  state: {
     message: ''
   },
-  setErrorState: dummyProvider
-} as ErrorContextType;
+  setState: dummyProvider
+} as ContextType<ErrorStateType>;
 
-export const ErrorContext = createContext<ErrorContextType>(defaultErrorContext);
+export const ErrorContext = createContext(defaultErrorContext);
 export const errorReducer : (<T extends ErrorStateType>(s: T, a: T) => T) = baseReducer
 

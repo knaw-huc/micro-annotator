@@ -1,11 +1,11 @@
 import {useErrorContext} from './ErrorContext';
 
 export default function ErrorMsg() {
-  const {errorState} = useErrorContext();
+  const {state} = useErrorContext();
 
-  return <>{errorState.message && <p
+  return <>{state.message && <p
       className="error-msg"
   >
-      Error: {errorState.message}
+      Error: {state.message}
   </p>}</>;
 }
