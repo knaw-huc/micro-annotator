@@ -167,18 +167,18 @@ export default function App() {
         <ImageColumn
           images={imageRegions}
         />
-        {versionId && <Annotator
-            text={annotatableText.join('\n')}
-            annotations={annotations}
-            onAddAnnotation={addAnnotation}
-            onUpdateAnnotation={updateAnnotation}
-            creator={currentCreator}
-            selected={selectedAnnotation}
-            onSelect={(a: MicroAnnotation | undefined) => setSelectedAnnotation(a)}
-            onSearch={updateAnnotationId}
-            annotationType={annotationType}
-            onSetAnnotationType={setAnnotationType}
-        />}
+        <Annotator
+          text={annotatableText.join('\n')}
+          annotations={annotations}
+          onAddAnnotation={addAnnotation}
+          onUpdateAnnotation={updateAnnotation}
+          creator={currentCreator}
+          selected={selectedAnnotation}
+          onSelect={(a: MicroAnnotation | undefined) => setSelectedAnnotation(a)}
+          onSearch={updateAnnotationId}
+          annotationType={annotationType}
+          onSetAnnotationType={setAnnotationType}
+        />
       </div>
     </div>
   );
