@@ -5,7 +5,7 @@ import Config from './Config';
 import {Creator} from './components/creator/Creator';
 import Elucidate from './resources/Elucidate';
 import {ElucidateTarget} from './model/ElucidateAnnotation';
-import ErrorMsg from './components/common/ErrorMsg';
+import ErrorMsg from './components/error/ErrorMsg';
 import findImageRegions from './util/findImageRegions';
 import findSelectorTarget from './util/findSelectorTarget';
 import ImageColumn from './components/image/ImageColumn';
@@ -19,13 +19,11 @@ import {toNewElucidateAnn} from './util/convert/toNewElucidateAnn';
 import {toUpdatableElucidateAnn} from './util/convert/toUpdatableElucidateAnn';
 import toVersionId from './util/convert/toVersionId';
 import {useCreatorContext} from './components/creator/CreatorContext';
+import {useErrorContext} from './components/error/ErrorContext';
 
 export default function App() {
 
-  /**
-   * Error message, or falsy when no error
-   */
-  const [error, setError] = useState<string>();
+  const {setErrorState} = useErrorContext();
 
   /**
    * Scan urls including image regions
@@ -90,16 +88,16 @@ export default function App() {
       setAnnotations(converted);
     };
     getAnnotations()
-      .catch(e => setError(e.message));
-  }, [targetId, creatorState, beginRange, endRange, annotationType, annotatableText]);
+      .catch(e => setErrorState({message: e.message}));
+  }, [targetId, creatorState, beginRange, endRange, annotationType, annotatableText, setErrorState]);
 
   useEffect(() => {
     if (!annotationId) {
       return;
     }
     searchAnnotation(annotationId)
-      .catch(e => setError(e.message));
-  }, [annotationId]);
+      .catch(e => setErrorState({message: e.message}));
+  }, [annotationId, setErrorState]);
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
     const toCreate = toNewElucidateAnn(a, creatorState.creator, annotatableText, beginRange, versionId);
@@ -151,9 +149,7 @@ export default function App() {
   return (
 
     <div className="container">
-      {error && <ErrorMsg
-          msg={error}
-      />}
+      <ErrorMsg />
       <Creator />
       <Search
         searchId={annotationId}

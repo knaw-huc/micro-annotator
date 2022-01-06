@@ -2,11 +2,11 @@ import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
-import AppContextprovider from './AppContextprovider';
+import AppContextProvider from './AppContextProvider';
 
 ReactDOM.render(
     <React.StrictMode>
-        <AppContextprovider/>
+        <AppContextProvider/>
     </React.StrictMode>,
     document.getElementById('root')
 );
