@@ -51,6 +51,9 @@ export default function App() {
 
   const creatorState = useCreatorContext().state;
 
+  /**
+   * Busy requesting selected annotation and text and elucidate and textrepo?
+   */
   const [searching, setSearching] = useState<boolean>(true);
 
   useEffect(() => {
@@ -69,7 +72,7 @@ export default function App() {
     };
     getAnnotations()
       .catch(e => setErrorState({message: e.message}));
-  }, [searchState, annotationType, creatorState, setErrorState, searching]);
+  }, [searchState, searching, annotationType, creatorState, setErrorState]);
 
   useEffect(() => {
     if (!annotationId) {
@@ -87,21 +90,17 @@ export default function App() {
       const imageRegions = findImageRegions(target);
       const versionId = toVersionId(foundAnn.id);
       const selectorTarget = findSelectorTarget(foundAnn);
+      const beginRange = selectorTarget.selector.start;
+      const endRange = selectorTarget.selector.end;
+      const targetId = selectorTarget.source;
+
       const annotatableText = await TextRepo.getByVersionIdAndRange(
         versionId,
-        selectorTarget.selector.start,
-        selectorTarget.selector.end
+        beginRange,
+        endRange
       );
 
-      setSearchState({
-        versionId,
-        annotatableText,
-        imageRegions,
-        targetId: selectorTarget.source,
-        beginRange: selectorTarget.selector.start,
-        endRange: selectorTarget.selector.end,
-        searching: false
-      });
+      setSearchState({versionId, annotatableText, imageRegions, targetId, beginRange, endRange});
       setSearching(false);
     };
     searchAnnotation(annotationId)
@@ -109,7 +108,7 @@ export default function App() {
   }, [searching, annotationId, setErrorState, setSearchState]);
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
-    const toCreate = toNewElucidateAnn(a, creatorState.creator, searchState.annotatableText, searchState.beginRange, searchState.versionId);
+    const toCreate = toNewElucidateAnn(a, creatorState.creator, searchState);
     const created = await Elucidate.create(searchState.versionId, toCreate);
     const createdRecogitoAnn = toMicroAnn(created, searchState.beginRange, searchState.annotatableText);
     setAnnotations([createdRecogitoAnn, ...annotations]);

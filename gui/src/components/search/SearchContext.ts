@@ -5,6 +5,7 @@ import {ContextType} from '../common/ContextType';
 /**
  * Searched annotation and related fields
  */
+export const useSearchContext = () => useContext(SearchContext);
 export type SearchStateType = {
 
   /**
@@ -33,10 +34,6 @@ export type SearchStateType = {
   beginRange: number,
   endRange: number,
 
-  /**
-   * Requesting annotation at elucidate
-   */
-  searching: boolean
 };
 
 export const defaultSearchContext = {
@@ -46,22 +43,20 @@ export const defaultSearchContext = {
     imageRegions: [],
     targetId: '',
     beginRange: 0,
-    endRange: 0,
-    searching: true
+    endRange: 0
   },
   setState: dummyProvider
 } as ContextType<SearchStateType>;
 
 export const SearchContext = createContext(defaultSearchContext);
-export const useSearchContext = () => useContext(SearchContext);
 
 /**
- * Copy fields from action to state that exist both in state and action
-   */
-export const searchReducer = (state: SearchStateType, action: any): SearchStateType => {
-  Object.keys(state).forEach(key => {
-    if (action[key]) {
-      (state as any)[key] = action[key];
+ * Copy fields from action to state that exist both in action and state
+ */
+export const searchReducer = (state: SearchStateType, action: SearchStateType): SearchStateType => {
+  Object.keys(state).forEach((key: any) => {
+    if ((action as any)[key]) {
+      (state as any)[key] = (action as any)[key];
     }
   });
   return state;

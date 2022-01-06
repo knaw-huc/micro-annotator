@@ -2,24 +2,23 @@ import {ENTITY_CONTEXT, MicroAnnotation} from '../../model/Annotation';
 import Config from '../../Config';
 import {RecogitoTarget} from '../../model/ElucidateAnnotation';
 import {toLineCount} from './toLineCount';
+import {SearchStateType} from '../../components/search/SearchContext';
 
 export function toNewElucidateAnn(
   a: MicroAnnotation,
   creator: string,
-  text: string[],
-  begin: number,
-  versionId: string
+  searchState: SearchStateType
 ) {
   a['@context'] = ENTITY_CONTEXT;
   a.type = ['Annotation', 'Entity'];
   a.creator = creator;
 
-  let c = toUntanngleCoordinates(a, text.join('\n'));
-  c = toAbsoluteOffsets(c, begin);
+  let c = toUntanngleCoordinates(a, searchState.annotatableText.join('\n'));
+  c = toAbsoluteOffsets(c, searchState.beginRange);
   const target = a.target as RecogitoTarget;
   a.target = [];
   a.target.push(target);
-  a.target.push(`${Config.TEXTREPO_HOST}/view/versions/${versionId}/segments/index/${c[0]}/${c[1]}/${c[2]}/${c[3]}`);
+  a.target.push(`${Config.TEXTREPO_HOST}/view/versions/${searchState.versionId}/segments/index/${c[0]}/${c[1]}/${c[2]}/${c[3]}`);
   a.target.push({
     type: 'urn:example:republic:TextAnchorSelector',
     'start': c[0],
