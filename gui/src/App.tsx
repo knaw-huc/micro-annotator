@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {AnnotationListType} from './components/list/AnnotationList';
 import Annotator from './components/annotator/Annotator';
 import Config from './Config';
-import {Creator} from './components/Creator';
+import {Creator} from './components/creator/Creator';
 import Elucidate from './resources/Elucidate';
 import {ElucidateTarget} from './model/ElucidateAnnotation';
 import ErrorMsg from './components/common/ErrorMsg';
@@ -18,6 +18,7 @@ import {toMicroAnn} from './util/convert/toMicroAnn';
 import {toNewElucidateAnn} from './util/convert/toNewElucidateAnn';
 import {toUpdatableElucidateAnn} from './util/convert/toUpdatableElucidateAnn';
 import toVersionId from './util/convert/toVersionId';
+import {useCreatorContext} from './components/creator/CreatorContext';
 
 export default function App() {
 
@@ -72,18 +73,15 @@ export default function App() {
    */
   const [versionId, setVersionId] = useState<string>('');
 
-  /**
-   * User name when searching user annotations or creating new annotations
-   */
-  const [currentCreator, setCurrentCreator] = useState<string>(Config.CREATOR);
+  const {creatorState} = useCreatorContext();
 
   useEffect(() => {
     const getAnnotations = async () => {
-      if (!(beginRange && targetId && currentCreator && beginRange && endRange && annotatableText.length)) {
+      if (!(beginRange && targetId && creatorState && beginRange && endRange && annotatableText.length)) {
         return;
       }
       const found = annotationType === AnnotationListType.USER
-        ? await Elucidate.getByCreator(currentCreator)
+        ? await Elucidate.getByCreator(creatorState.creator)
         : await Elucidate.getByOverlap(targetId, beginRange, endRange);
       const converted = found
         .map(a => toMicroAnn(a, beginRange, annotatableText))
@@ -93,7 +91,7 @@ export default function App() {
     };
     getAnnotations()
       .catch(e => setError(e.message));
-  }, [targetId, currentCreator, beginRange, endRange, annotationType, annotatableText]);
+  }, [targetId, creatorState, beginRange, endRange, annotationType, annotatableText]);
 
   useEffect(() => {
     if (!annotationId) {
@@ -104,20 +102,20 @@ export default function App() {
   }, [annotationId]);
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
-    const toCreate = toNewElucidateAnn(a, currentCreator, annotatableText, beginRange, versionId);
+    const toCreate = toNewElucidateAnn(a, creatorState.creator, annotatableText, beginRange, versionId);
     const created = await Elucidate.create(versionId, toCreate);
     const createdRecogitoAnn = toMicroAnn(created, beginRange, annotatableText);
     setAnnotations([createdRecogitoAnn, ...annotations]);
-  }, [annotations, annotatableText, beginRange, currentCreator, versionId]);
+  }, [annotations, annotatableText, beginRange, creatorState, versionId]);
 
   const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
-    const toUpdate = toUpdatableElucidateAnn(a, versionId, currentCreator);
+    const toUpdate = toUpdatableElucidateAnn(a, versionId, creatorState.creator);
     const updated = await Elucidate.update(toUpdate);
     const converted = toMicroAnn(updated, beginRange, annotatableText);
     const i = annotations.findIndex(a => a.id === converted.id);
     annotations[i] = converted;
     setAnnotations([...annotations]);
-  }, [annotations, annotatableText, beginRange, currentCreator, versionId]);
+  }, [annotations, annotatableText, beginRange, creatorState, versionId]);
 
   const searchAnnotation = async (bodyId: string) => {
     if (!bodyId) {
@@ -151,14 +149,12 @@ export default function App() {
   };
 
   return (
+
     <div className="container">
       {error && <ErrorMsg
           msg={error}
       />}
-      <Creator
-        onChange={setCurrentCreator}
-        creator={currentCreator}
-      />
+      <Creator />
       <Search
         searchId={annotationId}
         onSearch={updateAnnotationId}
@@ -172,7 +168,6 @@ export default function App() {
           annotations={annotations}
           onAddAnnotation={addAnnotation}
           onUpdateAnnotation={updateAnnotation}
-          creator={currentCreator}
           selected={selectedAnnotation}
           onSelect={(a: MicroAnnotation | undefined) => setSelectedAnnotation(a)}
           onSearch={updateAnnotationId}
