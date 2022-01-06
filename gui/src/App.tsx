@@ -20,20 +20,14 @@ import {toUpdatableElucidateAnn} from './util/convert/toUpdatableElucidateAnn';
 import toVersionId from './util/convert/toVersionId';
 import {useCreatorContext} from './components/creator/CreatorContext';
 import {useErrorContext} from './components/error/ErrorContext';
+import {useSearchContext} from './components/search/SearchContext';
 
 export default function App() {
 
   const setErrorState = useErrorContext().setState;
 
-  /**
-   * Scan urls including image regions
-   */
-  const [imageRegions, setImageRegions] = useState([] as string[]);
-
-  /**
-   * Array of lines: text that can be annotated
-   */
-  const [annotatableText, setAnnotatableText] = useState([] as string[]);
+  const searchState = useSearchContext().state;
+  const setSearchState = useSearchContext().setState;
 
   /**
    * Annotations on display
@@ -55,27 +49,8 @@ export default function App() {
    */
   const [annotationId, setAnnotationId] = useState<string>(Config.PLACEHOLDER_SEARCH_ID);
 
-  /**
-   * Target ID of annotation linking to current text
-   */
-  const [targetId, setTargetId] = useState('');
+  const creatorState = useCreatorContext().state;
 
-  /**
-   * Line range of current text
-   */
-  const [beginRange, setBeginRange] = useState(0);
-  const [endRange, setEndRange] = useState(0);
-
-  /**
-   * Version ID, also used as elucidate collection ID
-   */
-  const [versionId, setVersionId] = useState<string>('');
-
-  const {state} = useCreatorContext();
-
-  /**
-   * Searching annotation
-   */
   const [searching, setSearching] = useState<boolean>(true);
 
   useEffect(() => {
@@ -83,75 +58,71 @@ export default function App() {
       if(searching) {
         return;
       }
-      if (!(beginRange && targetId && state && beginRange && endRange && annotatableText.length)) {
-        return;
-      }
       const found = annotationType === AnnotationListType.USER
-        ? await Elucidate.getByCreator(state.creator)
-        : await Elucidate.getByOverlap(targetId, beginRange, endRange);
+        ? await Elucidate.getByCreator(creatorState.creator)
+        : await Elucidate.getByOverlap(searchState.targetId, searchState.beginRange, searchState.endRange);
       const converted = found
-        .map(a => toMicroAnn(a, beginRange, annotatableText))
+        .map(a => toMicroAnn(a, searchState.beginRange, searchState.annotatableText))
         .filter(a => !['line', 'column'].includes(a.entity_type))
-        .filter(ann => isInRelativeRange(ann.coordinates, endRange - beginRange));
+        .filter(ann => isInRelativeRange(ann.coordinates, searchState.endRange - searchState.beginRange));
       setAnnotations(converted);
     };
     getAnnotations()
       .catch(e => setErrorState({message: e.message}));
-  }, [
-    searching, setAnnotations, targetId, state, beginRange,
-    endRange, annotationType, annotatableText, setErrorState
-  ]);
+  }, [searchState, annotationType, creatorState, setErrorState, searching]);
 
   useEffect(() => {
     if (!annotationId) {
       return;
     }
+    const searchAnnotation = async (bodyId: string) => {
+      if (!bodyId) {
+        return;
+      }
+      const foundAnn = await Elucidate.findByBodyId(bodyId);
+      if (!foundAnn.target || isString(foundAnn.target)) {
+        throw Error(`Could not find targets in annotation: ${JSON.stringify(foundAnn)}`);
+      }
+      const target = foundAnn.target as ElucidateTarget[];
+      const imageRegions = findImageRegions(target);
+      const versionId = toVersionId(foundAnn.id);
+      const selectorTarget = findSelectorTarget(foundAnn);
+      const annotatableText = await TextRepo.getByVersionIdAndRange(
+        versionId,
+        selectorTarget.selector.start,
+        selectorTarget.selector.end
+      );
+
+      setSearchState({
+        versionId,
+        annotatableText,
+        imageRegions,
+        targetId: selectorTarget.source,
+        beginRange: selectorTarget.selector.start,
+        endRange: selectorTarget.selector.end,
+        searching: false
+      });
+      setSearching(false);
+    };
     searchAnnotation(annotationId)
       .catch(e => setErrorState({message: e.message}));
-  }, [searching, annotationId, setErrorState]);
+  }, [searching, annotationId, setErrorState, setSearchState]);
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
-    const toCreate = toNewElucidateAnn(a, state.creator, annotatableText, beginRange, versionId);
-    const created = await Elucidate.create(versionId, toCreate);
-    const createdRecogitoAnn = toMicroAnn(created, beginRange, annotatableText);
+    const toCreate = toNewElucidateAnn(a, creatorState.creator, searchState.annotatableText, searchState.beginRange, searchState.versionId);
+    const created = await Elucidate.create(searchState.versionId, toCreate);
+    const createdRecogitoAnn = toMicroAnn(created, searchState.beginRange, searchState.annotatableText);
     setAnnotations([createdRecogitoAnn, ...annotations]);
-  }, [annotations, annotatableText, beginRange, state, versionId]);
+  }, [annotations, searchState, creatorState]);
 
   const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
-    const toUpdate = toUpdatableElucidateAnn(a, versionId, state.creator);
+    const toUpdate = toUpdatableElucidateAnn(a, searchState.versionId, creatorState.creator);
     const updated = await Elucidate.update(toUpdate);
-    const converted = toMicroAnn(updated, beginRange, annotatableText);
+    const converted = toMicroAnn(updated, searchState.beginRange, searchState.annotatableText);
     const i = annotations.findIndex(a => a.id === converted.id);
     annotations[i] = converted;
     setAnnotations([...annotations]);
-  }, [annotations, annotatableText, beginRange, state, versionId]);
-
-  const searchAnnotation = async (bodyId: string) => {
-    if (!bodyId) {
-      return;
-    }
-    const foundAnn = await Elucidate.findByBodyId(bodyId);
-    if (!foundAnn.target || isString(foundAnn.target)) {
-      throw Error(`Could not find targets in annotation: ${JSON.stringify(foundAnn)}`);
-    }
-    const target = foundAnn.target as ElucidateTarget[];
-    const imageRegions = findImageRegions(target);
-    const versionId = toVersionId(foundAnn.id);
-    const selectorTarget = findSelectorTarget(foundAnn);
-    const annotatableText = await TextRepo.getByVersionIdAndRange(
-      versionId,
-      selectorTarget.selector.start,
-      selectorTarget.selector.end
-    );
-    setAnnotations([]);
-    setVersionId(versionId);
-    setAnnotatableText(annotatableText);
-    setImageRegions(imageRegions);
-    setTargetId(selectorTarget.source);
-    setBeginRange(selectorTarget.selector.start);
-    setEndRange(selectorTarget.selector.end);
-    setSearching(false);
-  };
+  }, [annotations, searchState, creatorState]);
 
   const updateAnnotationId = (id: string) => {
     setAnnotations([]);
@@ -171,10 +142,10 @@ export default function App() {
       />
       <div className="row">
         <ImageColumn
-          images={imageRegions}
+          images={searchState.imageRegions}
         />
         <Annotator
-          text={annotatableText.join('\n')}
+          text={searchState.annotatableText.join('\n')}
           annotations={annotations}
           onAddAnnotation={addAnnotation}
           onUpdateAnnotation={updateAnnotation}

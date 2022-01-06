@@ -6,8 +6,6 @@ import {ContextType} from '../common/ContextType';
 /**
  * Error message, or falsy when no error
  */
-export const useErrorContext = () => useContext(ErrorContext);
-
 export type ErrorStateType = {
   message: string;
 }
@@ -20,5 +18,6 @@ export const defaultErrorContext = {
 } as ContextType<ErrorStateType>;
 
 export const ErrorContext = createContext(defaultErrorContext);
+export const useErrorContext = () => useContext(ErrorContext);
 export const errorReducer : (<T extends ErrorStateType>(s: T, a: T) => T) = baseReducer
 
