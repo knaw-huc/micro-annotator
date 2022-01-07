@@ -1,85 +1,96 @@
-import Typeahead, {TypeaheadItem} from '../common/Typeahead';
-import {useEffect, useState} from 'react';
+import SearchField from './SearchField';
+import {useCallback, useEffect} from 'react';
 import Elucidate from '../../resources/Elucidate';
-import {findBodyId} from '../../util/findBodyId';
-import {useDebounce} from '../../util/useDebounce';
+import isString from '../../util/isString';
+import {ElucidateTarget} from '../../model/ElucidateAnnotation';
+import findImageRegions from '../../util/findImageRegions';
+import toVersionId from '../../util/convert/toVersionId';
+import findSelectorTarget from '../../util/findSelectorTarget';
+import TextRepo from '../../resources/TextRepo';
+import {useErrorContext} from '../error/ErrorContext';
+import {useSearchContext} from './SearchContext';
 import {usePrevious} from '../../util/usePrevious';
+import {AnnotationListType} from '../list/AnnotationList';
+import {toMicroAnn} from '../../util/convert/toMicroAnn';
+import {isInRelativeRange} from '../../util/isInRelativeRange';
+import {useAnnotationTypeContext} from '../annotator/AnnotationTypeContext';
+import {useCreatorContext} from '../creator/CreatorContext';
 
-type SearchProps = {
-  searchId: string;
-  onSearch: (id: string) => void;
-}
+export default function Search() {
 
-export default function Search(props: SearchProps) {
-  const [items, setItems] = useState<TypeaheadItem[]>([]);
-  const [input, setInput] = useState<string>('');
-  const debouncedInput = useDebounce<string>(input, 250);
-  const previousInput = usePrevious(debouncedInput);
-  const previousSearchId = usePrevious(props.searchId);
+  const setErrorState = useErrorContext().setState;
+  const setSearchState = useSearchContext().setState;
+  const annotationTypeState = useAnnotationTypeContext().state;
+  const creatorState = useCreatorContext().state;
+  const searchState = useSearchContext().state;
+  const previousAnnotationId = usePrevious(searchState.annotationId);
+  const previousAnnotationType = usePrevious(annotationTypeState.annotationType);
 
-  useEffect(() => {
-    if(previousSearchId !== props.searchId) {
-      setInput(props.searchId);
-    }
-  }, [previousSearchId, props.searchId]);
-
-  async function handleTyping(inputValue: string) {
-    setInput(inputValue);
-  }
-
-  // Display suggestions:
-  useEffect(() => {
-    // Wait until input is debounced:
-    if (!debouncedInput || debouncedInput === previousInput) {
+  const searchAnnotation = useCallback(async (annotationId: string) => {
+    if (!annotationId) {
       return;
     }
 
-    // Remove suggestions when input matches picked search id:
-    if (debouncedInput === props.searchId) {
-      setItems([]);
+    const foundAnn = await Elucidate.findByBodyId(annotationId);
+    if (!foundAnn.target || isString(foundAnn.target)) {
+      setErrorState({message: `Could not find targets in annotation: ${JSON.stringify(foundAnn)}`});
       return;
     }
 
-    Elucidate.getFirstPageByBodyIdPrefix(debouncedInput).then((found) => {
-      if (!found) {
-        setItems([]);
-        return;
-      }
+    const target = foundAnn.target as ElucidateTarget[];
+    const imageRegions = findImageRegions(target);
+    const versionId = toVersionId(foundAnn.id);
+    const selectorTarget = findSelectorTarget(foundAnn);
+    const beginRange = selectorTarget.selector.start;
+    const endRange = selectorTarget.selector.end;
+    const targetId = selectorTarget.source;
 
-      const ids = Array.from(new Set(
-        found.map(findBodyId)
-      ));
+    const annotatableText = await TextRepo.getByVersionIdAndRange(
+      versionId,
+      beginRange,
+      endRange
+    );
 
-      const items = ids
-        .filter(i => i)
-        .sort()
-        .slice(0, 10)
-        .map(i => ({value: i} as TypeaheadItem));
-      setItems(items);
+    const found = annotationTypeState.annotationType === AnnotationListType.USER
+      ? await Elucidate.getByCreator(creatorState.creator)
+      : await Elucidate.getByOverlap(searchState.targetId, searchState.beginRange, searchState.endRange);
+    const annotations = found
+      .map(a => toMicroAnn(a, searchState.beginRange, searchState.annotatableText))
+      .filter(a => !['line', 'column'].includes(a.entity_type))
+      .filter(ann => isInRelativeRange(ann.coordinates, searchState.endRange - searchState.beginRange));
+
+    const searching = false;
+    setSearchState({
+      annotationId,
+      versionId,
+      annotatableText,
+      imageRegions,
+      targetId,
+      beginRange,
+      endRange,
+      annotations,
+      searching
     });
+  }, [searchState, annotationTypeState, creatorState, setSearchState, setErrorState]);
 
-  }, [debouncedInput, previousInput, props.searchId, setItems]);
-
-  function handleSelected(selected: string) {
-    if (selected === props.searchId) {
-      return;
+  /**
+   * Search on relevant context changes:
+   */
+  useEffect(() => {
+    const idChanged = searchState.annotationId !== previousAnnotationId;
+    const typeChanged = annotationTypeState.annotationType !== previousAnnotationType;
+    if (idChanged || typeChanged) {
+      searchAnnotation(searchState.annotationId)
+        .catch(e => setErrorState({message: e.message}));
     }
+  }, [
+    searchState.annotationId, previousAnnotationId,
+    annotationTypeState.annotationType, previousAnnotationType,
+    setErrorState, searchAnnotation
+  ]);
 
-    setItems([]);
-    props.onSearch(selected);
-  }
-
-  return <form className='add-form'>
-    <div className='form-control'>
-      <label>Annotation ID</label>
-      <Typeahead
-        items={items}
-        input={input}
-        selected={props.searchId}
-        onType={handleTyping}
-        onSelect={handleSelected}
-      />
-    </div>
-  </form>;
+  return <SearchField
+    onSearch={searchAnnotation}
+  />
 }
 

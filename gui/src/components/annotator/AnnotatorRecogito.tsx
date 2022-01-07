@@ -19,6 +19,7 @@ interface RecogitoDocumentProps {
 }
 
 export const AnnotatorRecogito = (props: RecogitoDocumentProps) => {
+
   const rootName = 'recogito-root';
 
   useEffect(() => {
@@ -76,7 +77,7 @@ export const AnnotatorRecogito = (props: RecogitoDocumentProps) => {
       r.destroy();
     };
 
-  }, [props]);
+  }, [props, props.annotations]);
 
   return <AnnotatorRoot id={rootName} className="recogito-doc"/>;
 };

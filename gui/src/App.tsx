@@ -1,153 +1,83 @@
 import {useCallback, useEffect, useState} from 'react';
-import {AnnotationListType} from './components/list/AnnotationList';
 import Annotator from './components/annotator/Annotator';
-import Config from './Config';
 import {Creator} from './components/creator/Creator';
 import Elucidate from './resources/Elucidate';
-import {ElucidateTarget} from './model/ElucidateAnnotation';
 import ErrorMsg from './components/error/ErrorMsg';
-import findImageRegions from './util/findImageRegions';
-import findSelectorTarget from './util/findSelectorTarget';
 import ImageColumn from './components/image/ImageColumn';
-import {isInRelativeRange} from './util/isInRelativeRange';
-import isString from './util/isString';
 import {MicroAnnotation} from './model/Annotation';
 import Search from './components/search/Search';
-import TextRepo from './resources/TextRepo';
 import {toMicroAnn} from './util/convert/toMicroAnn';
 import {toNewElucidateAnn} from './util/convert/toNewElucidateAnn';
 import {toUpdatableElucidateAnn} from './util/convert/toUpdatableElucidateAnn';
-import toVersionId from './util/convert/toVersionId';
 import {useCreatorContext} from './components/creator/CreatorContext';
-import {useErrorContext} from './components/error/ErrorContext';
 import {useSearchContext} from './components/search/SearchContext';
 
 export default function App() {
 
-  const setErrorState = useErrorContext().setState;
-
   const searchState = useSearchContext().state;
   const setSearchState = useSearchContext().setState;
-
-  /**
-   * Annotations on display
-   */
-  const [annotations, setAnnotations] = useState<MicroAnnotation[]>([]);
 
   /**
    * Selected annotation in annotation list, or falsy when no annotation
    */
   const [selectedAnnotation, setSelectedAnnotation] = useState<MicroAnnotation>();
 
-  /**
-   * Type of annotations shown
-   */
-  const [annotationType, setAnnotationType] = useState(AnnotationListType.USER);
-
-  /**
-   * Body ID of annotation linking to current text
-   */
-  const [annotationId, setAnnotationId] = useState<string>(Config.PLACEHOLDER_SEARCH_ID);
-
   const creatorState = useCreatorContext().state;
-
-  /**
-   * Busy requesting selected annotation and text and elucidate and textrepo?
-   */
-  const [searching, setSearching] = useState<boolean>(true);
-
-  useEffect(() => {
-    const getAnnotations = async () => {
-      if (searching) {
-        return;
-      }
-      const found = annotationType === AnnotationListType.USER
-        ? await Elucidate.getByCreator(creatorState.creator)
-        : await Elucidate.getByOverlap(searchState.targetId, searchState.beginRange, searchState.endRange);
-      const converted = found
-        .map(a => toMicroAnn(a, searchState.beginRange, searchState.annotatableText))
-        .filter(a => !['line', 'column'].includes(a.entity_type))
-        .filter(ann => isInRelativeRange(ann.coordinates, searchState.endRange - searchState.beginRange));
-      setAnnotations(converted);
-    };
-    getAnnotations()
-      .catch(e => setErrorState({message: e.message}));
-  }, [searchState, searching, annotationType, creatorState, setErrorState]);
-
-  useEffect(() => {
-    const searchAnnotation = async () => {
-      if (!annotationId) {
-        return;
-      }
-      const foundAnn = await Elucidate.findByBodyId(annotationId);
-      if (!foundAnn.target || isString(foundAnn.target)) {
-        throw Error(`Could not find targets in annotation: ${JSON.stringify(foundAnn)}`);
-      }
-      const target = foundAnn.target as ElucidateTarget[];
-      const imageRegions = findImageRegions(target);
-      const versionId = toVersionId(foundAnn.id);
-      const selectorTarget = findSelectorTarget(foundAnn);
-      const beginRange = selectorTarget.selector.start;
-      const endRange = selectorTarget.selector.end;
-      const targetId = selectorTarget.source;
-
-      const annotatableText = await TextRepo.getByVersionIdAndRange(
-        versionId,
-        beginRange,
-        endRange
-      );
-
-      setSearchState({versionId, annotatableText, imageRegions, targetId, beginRange, endRange});
-      setSearching(false);
-    };
-    searchAnnotation()
-      .catch(e => setErrorState({message: e.message}));
-  }, [searching, annotationId, setErrorState, setSearchState]);
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
     const toCreate = toNewElucidateAnn(a, creatorState.creator, searchState);
     const created = await Elucidate.create(searchState.versionId, toCreate);
     const createdRecogitoAnn = toMicroAnn(created, searchState.beginRange, searchState.annotatableText);
-    setAnnotations([createdRecogitoAnn, ...annotations]);
-  }, [annotations, searchState, creatorState]);
+    const annotations = searchState.annotations;
+    annotations.push(createdRecogitoAnn);
+    setSearchState({...searchState, annotations});
+  }, [searchState, setSearchState, creatorState]);
 
   const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
     const toUpdate = toUpdatableElucidateAnn(a, searchState.versionId, creatorState.creator);
     const updated = await Elucidate.update(toUpdate);
     const converted = toMicroAnn(updated, searchState.beginRange, searchState.annotatableText);
+    let annotations = searchState.annotations;
     const i = annotations.findIndex(a => a.id === converted.id);
     annotations[i] = converted;
-    setAnnotations([...annotations]);
-  }, [annotations, searchState, creatorState]);
+    setSearchState({...searchState, annotations});
+  }, [searchState, setSearchState, creatorState]);
 
-  const updateAnnotationId = (id: string) => {
-    setAnnotations([]);
+  function removeAnnotations() {
     setSelectedAnnotation(undefined);
-    setAnnotationId(id);
-    setSearching(true);
+  }
+
+  const updateAnnotationId = (annotationId: string) => {
+    removeAnnotations();
+    const searching = true;
+    setSearchState({
+      annotationId,
+      searching
+    })
   };
+
+  useEffect(() => {
+    if (searchState.searching) {
+      removeAnnotations();
+    }
+  }, [searchState])
 
   return <div className="container">
     <ErrorMsg/>
     <Creator/>
-    <Search
-      searchId={annotationId}
-      onSearch={updateAnnotationId}
-    />
+    <Search/>
     <div className="row">
       <ImageColumn
         images={searchState.imageRegions}
       />
       <Annotator
         text={searchState.annotatableText.join('\n')}
-        annotations={annotations}
+        annotations={searchState.annotations}
         onAddAnnotation={addAnnotation}
         onUpdateAnnotation={updateAnnotation}
         selected={selectedAnnotation}
         onSelect={(a: MicroAnnotation | undefined) => setSelectedAnnotation(a)}
         onSearch={updateAnnotationId}
-        annotationType={annotationType}
-        onSetAnnotationType={setAnnotationType}
       />
     </div>
   </div>;

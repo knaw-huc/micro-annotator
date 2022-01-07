@@ -1,12 +1,28 @@
 import {createContext, useContext} from 'react';
 import {dummyProvider} from '../../util/dummyProvider';
-import {ContextType} from '../common/ContextType';
+import Config from '../../Config';
+import {MicroAnnotation} from '../../model/Annotation';
 
 /**
  * Searched annotation and related fields
  */
 export const useSearchContext = () => useContext(SearchContext);
-export type SearchStateType = {
+
+export type SearchingStateType = {
+
+  /**
+   * Body ID of annotation linking to current text
+   */
+  annotationId: string,
+
+  /**
+   * Requestion annotation resources from elucidate and textrepo
+   */
+  searching: boolean
+
+}
+
+export type SearchStateType = SearchingStateType & {
 
   /**
    * Version ID, also used as elucidate collection ID
@@ -34,31 +50,58 @@ export type SearchStateType = {
   beginRange: number,
   endRange: number,
 
+  /**
+   * Annotations on display
+   */
+  annotations: MicroAnnotation[]
+
 };
 
 export const defaultSearchContext = {
   state: {
+    annotationId: Config.PLACEHOLDER_SEARCH_ID,
     versionId: '',
     annotatableText: [],
     imageRegions: [],
     targetId: '',
     beginRange: 0,
-    endRange: 0
+    endRange: 0,
+    annotations: [],
+    searching: true
   },
   setState: dummyProvider
-} as ContextType<SearchStateType>;
+} as {
+  state: SearchStateType;
+  setState: (a: SearchingStateType | SearchStateType) => void
+};
 
 export const SearchContext = createContext(defaultSearchContext);
 
 /**
- * Copy fields from action to state that exist both in action and state
+ * When searching: only annotationId is available
+ * When not searching: all annotation and associated fields should be present
  */
-export const searchReducer = (state: SearchStateType, action: SearchStateType): SearchStateType => {
+export const searchReducer = (
+  state: SearchStateType,
+  action: SearchingStateType | SearchStateType
+): SearchStateType => {
+  const searching = action.searching;
+  if (searching) {
+    const annotationId = action.annotationId;
+    return Object.assign(
+      {searching, annotationId} as SearchStateType,
+      defaultSearchContext,
+    );
+  }
+
+  // Copy fields from action to state that exist both in action and state:
+  const result = {} as any;
   Object.keys(state).forEach((key: any) => {
     if ((action as any)[key]) {
-      (state as any)[key] = (action as any)[key];
+      result[key] = (action as any)[key];
     }
   });
-  return state;
+
+  return result;
 }
 

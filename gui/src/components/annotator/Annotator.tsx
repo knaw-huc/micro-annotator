@@ -1,8 +1,7 @@
 import {Annotation, MicroAnnotation} from '../../model/Annotation';
-import AnnotationList, {AnnotationListType} from '../list/AnnotationList';
+import AnnotationList from '../list/AnnotationList';
 import {AnnotatorDocument} from './AnnotatorDocument';
-import {browsableAnnotations} from '../list/AnnotationItem';
-import {useCreatorContext} from '../creator/CreatorContext';
+import AnnotationTypeField from './AnnotationTypeField';
 
 type RecogitoAnnotatorProps = {
   annotations: MicroAnnotation[];
@@ -12,48 +11,23 @@ type RecogitoAnnotatorProps = {
   onAddAnnotation: (ann: any) => void;
   onUpdateAnnotation: (ann: any) => void;
   text: string;
-  annotationType: AnnotationListType;
-  onSetAnnotationType: (t: AnnotationListType) => void;
 }
 
 export default function Annotator(props: RecogitoAnnotatorProps) {
-  const {state} = useCreatorContext();
-
-  const changeToUser = () => props.onSetAnnotationType(AnnotationListType.USER);
-  const changeToRange = () => props.onSetAnnotationType(AnnotationListType.RANGE);
-
-  const recogitoAnnotations = props.annotationType === AnnotationListType.USER
-    ? props.annotations.filter(a => !browsableAnnotations.includes(a.entity_type))
-    : props.selected !== undefined
-      ? [props.selected]
-      : [];
 
   return <>
     <div className="annotator-column">
       <AnnotatorDocument
         text={props.text}
-        annotations={recogitoAnnotations}
         onAddAnnotation={props.onAddAnnotation}
         onUpdateAnnotation={props.onUpdateAnnotation}
-        creator={state.creator}
-        readOnly={props.annotationType === AnnotationListType.RANGE}
+        selected={props.selected}
       />
     </div>
     <div className="annotator-column">
       <h4>Annotations</h4>
-      <div className="tabs clearfix">
-        <button
-          className={'btn btn-block btn-tab' + (props.annotationType === AnnotationListType.USER ? '' : ' btn-tab-unselected')}
-          onClick={changeToUser}
-        >
-          By user
-        </button>
-        <button
-          className={'btn btn-block btn-tab' + (props.annotationType === AnnotationListType.RANGE ? '' : ' btn-tab-unselected')}
-          onClick={changeToRange}
-        >
-          Overlap
-        </button>
+      <div>
+        <AnnotationTypeField />
       </div>
       <AnnotationList
         annotations={props.annotations}
