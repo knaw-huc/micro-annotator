@@ -58,7 +58,7 @@ export default function App() {
 
   useEffect(() => {
     const getAnnotations = async () => {
-      if(searching) {
+      if (searching) {
         return;
       }
       const found = annotationType === AnnotationListType.USER
@@ -75,14 +75,11 @@ export default function App() {
   }, [searchState, searching, annotationType, creatorState, setErrorState]);
 
   useEffect(() => {
-    if (!annotationId) {
-      return;
-    }
-    const searchAnnotation = async (bodyId: string) => {
-      if (!bodyId) {
+    const searchAnnotation = async () => {
+      if (!annotationId) {
         return;
       }
-      const foundAnn = await Elucidate.findByBodyId(bodyId);
+      const foundAnn = await Elucidate.findByBodyId(annotationId);
       if (!foundAnn.target || isString(foundAnn.target)) {
         throw Error(`Could not find targets in annotation: ${JSON.stringify(foundAnn)}`);
       }
@@ -103,7 +100,7 @@ export default function App() {
       setSearchState({versionId, annotatableText, imageRegions, targetId, beginRange, endRange});
       setSearching(false);
     };
-    searchAnnotation(annotationId)
+    searchAnnotation()
       .catch(e => setErrorState({message: e.message}));
   }, [searching, annotationId, setErrorState, setSearchState]);
 
@@ -130,32 +127,29 @@ export default function App() {
     setSearching(true);
   };
 
-  return (
-
-    <div className="container">
-      <ErrorMsg />
-      <Creator />
-      <Search
-        searchId={annotationId}
-        onSearch={updateAnnotationId}
+  return <div className="container">
+    <ErrorMsg/>
+    <Creator/>
+    <Search
+      searchId={annotationId}
+      onSearch={updateAnnotationId}
+    />
+    <div className="row">
+      <ImageColumn
+        images={searchState.imageRegions}
       />
-      <div className="row">
-        <ImageColumn
-          images={searchState.imageRegions}
-        />
-        <Annotator
-          text={searchState.annotatableText.join('\n')}
-          annotations={annotations}
-          onAddAnnotation={addAnnotation}
-          onUpdateAnnotation={updateAnnotation}
-          selected={selectedAnnotation}
-          onSelect={(a: MicroAnnotation | undefined) => setSelectedAnnotation(a)}
-          onSearch={updateAnnotationId}
-          annotationType={annotationType}
-          onSetAnnotationType={setAnnotationType}
-        />
-      </div>
+      <Annotator
+        text={searchState.annotatableText.join('\n')}
+        annotations={annotations}
+        onAddAnnotation={addAnnotation}
+        onUpdateAnnotation={updateAnnotation}
+        selected={selectedAnnotation}
+        onSelect={(a: MicroAnnotation | undefined) => setSelectedAnnotation(a)}
+        onSearch={updateAnnotationId}
+        annotationType={annotationType}
+        onSetAnnotationType={setAnnotationType}
+      />
     </div>
-  );
+  </div>;
 }
 
