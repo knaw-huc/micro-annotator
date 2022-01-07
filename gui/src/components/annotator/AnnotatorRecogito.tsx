@@ -2,6 +2,7 @@ import '@recogito/recogito-js/dist/recogito.min.css';
 import {AnnotatorRoot} from './AnnotatorRoot';
 import {Recogito} from '@recogito/recogito-js';
 import {useEffect} from 'react';
+import {MicroAnnotation} from '../../model/Annotation';
 
 const VOCABULARY = [
   {label: 'place', uri: 'https://dbpedia.org/property/place'},
@@ -12,7 +13,7 @@ const VOCABULARY = [
 interface RecogitoDocumentProps {
   onAddAnnotation: (ann: any) => void;
   onUpdateAnnotation: (ann: any) => void;
-  annotations: {}[];
+  annotations: MicroAnnotation[];
   text: string;
   creator: string;
   readOnly: boolean;

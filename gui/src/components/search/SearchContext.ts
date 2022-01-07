@@ -92,16 +92,8 @@ export const searchReducer = (
       {searching, annotationId} as SearchStateType,
       defaultSearchContext,
     );
+  } else {
+    return action as SearchStateType;
   }
-
-  // Copy fields from action to state that exist both in action and state:
-  const result = {} as any;
-  Object.keys(state).forEach((key: any) => {
-    if ((action as any)[key]) {
-      result[key] = (action as any)[key];
-    }
-  });
-
-  return result;
 }
 

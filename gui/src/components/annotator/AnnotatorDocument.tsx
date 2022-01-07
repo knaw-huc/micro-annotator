@@ -4,30 +4,36 @@ import {AnnotationListType} from '../list/AnnotationList';
 import {browsableAnnotations} from '../list/AnnotationItem';
 import {useCreatorContext} from '../creator/CreatorContext';
 import {useSearchContext} from '../search/SearchContext';
-import {Annotation} from '../../model/Annotation';
+import {useSelectedAnnotationContext} from '../list/SelectedAnnotationContext';
+import {MicroAnnotation} from '../../model/Annotation';
 
 interface AnnotatorDocumentProps {
   onAddAnnotation: (ann: any) => void;
   onUpdateAnnotation: (ann: any) => void;
   text: string;
-  selected: Annotation | undefined;
 }
 
 export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
 
-  const creatorState = useCreatorContext().state;
-  const searchState = useSearchContext().state;
-  const annotationTypeState = useAnnotationTypeContext().state;
+  const creator = useCreatorContext().state.creator;
+  const annotations = useSearchContext().state.annotations;
+  const annotationType = useAnnotationTypeContext().state.annotationType;
+  const selectedAnnotation = useSelectedAnnotationContext().state.selected;
 
-  let recogitoAnnotations;
-  const displayUserAnnotations = annotationTypeState.annotationType === AnnotationListType.USER;
+  const displayUserAnnotations = annotationType === AnnotationListType.USER;
+
+  const displaySelectedAnnotation = annotationType === AnnotationListType.RANGE
+    && selectedAnnotation
+    && annotations.indexOf(selectedAnnotation) !== -1;
+
+  let recogitoAnnotations: MicroAnnotation[];
   if (displayUserAnnotations) {
-    recogitoAnnotations = searchState.annotations
+    recogitoAnnotations = annotations
       .filter(a => !browsableAnnotations.includes(a.entity_type));
+  } else if (displaySelectedAnnotation) {
+    recogitoAnnotations = [selectedAnnotation];
   } else {
-    recogitoAnnotations = props.selected
-      ? [props.selected]
-      : [];
+    recogitoAnnotations = []
   }
 
   return <AnnotatorRecogito
@@ -35,8 +41,8 @@ export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
     annotations={recogitoAnnotations}
     onAddAnnotation={props.onAddAnnotation}
     onUpdateAnnotation={props.onUpdateAnnotation}
-    creator={creatorState.creator}
-    readOnly={annotationTypeState.annotationType === AnnotationListType.RANGE}
+    creator={creator}
+    readOnly={annotationType === AnnotationListType.RANGE}
   />;
 };
 

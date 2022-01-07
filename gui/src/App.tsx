@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback} from 'react';
 import Annotator from './components/annotator/Annotator';
 import {Creator} from './components/creator/Creator';
 import Elucidate from './resources/Elucidate';
@@ -11,16 +11,14 @@ import {toNewElucidateAnn} from './util/convert/toNewElucidateAnn';
 import {toUpdatableElucidateAnn} from './util/convert/toUpdatableElucidateAnn';
 import {useCreatorContext} from './components/creator/CreatorContext';
 import {useSearchContext} from './components/search/SearchContext';
+import {useSelectedAnnotationContext} from './components/list/SelectedAnnotationContext';
 
 export default function App() {
 
   const searchState = useSearchContext().state;
   const setSearchState = useSearchContext().setState;
 
-  /**
-   * Selected annotation in annotation list, or falsy when no annotation
-   */
-  const [selectedAnnotation, setSelectedAnnotation] = useState<MicroAnnotation>();
+  const setSelectedAnnotation = useSelectedAnnotationContext().setState;
 
   const creatorState = useCreatorContext().state;
 
@@ -43,24 +41,15 @@ export default function App() {
     setSearchState({...searchState, annotations});
   }, [searchState, setSearchState, creatorState]);
 
-  function removeAnnotations() {
-    setSelectedAnnotation(undefined);
-  }
-
+  // TODO: remove:
   const updateAnnotationId = (annotationId: string) => {
-    removeAnnotations();
+    setSelectedAnnotation({selected: undefined});
     const searching = true;
     setSearchState({
       annotationId,
       searching
     })
   };
-
-  useEffect(() => {
-    if (searchState.searching) {
-      removeAnnotations();
-    }
-  }, [searchState])
 
   return <div className="container">
     <ErrorMsg/>
@@ -75,8 +64,6 @@ export default function App() {
         annotations={searchState.annotations}
         onAddAnnotation={addAnnotation}
         onUpdateAnnotation={updateAnnotation}
-        selected={selectedAnnotation}
-        onSelect={(a: MicroAnnotation | undefined) => setSelectedAnnotation(a)}
         onSearch={updateAnnotationId}
       />
     </div>

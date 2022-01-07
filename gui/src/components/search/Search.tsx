@@ -77,12 +77,13 @@ export default function Search() {
    * Search on relevant context changes:
    */
   useEffect(() => {
-    const idChanged = searchState.annotationId !== previousAnnotationId;
-    const typeChanged = annotationTypeState.annotationType !== previousAnnotationType;
-    if (idChanged || typeChanged) {
-      searchAnnotation(searchState.annotationId)
-        .catch(e => setErrorState({message: e.message}));
+    const idEqual = searchState.annotationId === previousAnnotationId;
+    const typeEqual = annotationTypeState.annotationType === previousAnnotationType;
+    if (idEqual && typeEqual) {
+      return;
     }
+    searchAnnotation(searchState.annotationId)
+      .catch(e => setErrorState({message: e.message}));
   }, [
     searchState.annotationId, previousAnnotationId,
     annotationTypeState.annotationType, previousAnnotationType,
