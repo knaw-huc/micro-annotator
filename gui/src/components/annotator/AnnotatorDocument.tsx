@@ -10,11 +10,11 @@ import {MicroAnnotation} from '../../model/Annotation';
 interface AnnotatorDocumentProps {
   onAddAnnotation: (ann: any) => void;
   onUpdateAnnotation: (ann: any) => void;
-  text: string;
 }
 
 export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
 
+  const text = useSearchContext().state.annotatableText;
   const creator = useCreatorContext().state.creator;
   const annotations = useSearchContext().state.annotations;
   const annotationType = useAnnotationTypeContext().state.annotationType;
@@ -37,7 +37,7 @@ export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
   }
 
   return <AnnotatorRecogito
-    text={props.text}
+    text={text.join('\n')}
     annotations={recogitoAnnotations}
     onAddAnnotation={props.onAddAnnotation}
     onUpdateAnnotation={props.onUpdateAnnotation}

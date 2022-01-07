@@ -1,10 +1,9 @@
-import {MicroAnnotation} from '../../model/Annotation';
 import AnnotationItem from './AnnotationItem';
 import {useSelectedAnnotationContext} from './SelectedAnnotationContext';
+import {useSearchContext} from '../search/SearchContext';
 
 type AnnotationListProps = {
-  annotations: MicroAnnotation[];
-  onSearch: (id: string) => void;
+  onSelect: (id: string) => void;
 }
 
 export enum AnnotationListType {
@@ -14,19 +13,20 @@ export enum AnnotationListType {
 
 export default function AnnotationList(props: AnnotationListProps) {
 
+  const annotations = useSearchContext().state.annotations;
   const selectedAnnotation = useSelectedAnnotationContext().state.selected;
   const setSelectedAnnotationState = useSelectedAnnotationContext().setState;
 
   return (
     <div>
-      {props.annotations.map((annotation, index) => (
+      {annotations.map((annotation, index) => (
         <AnnotationItem
           key={index}
           annot_id={index}
           annotation={annotation}
           selected={selectedAnnotation?.id === annotation.id}
           onSelect={(selected) => setSelectedAnnotationState({selected})}
-          onSearch={props.onSearch}
+          onSearch={props.onSelect}
         />
       ))}
     </div>
