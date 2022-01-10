@@ -18,11 +18,17 @@ import {useSelectedAnnotationContext} from '../list/SelectedAnnotationContext';
 
 export default function Search() {
 
-  const creator = useCreatorContext().state.creator;
-  const searchState = useSearchContext().state;
-  const setErrorState = useErrorContext().setState;
-  const setSearchState = useSearchContext().setState;
-  const setSelectedAnnotation = useSelectedAnnotationContext().setState;
+  const creator = useCreatorContext()
+    .state
+    .creator;
+  const searchState = useSearchContext()
+    .state;
+  const setErrorState = useErrorContext()
+    .setState;
+  const setSearchState = useSearchContext()
+    .setState;
+  const setSelectedAnnotation = useSelectedAnnotationContext()
+    .setState;
 
   const previousAnnotationId = usePrevious(searchState.annotationId);
 
@@ -51,8 +57,18 @@ export default function Search() {
       endRange
     );
 
-    const overlappingAnnotations = await getOverlapping(targetId, beginRange, endRange, annotatableText);
-    const userAnnotations = await getByUser(creator, beginRange, endRange, annotatableText);
+    const overlappingAnnotations = await getOverlapping(
+      targetId,
+      beginRange,
+      endRange,
+      annotatableText
+    );
+    const userAnnotations = await getByUser(
+      creator,
+      beginRange,
+      endRange,
+      annotatableText
+    );
 
     const searching = false;
     setSearchState({

@@ -15,10 +15,16 @@ export enum AnnotationListType {
 
 export default function AnnotationList(props: AnnotationListProps) {
 
-  const searchContext = useSearchContext().state;
-  const selectedAnnotation = useSelectedAnnotationContext().state.selected;
-  const setSelectedAnnotationState = useSelectedAnnotationContext().setState;
-  const annotationType = useAnnotationTypeContext().state.annotationType;
+  const searchContext = useSearchContext()
+    .state;
+  const selectedAnnotation = useSelectedAnnotationContext()
+    .state
+    .selected;
+  const setSelectedAnnotationState = useSelectedAnnotationContext()
+    .setState;
+  const annotationType = useAnnotationTypeContext()
+    .state
+    .annotationType;
 
   const annotations = annotationType === AnnotationListType.USER
     ? searchContext.userAnnotations

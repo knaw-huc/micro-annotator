@@ -10,8 +10,14 @@ function alwaysMemo() {
 }
 
 /**
- * Create a single, persistent dom node for all recogito instances
+ * Create a single persistent dom node
+ * for all recogito instances
  */
-export const AnnotatorRoot = memo((props: RecogitoRootProps) => {
-  return <div id={props.id} className={props.className}/>;
+export const AnnotatorRoot = memo((
+  props: RecogitoRootProps
+) => {
+  return <div
+    id={props.id}
+    className={props.className}
+  />;
 }, alwaysMemo());

@@ -15,11 +15,20 @@ interface AnnotatorDocumentProps {
 
 export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
 
-  const text = useSearchContext().state.annotatableText;
-  const creator = useCreatorContext().state.creator;
-  const searchState = useSearchContext().state;
-  const annotationType = useAnnotationTypeContext().state.annotationType;
-  const selectedAnnotation = useSelectedAnnotationContext().state.selected;
+  const text = useSearchContext()
+    .state
+    .annotatableText;
+  const creator = useCreatorContext()
+    .state
+    .creator;
+  const searchState = useSearchContext()
+    .state;
+  const annotationType = useAnnotationTypeContext()
+    .state
+    .annotationType;
+  const selectedAnnotation = useSelectedAnnotationContext()
+    .state
+    .selected;
 
   const displayUserAnnotations = annotationType === AnnotationListType.USER;
 

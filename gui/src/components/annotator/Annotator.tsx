@@ -21,8 +21,10 @@ export default function Annotator() {
     setSearchState({searching, annotationId});
   };
 
-  const addAnnotation = useCallback(async (a: MicroAnnotation) => {
-    const toCreate = toNewElucidateAnn(a, creator, searchState);
+  const addAnnotation = useCallback(async (
+    annotation: MicroAnnotation
+  ) => {
+    const toCreate = toNewElucidateAnn(annotation, creator, searchState);
     const created = await Elucidate.create(searchState.versionId, toCreate);
     const createdRecogitoAnn = toMicroAnn(created, searchState.beginRange, searchState.annotatableText);
     const userAnnotations = searchState.userAnnotations;
@@ -30,8 +32,10 @@ export default function Annotator() {
     setSearchState({...searchState, userAnnotations});
   }, [searchState, setSearchState, creator]);
 
-  const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
-    const toUpdate = toUpdatableElucidateAnn(a, searchState.versionId, creator);
+  const updateAnnotation = useCallback(async (
+    annotation: MicroAnnotation
+  ) => {
+    const toUpdate = toUpdatableElucidateAnn(annotation, searchState.versionId, creator);
     const updated = await Elucidate.update(toUpdate);
     const converted = toMicroAnn(updated, searchState.beginRange, searchState.annotatableText);
     const userAnnotations = searchState.userAnnotations;

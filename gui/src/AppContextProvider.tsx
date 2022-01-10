@@ -38,12 +38,29 @@ export default function AppContextProvider() {
   );
 
   return <>
-    <ErrorContext.Provider value={{state: errorState, setState: setErrorState}}>
-      <CreatorContext.Provider value={{state: creatorState, setState: setCreatorState}}>
-        <AnnotationTypeContext.Provider value={{state: annotationTypeState, setState: setAnnotationTypeState}}>
-          <SelectedAnnotationContext.Provider value={{state: selectedAnnotationState, setState: setSelectedAnnotation}}>
-            <SearchContext.Provider value={{state: searchState, setState: setSearchState}}>
+    <ErrorContext.Provider value={{
+      state: errorState,
+      setState: setErrorState
+    }}>
+      <CreatorContext.Provider value={{
+        state: creatorState,
+        setState: setCreatorState
+      }}>
+        <AnnotationTypeContext.Provider value={{
+          state: annotationTypeState,
+          setState: setAnnotationTypeState
+        }}>
+          <SelectedAnnotationContext.Provider value={{
+            state: selectedAnnotationState,
+            setState: setSelectedAnnotation
+          }}>
+            <SearchContext.Provider value={{
+              state: searchState,
+              setState: setSearchState
+            }}>
+
               <App/>
+
             </SearchContext.Provider>
           </SelectedAnnotationContext.Provider>
         </AnnotationTypeContext.Provider>

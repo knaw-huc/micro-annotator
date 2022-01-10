@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import AnnotationItemSummery from './AnnotationItemSummery';
+import AnnotationItemContent from './AnnotationItemContent';
 import {findBodyId} from '../../util/findBodyId';
 import {MicroAnnotation} from '../../model/Annotation';
 import toRange from '../../util/convert/toRange';
@@ -56,7 +56,7 @@ export default function AnnotationItem(props: AnnotationSnippetProps) {
             🔎
         </button>}
       </div>
-      {isOpen && <AnnotationItemSummery ann={props.annotation}/>}
+      {isOpen && <AnnotationItemContent ann={props.annotation}/>}
     </div>
   );
 }
