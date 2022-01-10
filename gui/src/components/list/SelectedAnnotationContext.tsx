@@ -1,7 +1,7 @@
 import {createContext, useContext} from 'react';
-import {dummyProvider} from '../../util/dummyProvider';
 import {baseReducer} from '../../util/baseReducer';
 import {ContextType} from '../common/ContextType';
+import {dummyProvider} from '../../util/dummyProvider';
 import {MicroAnnotation} from '../../model/Annotation';
 
 /**
@@ -20,5 +20,5 @@ export const defaultSelectedAnnotationContext = {
 } as ContextType<SelectedAnnotationStateType>;
 
 export const SelectedAnnotationContext = createContext(defaultSelectedAnnotationContext);
-export const selectedAnnotationReducer : (<T extends SelectedAnnotationStateType>(s: T, a: T) => T) = baseReducer
+export const selectedAnnotationReducer : (<T extends SelectedAnnotationStateType>(s: T, a: T) => T) = baseReducer;
 

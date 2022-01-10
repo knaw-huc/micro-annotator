@@ -1,11 +1,11 @@
-import {AnnotatorRecogito} from './AnnotatorRecogito';
-import {useAnnotationTypeContext} from './AnnotationTypeContext';
 import {AnnotationListType} from '../list/AnnotationList';
+import {AnnotatorRecogito} from './AnnotatorRecogito';
 import {browsableAnnotations} from '../list/AnnotationItem';
+import {MicroAnnotation} from '../../model/Annotation';
+import {useAnnotationTypeContext} from './AnnotationTypeContext';
 import {useCreatorContext} from '../creator/CreatorContext';
 import {useSearchContext} from '../search/SearchContext';
 import {useSelectedAnnotationContext} from '../list/SelectedAnnotationContext';
-import {MicroAnnotation} from '../../model/Annotation';
 
 interface AnnotatorDocumentProps {
   onAddAnnotation: (ann: any) => void;
@@ -33,7 +33,7 @@ export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
   } else if (displaySelectedAnnotation) {
     recogitoAnnotations = [selectedAnnotation];
   } else {
-    recogitoAnnotations = []
+    recogitoAnnotations = [];
   }
 
   return <AnnotatorRecogito

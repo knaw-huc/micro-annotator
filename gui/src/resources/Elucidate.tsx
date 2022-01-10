@@ -27,7 +27,7 @@ export default class Elucidate {
       headers: this.headers,
       body: JSON.stringify(a)
     });
-    return await this.withEtag(response);
+    return await response.json() as ElucidateAnnotation;
   }
 
   static async update(a: MicroAnnotation): Promise<ElucidateAnnotation> {
@@ -41,7 +41,7 @@ export default class Elucidate {
       body: JSON.stringify(a)
     });
 
-    return await this.withEtag(response);
+    return await response.json() as ElucidateAnnotation;
   }
 
   private static async withETagHeader(a: MicroAnnotation, headers: {}) {
@@ -51,17 +51,6 @@ export default class Elucidate {
       throw new Error('Could not create If-Match header from ' + eTag);
     }
     return Object.assign({'If-Match': ifMatch}, headers);
-  }
-
-  private static async withEtag(response: Response) {
-    const result = await response.json() as ElucidateAnnotation;
-    const eTag = response.headers.get('ETag');
-    if (eTag) {
-      result.ETag = eTag;
-    } else {
-      throw new Error('No etag found in: ' + JSON.stringify(response.headers));
-    }
-    return result;
   }
 
   /**

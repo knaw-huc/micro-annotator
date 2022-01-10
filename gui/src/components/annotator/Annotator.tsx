@@ -1,28 +1,24 @@
 import AnnotationList from '../list/AnnotationList';
-import {AnnotatorDocument} from './AnnotatorDocument';
 import AnnotationTypeField from './AnnotationTypeField';
-import {useSearchContext} from '../search/SearchContext';
-import {useSelectedAnnotationContext} from '../list/SelectedAnnotationContext';
-import {useCallback} from 'react';
-import {MicroAnnotation} from '../../model/Annotation';
-import {toNewElucidateAnn} from '../../util/convert/toNewElucidateAnn';
+import {AnnotatorDocument} from './AnnotatorDocument';
 import Elucidate from '../../resources/Elucidate';
+import {MicroAnnotation} from '../../model/Annotation';
 import {toMicroAnn} from '../../util/convert/toMicroAnn';
+import {toNewElucidateAnn} from '../../util/convert/toNewElucidateAnn';
 import {toUpdatableElucidateAnn} from '../../util/convert/toUpdatableElucidateAnn';
+import {useCallback} from 'react';
 import {useCreatorContext} from '../creator/CreatorContext';
+import {useSearchContext} from '../search/SearchContext';
 
 export default function Annotator() {
 
   const creator = useCreatorContext().state.creator;
   const searchState = useSearchContext().state;
   const setSearchState = useSearchContext().setState;
-  const setSelectedAnnotation = useSelectedAnnotationContext().setState;
 
   const updateAnnotationId = (annotationId: string) => {
     const searching = true;
-    setSearchState({searching, annotationId})
-    const selected = undefined;
-    setSelectedAnnotation({selected});
+    setSearchState({searching, annotationId});
   };
 
   const addAnnotation = useCallback(async (a: MicroAnnotation) => {
@@ -38,7 +34,7 @@ export default function Annotator() {
     const toUpdate = toUpdatableElucidateAnn(a, searchState.versionId, creator);
     const updated = await Elucidate.update(toUpdate);
     const converted = toMicroAnn(updated, searchState.beginRange, searchState.annotatableText);
-    let annotations = searchState.annotations;
+    const annotations = searchState.annotations;
     const i = annotations.findIndex(a => a.id === converted.id);
     annotations[i] = converted;
     setSearchState({...searchState, annotations});

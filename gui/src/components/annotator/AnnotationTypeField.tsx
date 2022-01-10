@@ -11,17 +11,17 @@ export default function AnnotationTypeField() {
   return <div className="tabs clearfix">
     <button
       className={'btn btn-block btn-tab'
-      + (annotationTypeState.annotationType === AnnotationListType.USER ? '' : ' btn-tab-unselected')}
+      + (annotationTypeState.annotationType === AnnotationListType.USER ? ' btn-tab-selected' : '')}
       onClick={changeToUser}
     >
-      By user
+      By user ✍️
     </button>
     <button
       className={'btn btn-block btn-tab'
-      + (annotationTypeState.annotationType === AnnotationListType.RANGE ? '' : ' btn-tab-unselected')}
+      + (annotationTypeState.annotationType === AnnotationListType.RANGE ? ' btn-tab-selected' : '')}
       onClick={changeToRange}
     >
-      Overlap
+      Overlap 🔒
     </button>
   </div>;
 }

@@ -278,9 +278,10 @@ footer {
     width: 45%;
     float: left;
     margin-right: 0.5em;
+    font-size: 0.8em;
 }
 
-.btn-tab-unselected {
+.btn-tab-selected {
     border: 1px solid black;
     background-color: white;
     color: black;

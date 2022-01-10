@@ -1,8 +1,8 @@
 import '@recogito/recogito-js/dist/recogito.min.css';
+import {memo, useEffect, useState} from 'react';
 import {AnnotatorRoot} from './AnnotatorRoot';
-import {Recogito} from '@recogito/recogito-js';
-import {useEffect} from 'react';
 import {MicroAnnotation} from '../../model/Annotation';
+import {Recogito} from '@recogito/recogito-js';
 
 const VOCABULARY = [
   {label: 'place', uri: 'https://dbpedia.org/property/place'},
@@ -11,17 +11,41 @@ const VOCABULARY = [
 ];
 
 interface RecogitoDocumentProps {
-  onAddAnnotation: (ann: any) => void;
-  onUpdateAnnotation: (ann: any) => void;
-  annotations: MicroAnnotation[];
-  text: string;
-  creator: string;
-  readOnly: boolean;
+  onAddAnnotation: (ann: any) => void,
+  onUpdateAnnotation: (ann: any) => void,
+  annotations: MicroAnnotation[],
+  text: string,
+  creator: string,
+  readOnly: boolean,
 }
 
-export const AnnotatorRecogito = (props: RecogitoDocumentProps) => {
+export const AnnotatorRecogito = memo((props: RecogitoDocumentProps) => {
+
+  const [toAdd, setToAdd] = useState<MicroAnnotation | undefined>();
+  const [toUpdate, setToUpdate] = useState<MicroAnnotation | undefined>();
 
   const rootName = 'recogito-root';
+
+  /**
+   * useEffect uses up-to-date event handler:
+   */
+  useEffect(() => {
+    if (toAdd) {
+      delete (toAdd as any).id;
+      props.onAddAnnotation(toAdd);
+      setToAdd(undefined);
+    }
+  }, [props, toAdd]);
+
+  /**
+   * useEffect uses up-to-date event handler:
+   */
+  useEffect(() => {
+    if (toUpdate) {
+      props.onUpdateAnnotation(toUpdate);
+      setToUpdate(undefined);
+    }
+  }, [props, toUpdate]);
 
   useEffect(() => {
     const elementById = document.getElementById(rootName);
@@ -66,12 +90,11 @@ export const AnnotatorRecogito = (props: RecogitoDocumentProps) => {
     }
 
     r.on('createAnnotation', (a: any) => {
-      delete a.id;
-      props.onAddAnnotation(a);
+      setToAdd(a);
     });
 
     r.on('updateAnnotation', (a: any) => {
-      props.onUpdateAnnotation(a);
+      setToUpdate(a);
     });
 
     return () => {
@@ -81,5 +104,8 @@ export const AnnotatorRecogito = (props: RecogitoDocumentProps) => {
   }, [props, props.annotations]);
 
   return <AnnotatorRoot id={rootName} className="recogito-doc"/>;
-};
+}, (prev, next) => {
+  return prev.text === next.text
+    && prev.annotations.map(a => a.id).join(',') === next.annotations.map(a => a.id).join(',');
+});
 

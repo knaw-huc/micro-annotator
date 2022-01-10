@@ -1,8 +1,8 @@
 import {ENTITY_CONTEXT, MicroAnnotation} from '../../model/Annotation';
 import Config from '../../Config';
 import {RecogitoTarget} from '../../model/ElucidateAnnotation';
-import {toLineCount} from './toLineCount';
 import {SearchStateType} from '../../components/search/SearchContext';
+import {toLineCount} from './toLineCount';
 
 export function toNewElucidateAnn(
   a: MicroAnnotation,

@@ -1,6 +1,6 @@
 import {createContext, useContext} from 'react';
-import {dummyProvider} from '../../util/dummyProvider';
 import Config from '../../Config';
+import {dummyProvider} from '../../util/dummyProvider';
 import {MicroAnnotation} from '../../model/Annotation';
 
 /**
@@ -87,13 +87,15 @@ export const searchReducer = (
 ): SearchStateType => {
   const searching = action.searching;
   if (searching) {
+    console.log('start searching');
     const annotationId = action.annotationId;
     return Object.assign(
       {searching, annotationId} as SearchStateType,
       defaultSearchContext,
     );
   } else {
+    console.log('stop searching');
     return action as SearchStateType;
   }
-}
+};
 

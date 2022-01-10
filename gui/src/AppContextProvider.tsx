@@ -6,13 +6,13 @@ import {
 import {CreatorContext, creatorReducer, defaultCreatorContext} from './components/creator/CreatorContext';
 import {defaultErrorContext, ErrorContext, errorReducer} from './components/error/ErrorContext';
 import {defaultSearchContext, SearchContext, searchReducer} from './components/search/SearchContext';
-import App from './App';
-import {useReducer} from 'react';
 import {
   defaultSelectedAnnotationContext,
   SelectedAnnotationContext,
   selectedAnnotationReducer
 } from './components/list/SelectedAnnotationContext';
+import App from './App';
+import {useReducer} from 'react';
 
 export default function AppContextProvider() {
 

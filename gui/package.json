@@ -26,11 +26,27 @@
       "react-app"
     ],
     "rules": {
-      "no-multiple-empty-lines": [2, {"max": 2}],
+      "no-multiple-empty-lines": [
+        2,
+        {
+          "max": 2
+        }
+      ],
       "prefer-const": "error",
-      "quotes": ["error", "single"],
-      "semi": ["error", "always"],
-      "sort-imports": ["error", {"ignoreCase":  true}]
+      "quotes": [
+        "error",
+        "single"
+      ],
+      "semi": [
+        "error",
+        "always"
+      ],
+      "sort-imports": [
+        "error",
+        {
+          "ignoreCase": true
+        }
+      ]
     }
   },
   "browserslist": {
@@ -47,5 +63,9 @@
   },
   "devDependencies": {
     "typescript": "^4.4.2"
+  },
+  "//": "See: https://github.com/facebook/create-react-app/issues/11771#issuecomment-999570897",
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   }
 }
