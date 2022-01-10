@@ -1,8 +1,9 @@
 import '@recogito/recogito-js/dist/recogito.min.css';
-import {memo, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {AnnotatorRoot} from './AnnotatorRoot';
 import {MicroAnnotation} from '../../model/Annotation';
 import {Recogito} from '@recogito/recogito-js';
+import {usePrevious} from '../../util/usePrevious';
 
 const VOCABULARY = [
   {label: 'place', uri: 'https://dbpedia.org/property/place'},
@@ -10,7 +11,7 @@ const VOCABULARY = [
   {label: 'person', uri: 'https://dbpedia.org/property/person'},
 ];
 
-interface RecogitoDocumentProps {
+interface AnnotatorRecogitoProps {
   onAddAnnotation: (ann: any) => void,
   onUpdateAnnotation: (ann: any) => void,
   annotations: MicroAnnotation[],
@@ -19,15 +20,21 @@ interface RecogitoDocumentProps {
   readOnly: boolean,
 }
 
-export const AnnotatorRecogito = memo((props: RecogitoDocumentProps) => {
+function toIds(annotations: MicroAnnotation[]) {
+  return annotations.map(a => a.id).join(',');
+}
 
-  const [toAdd, setToAdd] = useState<MicroAnnotation | undefined>();
-  const [toUpdate, setToUpdate] = useState<MicroAnnotation | undefined>();
+export const AnnotatorRecogito = (props: AnnotatorRecogitoProps) => {
 
   const rootName = 'recogito-root';
+  const [toAdd, setToAdd] = useState<MicroAnnotation | undefined>();
+  const [toUpdate, setToUpdate] = useState<MicroAnnotation | undefined>();
+  const prevText = usePrevious(props.text);
+  const prevAnnotationIds = usePrevious(props.text);
 
   /**
-   * useEffect uses up-to-date event handler:
+   * Add annotation
+   * with up-to-date event handler
    */
   useEffect(() => {
     if (toAdd) {
@@ -38,7 +45,8 @@ export const AnnotatorRecogito = memo((props: RecogitoDocumentProps) => {
   }, [props, toAdd]);
 
   /**
-   * useEffect uses up-to-date event handler:
+   * Update annotation
+   * with up-to-date event handler
    */
   useEffect(() => {
     if (toUpdate) {
@@ -47,7 +55,16 @@ export const AnnotatorRecogito = memo((props: RecogitoDocumentProps) => {
     }
   }, [props, toUpdate]);
 
+  /**
+   * Rerender recogito
+   * when text or annotation change
+   */
   useEffect(() => {
+
+    if(props.text === prevText && toIds(props.annotations) === prevAnnotationIds) {
+      return;
+    }
+
     const elementById = document.getElementById(rootName);
     if (elementById) {
       elementById.textContent = props.text;
@@ -101,11 +118,8 @@ export const AnnotatorRecogito = memo((props: RecogitoDocumentProps) => {
       r.destroy();
     };
 
-  }, [props, props.annotations]);
+  }, [props, prevText, prevAnnotationIds]);
 
   return <AnnotatorRoot id={rootName} className="recogito-doc"/>;
-}, (prev, next) => {
-  return prev.text === next.text
-    && prev.annotations.map(a => a.id).join(',') === next.annotations.map(a => a.id).join(',');
-});
+};
 
