@@ -1,4 +1,4 @@
-ct-# Micro-annotator
+# Micro-annotator
 Micro-annotator is a small, proof-of-concept webapp to create web annotations on segments of collection
 documents, including both image segments and text segments. Image segments are provided by a IIIF server, text segments
 by an instance of [TextRepo](https://github.com/knaw-huc/textrepo) and annotations by an adapted version of the 

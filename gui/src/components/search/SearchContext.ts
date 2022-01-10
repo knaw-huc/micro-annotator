@@ -51,9 +51,14 @@ export type SearchStateType = SearchingStateType & {
   endRange: number,
 
   /**
-   * Annotations on display
+   * Annotations that overlap with current annotation
    */
-  annotations: MicroAnnotation[]
+  overlappingAnnotations: MicroAnnotation[]
+
+  /**
+   * Annotations created by user in micro-annotator
+   */
+  userAnnotations: MicroAnnotation[]
 
 };
 
@@ -66,7 +71,8 @@ export const defaultSearchContext = {
     targetId: '',
     beginRange: 0,
     endRange: 0,
-    annotations: [],
+    overlappingAnnotations: [],
+    userAnnotations: [],
     searching: true
   },
   setState: dummyProvider
@@ -87,14 +93,16 @@ export const searchReducer = (
 ): SearchStateType => {
   const searching = action.searching;
   if (searching) {
-    console.log('start searching');
     const annotationId = action.annotationId;
-    return Object.assign(
+    const result = Object.assign(
+      {},
+      defaultSearchContext.state,
       {searching, annotationId} as SearchStateType,
-      defaultSearchContext,
     );
+    console.log('result', result);
+    return result;
   } else {
-    console.log('stop searching');
+    console.log('action', action);
     return action as SearchStateType;
   }
 };

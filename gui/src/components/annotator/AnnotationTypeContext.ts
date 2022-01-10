@@ -5,7 +5,7 @@ import {ContextType} from '../common/ContextType';
 import {dummyProvider} from '../../util/dummyProvider';
 
 /**
- * What type of annotations to display in annotation list?
+ * Type of annotations displayed in annotation list
  */
 export const useAnnotationTypeContext = () => useContext(AnnotationTypeContext);
 export type AnnotationTypeStateType = {

@@ -281,10 +281,12 @@ footer {
     font-size: 0.8em;
 }
 
-.btn-tab-selected {
-    border: 1px solid black;
-    background-color: white;
-    color: black;
+.btn-tab-deselected {
+    opacity: 0.5;
+}
+
+.btn-tab-deselected:hover {
+    opacity: 1;
 }
 
 /* Recogito */
@@ -297,4 +299,5 @@ footer {
 .annotator-column {
     min-width: 150px;
     width: 280px;
+    padding-left: 0.7em;
 }

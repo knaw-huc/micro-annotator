@@ -16,7 +16,7 @@ export default function Annotator() {
   const searchState = useSearchContext().state;
   const setSearchState = useSearchContext().setState;
 
-  const updateAnnotationId = (annotationId: string) => {
+  const handleSearch = (annotationId: string) => {
     const searching = true;
     setSearchState({searching, annotationId});
   };
@@ -25,19 +25,19 @@ export default function Annotator() {
     const toCreate = toNewElucidateAnn(a, creator, searchState);
     const created = await Elucidate.create(searchState.versionId, toCreate);
     const createdRecogitoAnn = toMicroAnn(created, searchState.beginRange, searchState.annotatableText);
-    const annotations = searchState.annotations;
-    annotations.push(createdRecogitoAnn);
-    setSearchState({...searchState, annotations});
+    const userAnnotations = searchState.userAnnotations;
+    userAnnotations.push(createdRecogitoAnn);
+    setSearchState({...searchState, userAnnotations});
   }, [searchState, setSearchState, creator]);
 
   const updateAnnotation = useCallback(async (a: MicroAnnotation) => {
     const toUpdate = toUpdatableElucidateAnn(a, searchState.versionId, creator);
     const updated = await Elucidate.update(toUpdate);
     const converted = toMicroAnn(updated, searchState.beginRange, searchState.annotatableText);
-    const annotations = searchState.annotations;
-    const i = annotations.findIndex(a => a.id === converted.id);
-    annotations[i] = converted;
-    setSearchState({...searchState, annotations});
+    const userAnnotations = searchState.userAnnotations;
+    const i = userAnnotations.findIndex(a => a.id === converted.id);
+    userAnnotations[i] = converted;
+    setSearchState({...searchState, userAnnotations});
   }, [searchState, setSearchState, creator]);
 
   return <>
@@ -53,7 +53,7 @@ export default function Annotator() {
         <AnnotationTypeField/>
       </div>
       <AnnotationList
-        onSelect={updateAnnotationId}
+        onSearch={handleSearch}
       />
     </div>
   </>;

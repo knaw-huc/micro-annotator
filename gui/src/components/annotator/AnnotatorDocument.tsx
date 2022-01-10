@@ -16,19 +16,19 @@ export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
 
   const text = useSearchContext().state.annotatableText;
   const creator = useCreatorContext().state.creator;
-  const annotations = useSearchContext().state.annotations;
+  const searchState = useSearchContext().state;
   const annotationType = useAnnotationTypeContext().state.annotationType;
   const selectedAnnotation = useSelectedAnnotationContext().state.selected;
 
   const displayUserAnnotations = annotationType === AnnotationListType.USER;
 
-  const displaySelectedAnnotation = annotationType === AnnotationListType.RANGE
+  const displaySelectedAnnotation = annotationType === AnnotationListType.OVERLAPPING
     && selectedAnnotation
-    && annotations.indexOf(selectedAnnotation) !== -1;
+    && searchState.overlappingAnnotations.indexOf(selectedAnnotation) !== -1;
 
   let recogitoAnnotations: MicroAnnotation[];
   if (displayUserAnnotations) {
-    recogitoAnnotations = annotations
+    recogitoAnnotations = searchState.userAnnotations
       .filter(a => !browsableAnnotations.includes(a.entity_type));
   } else if (displaySelectedAnnotation) {
     recogitoAnnotations = [selectedAnnotation];
@@ -42,7 +42,7 @@ export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
     onAddAnnotation={props.onAddAnnotation}
     onUpdateAnnotation={props.onUpdateAnnotation}
     creator={creator}
-    readOnly={annotationType === AnnotationListType.RANGE}
+    readOnly={annotationType === AnnotationListType.OVERLAPPING}
   />;
 };
 

@@ -1,23 +1,28 @@
 import AnnotationItem from './AnnotationItem';
 import {MicroAnnotation} from '../../model/Annotation';
+import {useAnnotationTypeContext} from '../annotator/AnnotationTypeContext';
 import {useSearchContext} from '../search/SearchContext';
 import {useSelectedAnnotationContext} from './SelectedAnnotationContext';
 
 type AnnotationListProps = {
-  onSelect: (id: string) => void;
+  onSearch: (id: string) => void;
 }
 
 export enum AnnotationListType {
   USER = 'user',
-  RANGE = 'range'
+  OVERLAPPING = 'overlap'
 }
 
 export default function AnnotationList(props: AnnotationListProps) {
 
-  const annotations = useSearchContext().state.annotations;
+  const searchContext = useSearchContext().state;
   const selectedAnnotation = useSelectedAnnotationContext().state.selected;
   const setSelectedAnnotationState = useSelectedAnnotationContext().setState;
+  const annotationType = useAnnotationTypeContext().state.annotationType;
 
+  const annotations = annotationType === AnnotationListType.USER
+    ? searchContext.userAnnotations
+    : searchContext.overlappingAnnotations;
 
   function handleSelected(selected: MicroAnnotation | undefined) {
     return setSelectedAnnotationState({selected});
@@ -25,14 +30,14 @@ export default function AnnotationList(props: AnnotationListProps) {
 
   return (
     <div>
-      {annotations.map((annotation, index) => (
+      {annotations && annotations.map((annotation, index) => (
           <AnnotationItem
             key={index}
             annot_id={index}
             annotation={annotation}
             selected={selectedAnnotation?.id === annotation.id}
             onSelect={handleSelected}
-            onSearch={props.onSelect}
+            onSearch={props.onSearch}
           />
         )
       )}

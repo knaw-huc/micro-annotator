@@ -1,17 +1,16 @@
+import {ElucidateAnnotation, ElucidateTarget} from '../../model/ElucidateAnnotation';
 import {useCallback, useEffect} from 'react';
-import {AnnotationListType} from '../list/AnnotationList';
 import Elucidate from '../../resources/Elucidate';
-import {ElucidateTarget} from '../../model/ElucidateAnnotation';
 import findImageRegions from '../../util/findImageRegions';
 import findSelectorTarget from '../../util/findSelectorTarget';
 import {isInRelativeRange} from '../../util/isInRelativeRange';
 import isString from '../../util/isString';
+import {MicroAnnotation} from '../../model/Annotation';
 import SearchField from './SearchField';
 import TextRepo from '../../resources/TextRepo';
 import {toMicroAnn} from '../../util/convert/toMicroAnn';
 import toVersionId from '../../util/convert/toVersionId';
 import {useAnnotationTypeContext} from '../annotator/AnnotationTypeContext';
-import {useCreatorContext} from '../creator/CreatorContext';
 import {useErrorContext} from '../error/ErrorContext';
 import {usePrevious} from '../../util/usePrevious';
 import {useSearchContext} from './SearchContext';
@@ -19,13 +18,12 @@ import {useSelectedAnnotationContext} from '../list/SelectedAnnotationContext';
 
 export default function Search() {
 
+  const annotationTypeState = useAnnotationTypeContext().state;
+  const searchState = useSearchContext().state;
   const setErrorState = useErrorContext().setState;
   const setSearchState = useSearchContext().setState;
   const setSelectedAnnotation = useSelectedAnnotationContext().setState;
 
-  const annotationTypeState = useAnnotationTypeContext().state;
-  const creatorState = useCreatorContext().state;
-  const searchState = useSearchContext().state;
   const previousAnnotationId = usePrevious(searchState.annotationId);
   const previousAnnotationType = usePrevious(annotationTypeState.annotationType);
 
@@ -54,13 +52,8 @@ export default function Search() {
       endRange
     );
 
-    const found = annotationTypeState.annotationType === AnnotationListType.USER
-      ? await Elucidate.getByCreator(creatorState.creator)
-      : await Elucidate.getByOverlap(targetId, beginRange, endRange);
-    const annotations = found
-      .map(a => toMicroAnn(a, beginRange, annotatableText))
-      .filter(a => !['line', 'column'].includes(a.entity_type))
-      .filter(ann => isInRelativeRange(ann.coordinates, endRange - beginRange));
+    const overlappingAnnotations = await getOverlapping(targetId, beginRange, endRange, annotatableText);
+    const userAnnotations = await getByUser(targetId, beginRange, endRange, annotatableText);
 
     const searching = false;
     setSearchState({
@@ -71,13 +64,14 @@ export default function Search() {
       targetId,
       beginRange,
       endRange,
-      annotations,
+      overlappingAnnotations,
+      userAnnotations,
       searching
     });
-  }, [annotationTypeState, creatorState, setSearchState, setErrorState]);
+  }, [setSearchState, setErrorState]);
 
   /**
-   * Search on relevant context changes:
+   * Search when context
    */
   useEffect(() => {
     const idEqual = searchState.annotationId === previousAnnotationId;
@@ -92,6 +86,7 @@ export default function Search() {
       .catch(e => setErrorState({message: e.message}));
 
   }, [
+    searchState.searching,
     searchState.annotationId, previousAnnotationId,
     annotationTypeState.annotationType, previousAnnotationType,
     setErrorState, setSelectedAnnotation, searchAnnotation
@@ -100,5 +95,37 @@ export default function Search() {
   return <SearchField
     onSearch={searchAnnotation}
   />;
+}
+
+async function getOverlapping(
+  targetId: string,
+  beginRange: number,
+  endRange: number,
+  annotatableText: string[]
+): Promise<MicroAnnotation[]> {
+  const annotations = await Elucidate.getByOverlap(targetId, beginRange, endRange);
+  return mapAndFilter(annotations, annotatableText, beginRange, endRange);
+}
+
+async function getByUser(
+  creator: string,
+  beginRange: number,
+  endRange: number,
+  annotatableText: string[]
+): Promise<MicroAnnotation[]> {
+  const annotations = await Elucidate.getByCreator(creator);
+  return mapAndFilter(annotations, annotatableText, beginRange, endRange);
+}
+
+function mapAndFilter(
+  annotations: ElucidateAnnotation[],
+  annotatableText: string[],
+  beginRange: number,
+  endRange: number
+): MicroAnnotation[] {
+  return annotations
+    .map(a => toMicroAnn(a, beginRange, annotatableText))
+    .filter(a => !['line', 'column'].includes(a.entity_type))
+    .filter(ann => isInRelativeRange(ann.coordinates, endRange - beginRange));
 }
 
