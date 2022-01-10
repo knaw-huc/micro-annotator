@@ -61,7 +61,9 @@ export const AnnotatorRecogito = (props: AnnotatorRecogitoProps) => {
    */
   useEffect(() => {
 
-    if(props.text === prevText && toIds(props.annotations) === prevAnnotationIds) {
+    const textEqual = props.text === prevText;
+    const annotationsEqual = toIds(props.annotations) === prevAnnotationIds;
+    if(textEqual && annotationsEqual) {
       return;
     }
 

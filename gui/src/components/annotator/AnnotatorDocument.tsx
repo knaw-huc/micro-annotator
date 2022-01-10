@@ -1,6 +1,7 @@
 import {AnnotationListType} from '../list/AnnotationList';
 import {AnnotatorRecogito} from './AnnotatorRecogito';
 import {browsableAnnotations} from '../list/AnnotationItem';
+import {contains} from '../../util/contains';
 import {MicroAnnotation} from '../../model/Annotation';
 import {useAnnotationTypeContext} from './AnnotationTypeContext';
 import {useCreatorContext} from '../creator/CreatorContext';
@@ -24,7 +25,7 @@ export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
 
   const displaySelectedAnnotation = annotationType === AnnotationListType.OVERLAPPING
     && selectedAnnotation
-    && searchState.overlappingAnnotations.indexOf(selectedAnnotation) !== -1;
+    && contains(selectedAnnotation, searchState.overlappingAnnotations);
 
   let recogitoAnnotations: MicroAnnotation[];
   if (displayUserAnnotations) {

@@ -94,15 +94,12 @@ export const searchReducer = (
   const searching = action.searching;
   if (searching) {
     const annotationId = action.annotationId;
-    const result = Object.assign(
+    return Object.assign(
       {},
       defaultSearchContext.state,
-      {searching, annotationId} as SearchStateType,
+      {searching, annotationId},
     );
-    console.log('result', result);
-    return result;
   } else {
-    console.log('action', action);
     return action as SearchStateType;
   }
 };

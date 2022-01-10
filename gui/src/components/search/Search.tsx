@@ -10,7 +10,7 @@ import SearchField from './SearchField';
 import TextRepo from '../../resources/TextRepo';
 import {toMicroAnn} from '../../util/convert/toMicroAnn';
 import toVersionId from '../../util/convert/toVersionId';
-import {useAnnotationTypeContext} from '../annotator/AnnotationTypeContext';
+import {useCreatorContext} from '../creator/CreatorContext';
 import {useErrorContext} from '../error/ErrorContext';
 import {usePrevious} from '../../util/usePrevious';
 import {useSearchContext} from './SearchContext';
@@ -18,14 +18,13 @@ import {useSelectedAnnotationContext} from '../list/SelectedAnnotationContext';
 
 export default function Search() {
 
-  const annotationTypeState = useAnnotationTypeContext().state;
+  const creator = useCreatorContext().state.creator;
   const searchState = useSearchContext().state;
   const setErrorState = useErrorContext().setState;
   const setSearchState = useSearchContext().setState;
   const setSelectedAnnotation = useSelectedAnnotationContext().setState;
 
   const previousAnnotationId = usePrevious(searchState.annotationId);
-  const previousAnnotationType = usePrevious(annotationTypeState.annotationType);
 
   const searchAnnotation = useCallback(async (annotationId: string) => {
     if (!annotationId) {
@@ -53,7 +52,7 @@ export default function Search() {
     );
 
     const overlappingAnnotations = await getOverlapping(targetId, beginRange, endRange, annotatableText);
-    const userAnnotations = await getByUser(targetId, beginRange, endRange, annotatableText);
+    const userAnnotations = await getByUser(creator, beginRange, endRange, annotatableText);
 
     const searching = false;
     setSearchState({
@@ -68,15 +67,14 @@ export default function Search() {
       userAnnotations,
       searching
     });
-  }, [setSearchState, setErrorState]);
+  }, [setSearchState, setErrorState, creator]);
 
   /**
-   * Search when context
+   * Search when context changes
    */
   useEffect(() => {
     const idEqual = searchState.annotationId === previousAnnotationId;
-    const typeEqual = annotationTypeState.annotationType === previousAnnotationType;
-    if (idEqual && typeEqual) {
+    if (idEqual) {
       return;
     }
 
@@ -86,9 +84,7 @@ export default function Search() {
       .catch(e => setErrorState({message: e.message}));
 
   }, [
-    searchState.searching,
     searchState.annotationId, previousAnnotationId,
-    annotationTypeState.annotationType, previousAnnotationType,
     setErrorState, setSelectedAnnotation, searchAnnotation
   ]);
 
