@@ -8,7 +8,7 @@ import {usePrevious} from '../../util/usePrevious';
 const VOCABULARY = [
   {label: 'place', uri: 'https://dbpedia.org/property/place'},
   {label: 'organisation', uri: 'https://dbpedia.org/property/organisation'},
-  {label: 'person', uri: 'https://dbpedia.org/property/person'},
+  {label: 'person', uri: 'https://dbpedia.org/property/person'}
 ];
 
 interface AnnotatorRecogitoProps {
@@ -90,12 +90,11 @@ export const AnnotatorRecogito = (props: AnnotatorRecogitoProps) => {
         );
 
         const tagClasses: string[] = [];
-
         for (const tag of tags) {
-          if (tag === 'material') {
-            tagClasses.push('tag-material');
-          } else if (tag === 'object') {
-            tagClasses.push('tag-object');
+          if (tag === 'place') {
+            tagClasses.push('tag-place');
+          } else if (tag === 'organisation') {
+            tagClasses.push('tag-organisation');
           } else if (tag === 'person') {
             tagClasses.push('tag-person');
           }

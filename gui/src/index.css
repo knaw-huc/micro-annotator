@@ -301,3 +301,18 @@ footer {
     width: 280px;
     padding-left: 0.7em;
 }
+
+.tag-place {
+    background-color: rgb(165, 213, 216, .2) !important;
+    border-bottom: 2px solid rgb(165, 213, 216) !important;
+}
+
+.tag-organisation {
+    background-color: rgb(0, 66, 157, .2) !important;
+    border-bottom: 2px solid rgb(0, 66, 157) !important;
+}
+
+.tag-person {
+    background-color: rgba(147, 0, 58, .2) !important;
+    border-bottom: 2px solid rgb(147, 0, 58) !important;
+}
