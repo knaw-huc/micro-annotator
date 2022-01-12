@@ -3,15 +3,13 @@ import {useEffect, useState} from 'react';
 import Elucidate from '../../resources/Elucidate';
 import {findBodyId} from '../../util/findBodyId';
 import {useDebounce} from '../../util/useDebounce';
+import {useNavigate} from 'react-router-dom';
 import {usePrevious} from '../../util/usePrevious';
 import {useSearchContext} from './SearchContext';
 
-type SearchFieldProps = {
-  onSearch: (id: string) => void;
-}
-
-export default function SearchField(props: SearchFieldProps) {
+export default function SearchField() {
   const searchState = useSearchContext().state;
+  const navigate = useNavigate();
 
   const annotationId = searchState.annotationId;
   const previousAnnotationId = usePrevious(annotationId);
@@ -69,7 +67,7 @@ export default function SearchField(props: SearchFieldProps) {
     }
 
     setItems([]);
-    props.onSearch(selected);
+    navigate(`/annotation/${selected}`);
   }
 
   return <form className='add-form'>

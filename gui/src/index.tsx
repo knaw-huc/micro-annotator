@@ -1,12 +1,12 @@
 import './index.css';
-import AppContextProvider from './AppContextProvider';
+import AppRouter from './AppRouter';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
     <React.StrictMode>
-        <AppContextProvider/>
+        <AppRouter/>
     </React.StrictMode>,
     document.getElementById('root')
 );

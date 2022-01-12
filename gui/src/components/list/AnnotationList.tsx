@@ -4,16 +4,12 @@ import {useAnnotationTypeContext} from '../annotator/AnnotationTypeContext';
 import {useSearchContext} from '../search/SearchContext';
 import {useSelectedAnnotationContext} from './SelectedAnnotationContext';
 
-type AnnotationListProps = {
-  onSearch: (id: string) => void;
-}
-
 export enum AnnotationListType {
   USER = 'user',
   OVERLAPPING = 'overlap'
 }
 
-export default function AnnotationList(props: AnnotationListProps) {
+export default function AnnotationList() {
 
   const searchContext = useSearchContext()
     .state;
@@ -43,7 +39,6 @@ export default function AnnotationList(props: AnnotationListProps) {
             annotation={annotation}
             selected={selectedAnnotation?.id === annotation.id}
             onSelect={handleSelected}
-            onSearch={props.onSearch}
           />
         )
       )}

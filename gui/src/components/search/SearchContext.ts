@@ -1,5 +1,4 @@
 import {createContext, useContext} from 'react';
-import Config from '../../Config';
 import {dummyProvider} from '../../util/dummyProvider';
 import {MicroAnnotation} from '../../model/Annotation';
 
@@ -64,7 +63,7 @@ export type SearchStateType = SearchingStateType & {
 
 export const defaultSearchContext = {
   state: {
-    annotationId: Config.PLACEHOLDER_SEARCH_ID,
+    annotationId: '',
     versionId: '',
     annotatableText: [],
     imageRegions: [],

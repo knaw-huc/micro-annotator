@@ -12,6 +12,7 @@ import {toMicroAnn} from '../../util/convert/toMicroAnn';
 import toVersionId from '../../util/convert/toVersionId';
 import {useCreatorContext} from '../creator/CreatorContext';
 import {useErrorContext} from '../error/ErrorContext';
+import {useParams} from 'react-router-dom';
 import {usePrevious} from '../../util/usePrevious';
 import {useSearchContext} from './SearchContext';
 import {useSelectedAnnotationContext} from '../list/SelectedAnnotationContext';
@@ -31,6 +32,7 @@ export default function Search() {
     .setState;
 
   const previousAnnotationId = usePrevious(searchState.annotationId);
+  const urlAnnotationId = useParams()['annotationId'];
 
   const searchAnnotation = useCallback(async (annotationId: string) => {
     if (!annotationId) {
@@ -86,6 +88,15 @@ export default function Search() {
   }, [setSearchState, setErrorState, creator]);
 
   /**
+   * Set annotation ID to url param
+   */
+  useEffect(() => {
+    if(urlAnnotationId && searchState.annotationId !== urlAnnotationId) {
+      setSearchState({searching: true, annotationId: urlAnnotationId});
+    }
+  }, [searchState.annotationId, urlAnnotationId, setSearchState]);
+
+  /**
    * Search when context changes
    */
   useEffect(() => {
@@ -98,15 +109,12 @@ export default function Search() {
 
     searchAnnotation(searchState.annotationId)
       .catch(e => setErrorState({message: e.message}));
-
   }, [
     searchState.annotationId, previousAnnotationId,
     setErrorState, setSelectedAnnotation, searchAnnotation
   ]);
 
-  return <SearchField
-    onSearch={searchAnnotation}
-  />;
+  return <SearchField />;
 }
 
 async function getOverlapping(

@@ -16,11 +16,6 @@ export default function Annotator() {
   const searchState = useSearchContext().state;
   const setSearchState = useSearchContext().setState;
 
-  const handleSearch = (annotationId: string) => {
-    const searching = true;
-    setSearchState({searching, annotationId});
-  };
-
   const addAnnotation = useCallback(async (
     annotation: MicroAnnotation
   ) => {
@@ -56,9 +51,7 @@ export default function Annotator() {
       <div>
         <AnnotationTypeField/>
       </div>
-      <AnnotationList
-        onSearch={handleSearch}
-      />
+      <AnnotationList />
     </div>
   </>;
 }
