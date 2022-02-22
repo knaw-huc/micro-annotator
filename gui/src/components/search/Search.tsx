@@ -148,4 +148,3 @@ function mapAndFilter(
     .filter(a => !['line', 'column'].includes(a.entity_type))
     .filter(ann => isInRelativeRange(ann.coordinates, endRange - beginRange));
 }
-

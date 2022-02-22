@@ -83,4 +83,3 @@ export default function SearchField() {
     </div>
   </form>;
 }
-

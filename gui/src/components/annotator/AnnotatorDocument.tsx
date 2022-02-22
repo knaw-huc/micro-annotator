@@ -11,6 +11,7 @@ import {useSelectedAnnotationContext} from '../list/SelectedAnnotationContext';
 interface AnnotatorDocumentProps {
   onAddAnnotation: (ann: any) => void;
   onUpdateAnnotation: (ann: any) => void;
+  onDeleteAnnotation: (ann: any) => void;
 }
 
 export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
@@ -51,6 +52,7 @@ export const AnnotatorDocument = (props: AnnotatorDocumentProps) => {
     annotations={recogitoAnnotations}
     onAddAnnotation={props.onAddAnnotation}
     onUpdateAnnotation={props.onUpdateAnnotation}
+    onDeleteAnnotation={props.onDeleteAnnotation}
     creator={creator}
     readOnly={annotationType === AnnotationListType.OVERLAPPING}
   />;

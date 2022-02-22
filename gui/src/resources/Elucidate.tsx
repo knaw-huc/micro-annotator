@@ -40,8 +40,19 @@ export default class Elucidate {
       headers: headers,
       body: JSON.stringify(a)
     });
-
     return await response.json() as ElucidateAnnotation;
+  }
+
+  static async delete(a: MicroAnnotation) {
+    if (!a.id) {
+      throw Error('Cannot delete annotation without ID: ' + JSON.stringify(a));
+    }
+    const headers = await this.withETagHeader(a, this.headers);
+    await fetch(a.id, {
+      method: 'DELETE',
+      headers: headers,
+      body: null
+    });
   }
 
   private static async withETagHeader(a: MicroAnnotation, headers: {}) {
@@ -144,5 +155,38 @@ export default class Elucidate {
     } while (annotationPage.next);
     return result;
   }
-}
 
+  public static async getAllPagesList(): Promise<ElucidateAnnotation[]> {
+    const result: ElucidateAnnotation[] = [];
+    let annotationPage;
+    let page = 0;
+    do {
+      const response = await fetch(
+        `http://localhost:8000/elucidate/annotation/w3c/services/search/body?fields=id&value=&page=${page}`,
+        {headers: this.headers}
+      );
+      annotationPage = await response.json();
+      if (annotationPage.items) {
+        result.push(...annotationPage.items);
+      }
+      page++;
+    } while (annotationPage.next);
+    return result;
+  }
+
+  public static async getPageList(page: number): Promise<ElucidateAnnotation[]> {
+    const result: ElucidateAnnotation[] = [];
+    let annotationPage;
+    do {
+      const response = await fetch(
+        `http://localhost:8000/elucidate/annotation/w3c/services/search/body?fields=id&value=&page=${page}`,
+        {headers: this.headers}
+      );
+      annotationPage = await response.json();
+      if (annotationPage.items) {
+        result.push(...annotationPage.items);
+      }  
+    } while (annotationPage.items < 100);
+    return result;
+  }
+}

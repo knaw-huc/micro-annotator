@@ -14,6 +14,7 @@ const VOCABULARY = [
 interface AnnotatorRecogitoProps {
   onAddAnnotation: (ann: any) => void,
   onUpdateAnnotation: (ann: any) => void,
+  onDeleteAnnotation: (ann: any) => void,
   annotations: MicroAnnotation[],
   text: string,
   creator: string,
@@ -29,6 +30,7 @@ export const AnnotatorRecogito = (props: AnnotatorRecogitoProps) => {
   const rootName = 'recogito-root';
   const [toAdd, setToAdd] = useState<MicroAnnotation | undefined>();
   const [toUpdate, setToUpdate] = useState<MicroAnnotation | undefined>();
+  const [toDelete, setToDelete] = useState<MicroAnnotation | undefined>();
   const prevText = usePrevious(props.text);
   const prevAnnotationIds = usePrevious(props.text);
 
@@ -54,6 +56,13 @@ export const AnnotatorRecogito = (props: AnnotatorRecogitoProps) => {
       setToUpdate(undefined);
     }
   }, [props, toUpdate]);
+
+  useEffect(() => {
+    if (toDelete) {
+      props.onDeleteAnnotation(toDelete);
+      setToDelete(undefined);
+    }
+  }, [props, toDelete]);
 
   /**
    * Rerender recogito
@@ -113,6 +122,10 @@ export const AnnotatorRecogito = (props: AnnotatorRecogitoProps) => {
 
     r.on('updateAnnotation', (a: any) => {
       setToUpdate(a);
+    });
+
+    r.on('deleteAnnotation', (a: any) => {
+      setToDelete(a);
     });
 
     return () => {
