@@ -22,10 +22,10 @@ git clone -b tt-878-republic-annotaties-omzetten https://github.com/knaw-huc/un-
 - Run:
 ```
 export COLLECTION_TAG=1728-06-19
-docker-compose -f dev/elucidate/docker-compose.yml up -d
-docker-compose -f dev/textrepo/docker-compose.yml up -d
-docker-compose up -d
-docker-compose -f docker-compose-init.yml up
+docker compose -f dev/elucidate/docker-compose.yml up -d
+docker compose -f dev/textrepo/docker-compose.yml up -d
+docker compose up -d
+docker compose -f docker-compose-init.yml up
 ```
 
 Open http://localhost:8000
@@ -50,7 +50,7 @@ git clone -b txt_anchor https://github.com/knaw-huc/textrepo.git textrepo
 cd textrepo
 cp examples/development/* .
 sed -i '' 's#knawhuc/textrepo-app:${DOCKER_TAG}#textrepo-app:txt_anchor#' docker-compose-dev.yml
-source docker-compose.env && docker-compose -f docker-compose-dev.yml build textrepo-app
+source docker-compose.env && docker compose -f docker-compose-dev.yml build textrepo-app
 ```
 
 Change image of `textrepo-app` service in `./dev/textrepo/docker-compose.yml` to `textrepo-app:txt_anchor`
@@ -66,10 +66,10 @@ In micro-annotator:
 
 Start containers of elucidate, textrepo, annotator and init:
 ```
-docker-compose -f dev/elucidate/docker-compose.yml up -d
-docker-compose -f dev/textrepo/docker-compose.yml up -d
-docker-compose up -d
-docker-compose -f docker-compose-init.yml up
+docker compose -f dev/elucidate/docker-compose.yml up -d
+docker compose -f dev/textrepo/docker-compose.yml up -d
+docker compose up -d
+docker compose -f docker-compose-init.yml up
 ```
 
 Open http://localhost:8000
