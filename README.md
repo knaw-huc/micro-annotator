@@ -8,6 +8,16 @@ by an instance of [TextRepo](https://github.com/knaw-huc/textrepo) and annotatio
 
 ### Option 1: Use existing images
 
+#### Get untangle2elucidate and the data
+
+In the Micro-annotator directory:
+
+```
+git clone -b tt-878-republic-annotaties-omzetten https://github.com/knaw-huc/un-t-ann-gle.git untangle2elucidate
+```
+
+#### Rename .env files and start the containers
+
 - Remove `.example` postfix of env files in `./`, `./dev/elucidate` and `./dev/textrepo`.
 - Run:
 ```
