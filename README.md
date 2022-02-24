@@ -10,7 +10,7 @@ by an instance of [TextRepo](https://github.com/knaw-huc/textrepo) and annotatio
 
 #### Get untangle2elucidate and the data
 
-In the Micro-annotator directory:
+In the Micro-annotator directory (`./`):
 
 ```
 git clone -b tt-878-republic-annotaties-omzetten https://github.com/knaw-huc/un-t-ann-gle.git untangle2elucidate
