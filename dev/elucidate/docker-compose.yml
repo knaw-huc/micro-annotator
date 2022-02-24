@@ -4,7 +4,7 @@ services:
 
   elucidate:
     container_name: elucidate
-    build: /Users/sebastiaanvandaalen/Work/Projects/micro-annotator_experiment/elucidate-server/elucidate-server
+    image: registry.diginfra.net/tt/huc-elucidate-server:1.6.3
     networks:
       - elucidate_network
     env_file:
@@ -20,7 +20,7 @@ services:
 
   database:
     container_name: elucidate_db
-    build: .
+    image: registry.diginfra.net/micro-annotator/elucidate-db:${COLLECTION_TAG}
     shm_size: 1g
     networks:
       - elucidate_network
