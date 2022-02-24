@@ -24,7 +24,7 @@ git clone -b tt-878-republic-annotaties-omzetten https://github.com/knaw-huc/un-
 export COLLECTION_TAG=1728-06-19
 docker-compose -f dev/elucidate/docker-compose.yml up -d
 docker-compose -f dev/textrepo/docker-compose.yml up -d
-docker-compose up
+docker-compose up -d
 docker-compose -f docker-compose-init.yml up
 ```
 
