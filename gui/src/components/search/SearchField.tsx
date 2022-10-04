@@ -54,7 +54,7 @@ export default function SearchField() {
       const items = ids
         .filter(i => i)
         .sort()
-        .slice(0, 100)
+        .slice(0, 10)
         .map(i => ({value: i} as TypeaheadItem));
       setItems(items);
     });

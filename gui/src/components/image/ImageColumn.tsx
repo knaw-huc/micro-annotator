@@ -3,7 +3,7 @@ import {useSearchContext} from '../search/SearchContext';
 
 export default function ImageColumn() {
   const images = useSearchContext().state.imageRegions;
-  
+
   return (
     <div style={{'maxHeight': '500px'}}>
       {images.map((img, index) => (

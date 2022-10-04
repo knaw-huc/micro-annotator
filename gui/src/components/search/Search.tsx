@@ -52,7 +52,6 @@ export default function Search() {
     const beginRange = selectorTarget.selector.start;
     const endRange = selectorTarget.selector.end;
     const targetId = selectorTarget.source;
-    console.log(foundAnn);
 
     const annotatableText = await TextRepo.getByVersionIdAndRange(
       versionId,
@@ -72,9 +71,7 @@ export default function Search() {
       endRange,
       annotatableText
     );
-    
-    console.log(overlappingAnnotations);
-    console.log(userAnnotations);
+
     const searching = false;
     setSearchState({
       annotationId,

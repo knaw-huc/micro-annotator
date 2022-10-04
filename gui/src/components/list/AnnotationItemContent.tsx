@@ -11,7 +11,7 @@ type AnnotationContentProps = {
 export default function AnnotationItemContent(props: AnnotationContentProps): JSX.Element {
   const ann = props.ann;
   const [showFull, setShowFull] = useState(false);
-  //console.log(ann);
+  
 
   return <>{ann && <div className="annotation-content">
       <ul>

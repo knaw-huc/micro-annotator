@@ -5,7 +5,7 @@ version: '3.8'
 services:
 
   textrepo-app:
-    container_name: tr_textrepoma
+    container_name: tr_textrepo
     image: registry.diginfra.net/micro-annotator/textrepo-app:txt_anchor
     expose:
       - 8080
@@ -44,7 +44,7 @@ services:
       TR_FLYWAY_LOCATIONS: ${TR_FLYWAY_LOCATIONS}
 
   postgres:
-    container_name: tr_postgresma
+    container_name: tr_postgres
     image: registry.diginfra.net/micro-annotator/textrepo-db:${COLLECTION_TAG}
     shm_size: 1g
     networks:
