@@ -26,7 +26,10 @@ export default function AnnotationList() {
     ? searchContext.userAnnotations
     : searchContext.overlappingAnnotations;
 
+  console.log(annotations);
+  
   function handleSelected(selected: MicroAnnotation | undefined) {
+    console.log(selected);
     return setSelectedAnnotationState({selected});
   }
 

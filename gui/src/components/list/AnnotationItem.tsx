@@ -39,21 +39,14 @@ export default function AnnotationItem(props: AnnotationSnippetProps) {
     } else {
       props.onSelect(props.annotation);
     }
+    //console.log(props.annotation);
   }, [isOpen, previousIsOpen, browsable, props]);
 
   return (
-    <div
-      className={'annotation-snippet'}
-    >
-      <div
-        onClick={toggleOpen}
-        className="clickable"
-      >
+    <div className={'annotation-snippet'}>
+      <div onClick={toggleOpen} className="clickable">
         {props.annotation.entity_type} {toRangeStr(toRange(props.annotation))}
-        {browsable && <button
-            className="btn btn-open-ann"
-            onClick={() => navigate(`/annotation/${findBodyId(props.annotation)}`)}
-        >
+        {browsable && <button className="btn btn-open-ann" onClick={() => navigate(`/annotation/${findBodyId(props.annotation)}`)}>
             🔎
         </button>}
       </div>

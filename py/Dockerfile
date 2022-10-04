@@ -2,4 +2,4 @@ FROM python:3.9-slim-bullseye
 
 WORKDIR /usr/src/app
 RUN pip install flask
-RUN apt-get update && apt-get install curl jq git -y
+RUN apt-get update && apt-get install curl jq git iproute2 -y

@@ -72,7 +72,7 @@ export default function AnnotationButtons() {
     }
 
     async function nextQuick() {
-      const allPagesList = await Elucidate.getPageList(15);
+      const allPagesList = await Elucidate.getPageList(10);
 
       const listIds = [];
       for (let i = 0; i < allPagesList.length; i += 1) {
